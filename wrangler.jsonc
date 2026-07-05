@@ -41,7 +41,7 @@
       "fallthrough": true
     },
     {
-      "type": "Binary",
+      "type": "Data",
       "globs": ["server-functions/default/node_modules/next/dist/compiled/@vercel/og/*.bin"],
       "fallthrough": true
     }
