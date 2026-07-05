@@ -12,6 +12,17 @@ const NEXT_PUBLIC_SERVER_URL =
 const nextConfig: NextConfig = {
   output: 'standalone',
   reactStrictMode: true,
+  outputFileTracingIncludes: {
+    '/**/*': [
+      './node_modules/@payloadcms/richtext-lexical/**/*',
+      './node_modules/@payloadcms/ui/**/*',
+      './node_modules/@payloadcms/db-sqlite/**/*',
+      './node_modules/@payloadcms/drizzle/**/*',
+    ],
+  },
+  async redirects() {
+    return [{ source: '/favicon.ico', destination: '/icon', permanent: false }]
+  },
   images: {
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920],

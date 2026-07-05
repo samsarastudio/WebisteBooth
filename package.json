@@ -7,13 +7,15 @@
     "dev": "cross-env NODE_OPTIONS=--no-deprecation next dev",
     "build": "cross-env NODE_OPTIONS=--no-deprecation next build",
     "build:standalone": "cross-env NODE_OPTIONS=--no-deprecation payload generate:importmap && cross-env NODE_OPTIONS=--no-deprecation next build && node scripts/postbuild.mjs",
-    "start": "cross-env NODE_OPTIONS=--no-deprecation HOSTNAME=0.0.0.0 PORT=3000 node .next/standalone/server.js",
+    "start": "node scripts/start-production.mjs",
+    "start:server": "cross-env NODE_OPTIONS=--no-deprecation HOSTNAME=0.0.0.0 PORT=3000 node .next/standalone/server.js",
     "start:next": "cross-env NODE_OPTIONS=--no-deprecation next start -H 0.0.0.0 -p 3000",
     "lint": "eslint",
     "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
     "generate:types": "cross-env NODE_OPTIONS=--no-deprecation payload generate:types",
     "generate:importmap": "cross-env NODE_OPTIONS=--no-deprecation payload generate:importmap",
     "migrate": "cross-env NODE_OPTIONS=--no-deprecation payload migrate",
+    "migrate:prod": "cross-env NODE_OPTIONS=--no-deprecation payload migrate --force-accept-warning",
     "migrate:create": "cross-env NODE_OPTIONS=--no-deprecation payload migrate:create"
   },
   "dependencies": {

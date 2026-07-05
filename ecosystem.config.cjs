@@ -28,13 +28,15 @@ function loadEnv(filePath) {
 
 const dotenv = loadEnv(path.join(__dirname, '.env'))
 const sharpPath = path.join(__dirname, '.next', 'standalone', 'node_modules', 'sharp')
+const dbPath = path.join(__dirname, 'data', 'frameflix.db')
 
 module.exports = {
   apps: [
     {
       name: 'frameflix',
-      script: '.next/standalone/server.js',
+      script: 'scripts/start-production.mjs',
       cwd: __dirname,
+      interpreter: 'node',
       instances: 1,
       exec_mode: 'fork',
       autorestart: true,
@@ -46,6 +48,8 @@ module.exports = {
         HOSTNAME: '0.0.0.0',
         ...(fs.existsSync(sharpPath) ? { NEXT_SHARP_PATH: sharpPath } : {}),
         ...dotenv,
+        // Always use an absolute DB path in production so standalone cwd never breaks SQLite.
+        DATABASE_URI: `file:${dbPath}`,
       },
     },
   ],

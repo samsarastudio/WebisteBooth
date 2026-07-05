@@ -1,5 +1,5 @@
 import { cpSync, existsSync, mkdirSync, readdirSync } from 'fs'
-import { join } from 'path'
+import { dirname, join } from 'path'
 
 const standalone = '.next/standalone'
 if (!existsSync(standalone)) {
@@ -17,9 +17,49 @@ function copyPackage(name, fromDir = 'node_modules', toDir = join(standalone, 'n
   if (!existsSync(src)) return false
 
   const dest = join(toDir, name)
-  mkdirSync(toDir, { recursive: true })
+  mkdirSync(dirname(dest), { recursive: true })
   cpSync(src, dest, { recursive: true })
   return true
+}
+
+function copyPayloadDeps() {
+  const destModules = join(standalone, 'node_modules')
+  const copied = []
+
+  const payloadPackages = [
+    '@payloadcms/db-sqlite',
+    '@payloadcms/drizzle',
+    '@payloadcms/richtext-lexical',
+    '@payloadcms/ui',
+  ]
+
+  for (const pkg of payloadPackages) {
+    const src = join('node_modules', pkg)
+    const dest = join(destModules, pkg)
+    if (!existsSync(src)) continue
+    mkdirSync(dirname(dest), { recursive: true })
+    cpSync(src, dest, { recursive: true })
+    copied.push(pkg)
+  }
+
+  // libsql native bindings (SQLite on Pi / local dev)
+  if (copyPackage('libsql', 'node_modules', destModules)) {
+    copied.push('libsql')
+  }
+
+  const libsqlScope = join('node_modules', '@libsql')
+  if (existsSync(libsqlScope)) {
+    const destLibsql = join(destModules, '@libsql')
+    mkdirSync(destLibsql, { recursive: true })
+    for (const pkg of readdirSync(libsqlScope)) {
+      cpSync(join(libsqlScope, pkg), join(destLibsql, pkg), { recursive: true })
+      copied.push(`@libsql/${pkg}`)
+    }
+  }
+
+  if (copied.length > 0) {
+    console.log(`Copied Payload/SQLite deps into standalone: ${copied.join(', ')}`)
+  }
 }
 
 function copySharpDeps() {
@@ -55,5 +95,6 @@ function copySharpDeps() {
   }
 }
 
+copyPayloadDeps()
 copySharpDeps()
 console.log('Copied public/, .next/static, and native deps into standalone output')
