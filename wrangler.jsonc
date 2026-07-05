@@ -54,7 +54,7 @@
     {
       "binding": "D1",
       "database_name": "frameflix",
-      "database_id": "REPLACE_WITH_D1_DATABASE_ID"
+      "database_id": "6e251d4c-3579-4a98-90ea-162a5bc7c10c"
     }
   ]
   // R2 is optional — only needed for admin media/gallery uploads.
