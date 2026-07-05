@@ -63,7 +63,7 @@ export default buildConfig({
   plugins: r2Bucket
     ? [
         r2Storage({
-          bucket: r2Bucket,
+          bucket: r2Bucket as Parameters<typeof r2Storage>[0]['bucket'],
           collections: { media: true },
         }),
       ]

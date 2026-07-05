@@ -11,11 +11,11 @@ export const isPayloadCLI = process.argv.some((value) =>
   realpath(value)?.endsWith(path.join('payload', 'bin.js')),
 )
 
-export type CloudflareBindings = CloudflareEnv
+export type CloudflareBindings = CloudflareEnv & { D1: D1Database }
 
-/** R2 is optional — OpenNext's generated CloudflareEnv may not include it. */
-export function getOptionalR2Bucket(env: CloudflareBindings): R2Bucket | undefined {
-  return (env as CloudflareBindings & { R2?: R2Bucket }).R2
+/** R2 binding when ENABLE_R2=true — not part of the base CloudflareEnv type. */
+export function getOptionalR2Bucket(env: CloudflareBindings): unknown {
+  return (env as unknown as Record<string, unknown>).R2
 }
 
 export async function getCloudflareBindings(): Promise<{
@@ -29,11 +29,11 @@ export async function getCloudflareBindings(): Promise<{
       environment: process.env.CLOUDFLARE_ENV,
       remoteBindings: isProduction,
     } satisfies GetPlatformProxyOptions)
-    return { env: proxy.env as CloudflareBindings }
+    return { env: proxy.env as unknown as CloudflareBindings }
   }
 
   const ctx = await getCloudflareContext({ async: true })
-  return { env: ctx.env as CloudflareBindings }
+  return { env: ctx.env as unknown as CloudflareBindings }
 }
 
 export function cloudflareEnv(

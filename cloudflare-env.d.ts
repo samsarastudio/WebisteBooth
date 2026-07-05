@@ -1,8 +1,10 @@
-/** Cloudflare Worker bindings — D1 required; R2 optional (paid add-on) */
-interface CloudflareEnv {
-  D1: D1Database
-  R2?: R2Bucket
-  ASSETS: Fetcher
+/// <reference types="@cloudflare/workers-types" />
+
+/** Augment OpenNext's global CloudflareEnv with Payload D1 binding */
+declare global {
+  interface CloudflareEnv {
+    D1: D1Database
+  }
 }
 
 export {}

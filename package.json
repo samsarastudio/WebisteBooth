@@ -8,6 +8,7 @@
     "build": "cross-env NODE_OPTIONS=--no-deprecation next build",
     "build:standalone": "cross-env NODE_OPTIONS=--no-deprecation next build && node scripts/postbuild.mjs",
     "build:cloudflare": "cross-env NODE_OPTIONS=--no-deprecation DEPLOY_TARGET=cloudflare opennextjs-cloudflare build",
+    "typecheck:cloudflare": "cross-env DEPLOY_TARGET=cloudflare tsc --noEmit",
     "deploy:cloudflare": "cross-env NODE_OPTIONS=--no-deprecation DEPLOY_TARGET=cloudflare NODE_ENV=production payload migrate && wrangler deploy",
     "preview:cloudflare": "cross-env NODE_OPTIONS=--no-deprecation DEPLOY_TARGET=cloudflare opennextjs-cloudflare build && opennextjs-cloudflare preview",
     "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
@@ -48,6 +49,7 @@
     "eslint-config-next": "16.2.10",
     "tailwindcss": "^4",
     "typescript": "^5",
-    "wrangler": "^4.61.1"
+    "wrangler": "^4.61.1",
+    "@cloudflare/workers-types": "^4.20250730.0"
   }
 }
