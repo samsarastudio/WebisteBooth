@@ -34,16 +34,6 @@
       "type": "Text",
       "globs": ["cloudflare/**/*.sql"],
       "fallthrough": true
-    },
-    {
-      "type": "CompiledWasm",
-      "globs": ["server-functions/default/node_modules/next/dist/compiled/@vercel/og/*.wasm"],
-      "fallthrough": true
-    },
-    {
-      "type": "Data",
-      "globs": ["server-functions/default/node_modules/next/dist/compiled/@vercel/og/*.bin"],
-      "fallthrough": true
     }
   ],
   "assets": {

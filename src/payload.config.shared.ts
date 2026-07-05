@@ -37,6 +37,9 @@ export function buildSharedPayloadConfig({
   onInit,
 }: SharedPayloadOptions): Promise<SanitizedConfig> {
   return buildConfig({
+    graphQL: {
+      disable: true,
+    },
     admin: {
       user: Users.slug,
       importMap: {

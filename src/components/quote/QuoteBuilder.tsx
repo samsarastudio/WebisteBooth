@@ -1,16 +1,21 @@
 'use client'
 
-import { useActionState, useMemo, useState } from 'react'
+import { useMemo, useState, type FormEvent } from 'react'
 import { Check, CheckCircle2, Clock, Minus, Plus, Sparkles } from 'lucide-react'
 
 import { ProductImage } from '@/components/marketing/ProductImage'
 
-import { submitLead, type LeadFormState } from '@/app/actions/leads'
+import type { LeadFormState } from '@/lib/lead-form'
 import type { FrameStyleData } from '@/lib/brand-images'
 import { brand } from '@/lib/brand'
 import { calculateEstimate, type PricedAddOn, type PricedPackage } from '@/lib/pricing'
 
 const initialState: LeadFormState = { ok: false }
+
+async function postLeadForm(form: HTMLFormElement): Promise<LeadFormState> {
+  const res = await fetch('/api/leads', { method: 'POST', body: new FormData(form) })
+  return res.json() as Promise<LeadFormState>
+}
 
 const eventTypes = [
   'Wedding',
@@ -69,7 +74,19 @@ export function QuoteBuilder({
   const [styleId, setStyleId] = useState<string>(initialStyle ? String(initialStyle.id) : '')
   const [frameFormat, setFrameFormat] = useState<'polaroid' | '4x6'>('polaroid')
   const [selected, setSelected] = useState<Record<string, number>>({})
-  const [state, formAction, pending] = useActionState(submitLead, initialState)
+  const [state, setState] = useState<LeadFormState>(initialState)
+  const [pending, setPending] = useState(false)
+
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    setPending(true)
+    setState({ ok: false })
+    try {
+      setState(await postLeadForm(e.currentTarget))
+    } finally {
+      setPending(false)
+    }
+  }
 
   const wantsFrames = serviceType === 'frames' || serviceType === 'both'
   const wantsStickers = serviceType === 'stickers' || serviceType === 'both'
@@ -435,7 +452,7 @@ export function QuoteBuilder({
             <ReqStar /> Required fields
           </p>
 
-          <form action={formAction} className="card p-6 md:p-8 space-y-5 relative">
+          <form onSubmit={handleSubmit} className="card p-6 md:p-8 space-y-5 relative">
             <input type="hidden" name="intent" value="quote" />
             <input type="hidden" name="serviceType" value={serviceType} />
             <input type="hidden" name="packageId" value={wantsFrames ? packageId : ''} />

@@ -7,6 +7,7 @@ const __filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(__filename)
 
 const isCloudflareDeploy = process.env.DEPLOY_TARGET === 'cloudflare'
+const emptyOgShim = path.resolve(dirname, 'src/shims/empty-og.ts')
 
 const NEXT_PUBLIC_SERVER_URL =
   process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
@@ -61,10 +62,26 @@ const nextConfig: NextConfig = {
       '.js': ['.ts', '.tsx', '.js', '.jsx'],
       '.mjs': ['.mts', '.mjs'],
     }
+    if (isCloudflareDeploy) {
+      webpackConfig.resolve.alias = {
+        ...webpackConfig.resolve.alias,
+        'next/dist/compiled/@vercel/og/index.node.js': emptyOgShim,
+        'next/dist/compiled/@vercel/og/index.edge.js': emptyOgShim,
+        'next/og': false,
+      }
+    }
     return webpackConfig
   },
   turbopack: {
     root: path.resolve(dirname),
+    ...(isCloudflareDeploy
+      ? {
+          resolveAlias: {
+            'next/dist/compiled/@vercel/og/index.node.js': emptyOgShim,
+            'next/dist/compiled/@vercel/og/index.edge.js': emptyOgShim,
+          },
+        }
+      : {}),
   },
 }
 

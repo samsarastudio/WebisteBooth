@@ -1,9 +1,9 @@
 'use client'
 
-import { useActionState } from 'react'
+import { useState, type FormEvent } from 'react'
 import { CheckCircle2, Sparkles } from 'lucide-react'
 
-import { submitContactInquiry, type LeadFormState } from '@/app/actions/leads'
+import type { LeadFormState } from '@/lib/lead-form'
 
 const initialState: LeadFormState = { ok: false }
 
@@ -16,6 +16,11 @@ const eventTypes = [
   'Other',
 ]
 
+async function postLeadForm(form: HTMLFormElement): Promise<LeadFormState> {
+  const res = await fetch('/api/leads', { method: 'POST', body: new FormData(form) })
+  return res.json() as Promise<LeadFormState>
+}
+
 function ReqStar() {
   return (
     <span className="text-accent font-semibold" aria-hidden="true">
@@ -25,7 +30,19 @@ function ReqStar() {
 }
 
 export function ContactForm() {
-  const [state, formAction, pending] = useActionState(submitContactInquiry, initialState)
+  const [state, setState] = useState<LeadFormState>(initialState)
+  const [pending, setPending] = useState(false)
+
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    setPending(true)
+    setState({ ok: false })
+    try {
+      setState(await postLeadForm(e.currentTarget))
+    } finally {
+      setPending(false)
+    }
+  }
 
   if (state.ok) {
     return (
@@ -49,7 +66,7 @@ export function ContactForm() {
   }
 
   return (
-    <form action={formAction} className="card p-6 md:p-8 space-y-5 relative">
+    <form onSubmit={handleSubmit} className="card p-6 md:p-8 space-y-5 relative">
       <p className="text-xs text-text-secondary">
         Fields marked <ReqStar /> are required.
       </p>

@@ -1,28 +1,22 @@
-'use server'
-
-import { headers } from 'next/headers'
-
+import type { LeadFormState } from '@/lib/lead-form'
 import { getPayloadClient } from '@/lib/payload'
 import { calculateEstimate, type PricingUnit } from '@/lib/pricing'
 import { sendLeadEmails } from '@/lib/email'
 import { rateLimit } from '@/lib/rate-limit'
 
-export type LeadFormState = {
-  ok: boolean
-  error?: string
-  inquiryId?: string
+type HeaderStore = {
+  get(name: string): string | null
 }
 
-export async function submitLead(
-  _prev: LeadFormState,
+export async function submitLeadFromFormData(
   formData: FormData,
+  headerStore: HeaderStore,
 ): Promise<LeadFormState> {
   const honeypot = String(formData.get('website') || '')
   if (honeypot) {
     return { ok: true, inquiryId: `FF-${Date.now()}` }
   }
 
-  const headerStore = await headers()
   const ip =
     headerStore.get('x-forwarded-for')?.split(',')[0]?.trim() ||
     headerStore.get('x-real-ip') ||
@@ -209,14 +203,4 @@ export async function submitLead(
     console.error('Lead submit failed:', err)
     return { ok: false, error: 'Something went wrong. Please try again.' }
   }
-}
-
-export async function submitContactInquiry(
-  _prev: LeadFormState,
-  formData: FormData,
-): Promise<LeadFormState> {
-  formData.set('packageId', '')
-  formData.set('frameStyleId', '')
-  formData.set('selectedAddOns', '[]')
-  return submitLead(_prev, formData)
 }
