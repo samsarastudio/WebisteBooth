@@ -8,8 +8,6 @@ const dirname = path.dirname(__filename)
 
 const isCloudflareDeploy = process.env.DEPLOY_TARGET === 'cloudflare'
 
-const cloudflarePayloadConfig = path.resolve(dirname, 'src/payload.config.cloudflare.ts')
-
 const NEXT_PUBLIC_SERVER_URL =
   process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
 
@@ -63,23 +61,10 @@ const nextConfig: NextConfig = {
       '.js': ['.ts', '.tsx', '.js', '.jsx'],
       '.mjs': ['.mts', '.mjs'],
     }
-    if (isCloudflareDeploy) {
-      webpackConfig.resolve.alias = {
-        ...webpackConfig.resolve.alias,
-        '@payload-config': cloudflarePayloadConfig,
-      }
-    }
     return webpackConfig
   },
   turbopack: {
     root: path.resolve(dirname),
-    ...(isCloudflareDeploy
-      ? {
-          resolveAlias: {
-            '@payload-config': cloudflarePayloadConfig,
-          },
-        }
-      : {}),
   },
 }
 
