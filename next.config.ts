@@ -19,6 +19,7 @@ const nextConfig: NextConfig = {
         serverExternalPackages: [
           'jose',
           'pg-cloudflare',
+          '@payloadcms/db-d1-sqlite',
           'drizzle-kit',
           '@payloadcms/drizzle',
           '@payloadcms/db-sqlite',
