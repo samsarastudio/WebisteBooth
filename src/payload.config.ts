@@ -17,7 +17,7 @@ import { Gallery } from './collections/Gallery'
 import { FAQs } from './collections/FAQs'
 import { FrameStyles } from './collections/FrameStyles'
 import { SiteSettings } from './globals/SiteSettings'
-import { getCloudflareBindings, cloudflareEnv, isCloudflareDeploy } from './lib/cloudflare-context'
+import { getCloudflareBindings, cloudflareEnv, getOptionalR2Bucket, isCloudflareDeploy } from './lib/cloudflare-context'
 import { seedIfEmpty } from './seed'
 
 const filename = fileURLToPath(import.meta.url)
@@ -30,7 +30,10 @@ const serverURL =
 
 const cloudflare = isCloudflareDeploy ? await getCloudflareBindings() : null
 const cfEnv = cloudflare ? cloudflareEnv(cloudflare) : null
-const useR2Storage = isCloudflareDeploy && process.env.ENABLE_R2 === 'true' && Boolean(cfEnv?.R2)
+const r2Bucket =
+  isCloudflareDeploy && process.env.ENABLE_R2 === 'true' && cfEnv
+    ? getOptionalR2Bucket(cfEnv)
+    : undefined
 
 export default buildConfig({
   admin: {
@@ -57,10 +60,10 @@ export default buildConfig({
         },
         push: true,
       }),
-  plugins: useR2Storage
+  plugins: r2Bucket
     ? [
         r2Storage({
-          bucket: cfEnv!.R2,
+          bucket: r2Bucket,
           collections: { media: true },
         }),
       ]

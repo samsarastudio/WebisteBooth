@@ -13,6 +13,11 @@ export const isPayloadCLI = process.argv.some((value) =>
 
 export type CloudflareBindings = CloudflareEnv
 
+/** R2 is optional — OpenNext's generated CloudflareEnv may not include it. */
+export function getOptionalR2Bucket(env: CloudflareBindings): R2Bucket | undefined {
+  return (env as CloudflareBindings & { R2?: R2Bucket }).R2
+}
+
 export async function getCloudflareBindings(): Promise<{
   env: CloudflareBindings
 }> {
