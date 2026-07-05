@@ -35,7 +35,7 @@ Default packages, add-ons, FAQs, and site settings seed automatically on first b
 | Command | Description |
 | --- | --- |
 | `npm run dev` | Development server |
-| `npm run build` | Production build (standalone) |
+| `npm run build:standalone` | Production build for Pi/VPS (standalone + asset copy) |
 | `npm start` | Start on `0.0.0.0:3000` |
 | `npm run generate:types` | Regenerate Payload types |
 | `npm run generate:importmap` | Regenerate admin import map |

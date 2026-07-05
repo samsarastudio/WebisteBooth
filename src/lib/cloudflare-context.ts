@@ -11,7 +11,11 @@ export const isPayloadCLI = process.argv.some((value) =>
   realpath(value)?.endsWith(path.join('payload', 'bin.js')),
 )
 
-export async function getCloudflareBindings() {
+export type CloudflareBindings = CloudflareEnv
+
+export async function getCloudflareBindings(): Promise<{
+  env: CloudflareBindings
+}> {
   const isProduction = process.env.NODE_ENV === 'production'
 
   if (isPayloadCLI || !isProduction) {
@@ -20,8 +24,18 @@ export async function getCloudflareBindings() {
       environment: process.env.CLOUDFLARE_ENV,
       remoteBindings: isProduction,
     } satisfies GetPlatformProxyOptions)
-    return proxy
+    return { env: proxy.env as CloudflareBindings }
   }
 
-  return getCloudflareContext({ async: true })
+  const ctx = await getCloudflareContext({ async: true })
+  return { env: ctx.env as CloudflareBindings }
+}
+
+export function cloudflareEnv(
+  cloudflare: { env: CloudflareBindings } | null,
+): CloudflareBindings {
+  if (!cloudflare) {
+    throw new Error('Cloudflare bindings are unavailable')
+  }
+  return cloudflare.env
 }

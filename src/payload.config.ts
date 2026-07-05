@@ -17,7 +17,7 @@ import { Gallery } from './collections/Gallery'
 import { FAQs } from './collections/FAQs'
 import { FrameStyles } from './collections/FrameStyles'
 import { SiteSettings } from './globals/SiteSettings'
-import { getCloudflareBindings, isCloudflareDeploy } from './lib/cloudflare-context'
+import { getCloudflareBindings, cloudflareEnv, isCloudflareDeploy } from './lib/cloudflare-context'
 import { seedIfEmpty } from './seed'
 
 const filename = fileURLToPath(import.meta.url)
@@ -29,6 +29,7 @@ const serverURL =
   'http://localhost:3000'
 
 const cloudflare = isCloudflareDeploy ? await getCloudflareBindings() : null
+const cfEnv = cloudflare ? cloudflareEnv(cloudflare) : null
 
 export default buildConfig({
   admin: {
@@ -48,7 +49,7 @@ export default buildConfig({
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
   db: isCloudflareDeploy
-    ? sqliteD1Adapter({ binding: cloudflare!.env.D1 })
+    ? sqliteD1Adapter({ binding: cfEnv!.D1 })
     : sqliteAdapter({
         client: {
           url: process.env.DATABASE_URI || 'file:./data/frameflix.db',
@@ -58,7 +59,7 @@ export default buildConfig({
   plugins: isCloudflareDeploy
     ? [
         r2Storage({
-          bucket: cloudflare!.env.R2,
+          bucket: cfEnv!.R2,
           collections: { media: true },
         }),
       ]

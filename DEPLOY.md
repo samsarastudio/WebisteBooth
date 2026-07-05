@@ -65,7 +65,7 @@ mkdir -p data media
 
 ```bash
 npm ci
-npm run build   # also copies public/ + static assets into standalone output
+npm run build:standalone   # also copies public/ + static assets into standalone output
 ```
 
 On first boot, Payload pushes the SQLite schema and seeds packages, add-ons, FAQs, and site settings automatically.

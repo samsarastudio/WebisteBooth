@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "cross-env NODE_OPTIONS=--no-deprecation next dev",
-    "build": "cross-env NODE_OPTIONS=--no-deprecation next build && node scripts/postbuild.mjs",
+    "build": "cross-env NODE_OPTIONS=--no-deprecation next build",
+    "build:standalone": "cross-env NODE_OPTIONS=--no-deprecation next build && node scripts/postbuild.mjs",
     "build:cloudflare": "cross-env NODE_OPTIONS=--no-deprecation DEPLOY_TARGET=cloudflare opennextjs-cloudflare build",
     "deploy:cloudflare": "cross-env NODE_OPTIONS=--no-deprecation DEPLOY_TARGET=cloudflare NODE_ENV=production payload migrate && wrangler deploy",
     "preview:cloudflare": "cross-env NODE_OPTIONS=--no-deprecation DEPLOY_TARGET=cloudflare opennextjs-cloudflare build && opennextjs-cloudflare preview",
