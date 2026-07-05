@@ -11,6 +11,7 @@ import { AddOns } from './collections/AddOns'
 import { Leads } from './collections/Leads'
 import { Gallery } from './collections/Gallery'
 import { FAQs } from './collections/FAQs'
+import { Posts } from './collections/Posts'
 import { FrameStyles } from './collections/FrameStyles'
 import { SiteSettings } from './globals/SiteSettings'
 import { seedIfEmpty } from './seed'
@@ -49,7 +50,7 @@ export function buildSharedPayloadConfig({
         titleSuffix: '— FrameFlix Admin',
       },
     },
-    collections: [Users, Media, Packages, AddOns, FrameStyles, Leads, Gallery, FAQs],
+    collections: [Users, Media, Packages, AddOns, FrameStyles, Leads, Gallery, FAQs, Posts],
     globals: [SiteSettings],
     editor: lexicalEditor(),
     secret: process.env.PAYLOAD_SECRET || 'dev-secret-change-me',

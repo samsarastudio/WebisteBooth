@@ -75,6 +75,7 @@ export interface Config {
     leads: Lead;
     gallery: Gallery;
     faqs: Faq;
+    posts: Post;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -90,6 +91,7 @@ export interface Config {
     leads: LeadsSelect<false> | LeadsSelect<true>;
     gallery: GallerySelect<false> | GallerySelect<true>;
     faqs: FaqsSelect<false> | FaqsSelect<true>;
+    posts: PostsSelect<false> | PostsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -370,6 +372,60 @@ export interface Faq {
   createdAt: string;
 }
 /**
+ * Blog posts and articles for SEO and traffic.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "posts".
+ */
+export interface Post {
+  id: number;
+  title: string;
+  /**
+   * URL path — e.g. wedding-keepsake-ideas
+   */
+  slug: string;
+  /**
+   * Short summary for cards and search results.
+   */
+  excerpt: string;
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * Optional hero image for the post.
+   */
+  featuredImage?: (number | null) | Media;
+  category: 'tips' | 'events' | 'studio' | 'trends';
+  tags?:
+    | {
+        tag: string;
+        id?: string | null;
+      }[]
+    | null;
+  author?: string | null;
+  status: 'draft' | 'published';
+  publishedAt?: string | null;
+  /**
+   * SEO meta description (max 160 characters).
+   */
+  metaDescription?: string | null;
+  source?: ('admin' | 'openclaw' | 'seed') | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -424,6 +480,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'faqs';
         value: number | Faq;
+      } | null)
+    | ({
+        relationTo: 'posts';
+        value: number | Post;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -643,6 +703,31 @@ export interface FaqsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "posts_select".
+ */
+export interface PostsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  excerpt?: T;
+  content?: T;
+  featuredImage?: T;
+  category?: T;
+  tags?:
+    | T
+    | {
+        tag?: T;
+        id?: T;
+      };
+  author?: T;
+  status?: T;
+  publishedAt?: T;
+  metaDescription?: T;
+  source?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv_select".
  */
 export interface PayloadKvSelect<T extends boolean = true> {
@@ -717,6 +802,7 @@ export interface SiteSetting {
   showPackagesPage?: boolean | null;
   showStickersPage?: boolean | null;
   showGalleryPage?: boolean | null;
+  showBlogPage?: boolean | null;
   showFaqPage?: boolean | null;
   showContactPage?: boolean | null;
   showQuotePage?: boolean | null;
@@ -727,6 +813,7 @@ export interface SiteSetting {
   showPackagesSection?: boolean | null;
   showLifestyleBanner?: boolean | null;
   showGalleryPreview?: boolean | null;
+  showBlogPreview?: boolean | null;
   /**
    * Keep off until you have real reviews to publish.
    */
@@ -772,6 +859,7 @@ export interface SiteSettingsSelect<T extends boolean = true> {
   showPackagesPage?: T;
   showStickersPage?: T;
   showGalleryPage?: T;
+  showBlogPage?: T;
   showFaqPage?: T;
   showContactPage?: T;
   showQuotePage?: T;
@@ -782,6 +870,7 @@ export interface SiteSettingsSelect<T extends boolean = true> {
   showPackagesSection?: T;
   showLifestyleBanner?: T;
   showGalleryPreview?: T;
+  showBlogPreview?: T;
   showTestimonials?: T;
   showFinalCta?: T;
   showFrameCountOnHome?: T;

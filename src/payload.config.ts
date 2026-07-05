@@ -1,7 +1,25 @@
-import { isCloudflareDeploy } from './lib/cloudflare-context'
+import { sqliteAdapter } from '@payloadcms/db-sqlite'
+import path from 'path'
+import sharp from 'sharp'
+import { fileURLToPath } from 'url'
 
-/** Route to Cloudflare or Node config so Workers bundles never import drizzle-kit / db-sqlite. */
-export default (isCloudflareDeploy
-  ? import('./payload.config.cloudflare')
-  : import('./payload.config.node')
-).then((module) => module.default)
+import { buildSharedPayloadConfig } from './payload.config.shared'
+import { seedIfEmpty } from './seed'
+
+const filename = fileURLToPath(import.meta.url)
+const dirname = path.dirname(filename)
+
+export default buildSharedPayloadConfig({
+  db: sqliteAdapter({
+    client: {
+      url: process.env.DATABASE_URI || 'file:./data/frameflix.db',
+    },
+    // Dev: auto-push schema. Production: use `npm run migrate` (non-interactive).
+    push: process.env.NODE_ENV !== 'production',
+    migrationDir: path.resolve(dirname, 'migrations'),
+  }),
+  sharp,
+  onInit: async (payload) => {
+    await seedIfEmpty(payload)
+  },
+})

@@ -4,9 +4,9 @@ export const brand = {
   parentName: 'inmoment',
   fullName: 'FrameFlix by inmoment',
   tagline: 'Custom Photobooth Souvenirs',
-  email: process.env.LEAD_NOTIFY_EMAIL || 'frameflix@inmoment.com',
+  email: process.env.LEAD_NOTIFY_EMAIL || 'hello@inmomentservices.com',
   siteUrl: process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000',
-  parentUrl: process.env.NEXT_PUBLIC_PARENT_URL || 'https://inmoment.com',
+  parentUrl: process.env.NEXT_PUBLIC_PARENT_URL || 'https://inmomentservices.com',
 } as const
 
 export function pageTitle(suffix?: string) {

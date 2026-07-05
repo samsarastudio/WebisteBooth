@@ -7,27 +7,20 @@
     "dev": "cross-env NODE_OPTIONS=--no-deprecation next dev",
     "build": "cross-env NODE_OPTIONS=--no-deprecation next build",
     "build:standalone": "cross-env NODE_OPTIONS=--no-deprecation next build && node scripts/postbuild.mjs",
-    "postinstall": "node scripts/patch-opennext-env.mjs",
-    "build:cloudflare": "node scripts/build-cloudflare.mjs",
-    "typecheck:cloudflare": "cross-env DEPLOY_TARGET=cloudflare tsc --noEmit",
-    "deploy:cloudflare": "cross-env NODE_OPTIONS=--no-deprecation DEPLOY_TARGET=cloudflare NODE_ENV=production payload migrate && cross-env WRANGLER_BUILD_CONDITIONS= WRANGLER_BUILD_PLATFORM=node opennextjs-cloudflare deploy",
-    "preview:cloudflare": "cross-env NODE_OPTIONS=--no-deprecation DEPLOY_TARGET=cloudflare opennextjs-cloudflare build && opennextjs-cloudflare preview",
-    "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
     "start": "cross-env NODE_OPTIONS=--no-deprecation HOSTNAME=0.0.0.0 PORT=3000 node .next/standalone/server.js",
     "start:next": "cross-env NODE_OPTIONS=--no-deprecation next start -H 0.0.0.0 -p 3000",
     "lint": "eslint",
     "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
     "generate:types": "cross-env NODE_OPTIONS=--no-deprecation payload generate:types",
-    "generate:importmap": "cross-env NODE_OPTIONS=--no-deprecation payload generate:importmap"
+    "generate:importmap": "cross-env NODE_OPTIONS=--no-deprecation payload generate:importmap",
+    "migrate": "cross-env NODE_OPTIONS=--no-deprecation payload migrate",
+    "migrate:create": "cross-env NODE_OPTIONS=--no-deprecation payload migrate:create"
   },
   "dependencies": {
-    "@opennextjs/cloudflare": "^1.11.0",
-    "@payloadcms/db-d1-sqlite": "^3.85.2",
     "@payloadcms/db-sqlite": "^3.85.2",
     "@payloadcms/drizzle": "^3.85.2",
     "@payloadcms/next": "^3.85.2",
     "@payloadcms/richtext-lexical": "^3.85.2",
-    "@payloadcms/storage-r2": "^3.85.2",
     "@payloadcms/ui": "^3.85.2",
     "lucide-react": "^1.23.0",
     "motion": "^12.42.2",
@@ -48,8 +41,6 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.10",
     "tailwindcss": "^4",
-    "typescript": "^5",
-    "wrangler": "^4.61.1",
-    "@cloudflare/workers-types": "^4.20250730.0"
+    "typescript": "^5"
   }
 }

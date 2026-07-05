@@ -95,6 +95,12 @@ export const SiteSettings: GlobalConfig = {
               label: 'Show Gallery page',
             },
             {
+              name: 'showBlogPage',
+              type: 'checkbox',
+              defaultValue: true,
+              label: 'Show Blog page',
+            },
+            {
               name: 'showFaqPage',
               type: 'checkbox',
               defaultValue: true,
@@ -158,6 +164,12 @@ export const SiteSettings: GlobalConfig = {
               type: 'checkbox',
               defaultValue: true,
               label: 'Show gallery preview',
+            },
+            {
+              name: 'showBlogPreview',
+              type: 'checkbox',
+              defaultValue: true,
+              label: 'Show blog preview on home',
             },
             {
               name: 'showTestimonials',

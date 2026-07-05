@@ -1,8 +1,9 @@
 import type { MetadataRoute } from 'next'
 
 import { brand } from '@/lib/brand'
+import { getPublishedPostSlugs } from '@/lib/payload'
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const siteUrl = brand.siteUrl
   const routes = [
     '',
@@ -10,6 +11,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/packages',
     '/stickers',
     '/gallery',
+    '/blog',
     '/faq',
     '/contact',
     '/quote',
@@ -17,10 +19,25 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/disclaimer',
   ]
 
-  return routes.map((route) => ({
+  const staticEntries: MetadataRoute.Sitemap = routes.map((route) => ({
     url: `${siteUrl}${route}`,
     lastModified: new Date(),
-    changeFrequency: route === '' || route === '/quote' ? 'weekly' : 'monthly',
-    priority: route === '' ? 1 : route === '/quote' || route === '/packages' ? 0.9 : 0.7,
+    changeFrequency: route === '' || route === '/quote' || route === '/blog' ? 'weekly' : 'monthly',
+    priority:
+      route === ''
+        ? 1
+        : route === '/quote' || route === '/packages' || route === '/blog'
+          ? 0.9
+          : 0.7,
   }))
+
+  const postSlugs = await getPublishedPostSlugs()
+  const postEntries: MetadataRoute.Sitemap = postSlugs.map((post) => ({
+    url: `${siteUrl}/blog/${post.slug}`,
+    lastModified: post.publishedAt ? new Date(post.publishedAt) : new Date(),
+    changeFrequency: 'monthly',
+    priority: 0.8,
+  }))
+
+  return [...staticEntries, ...postEntries]
 }

@@ -2,20 +2,35 @@
 
 Lead-generating marketing site for **FrameFlix by inmoment** — custom photobooth frames, sticker studio, and quote builder.
 
-## Deploy
+## Deploy on Raspberry Pi
 
-- **Production (recommended):** [Cloudflare Workers + GitHub](CLOUDFLARE.md) → `frameflix.inmoment.com`
-- **Alternative:** Raspberry Pi + ngrok → [DEPLOY.md](./DEPLOY.md)
+Production runs on a **Raspberry Pi** (or Linux VPS) with SQLite and local file storage.
+
+**Full instructions:** [DEPLOY.md](./DEPLOY.md)
+
+Quick summary:
+
+```bash
+git clone https://github.com/samsarastudio/WebisteBooth.git frameflix
+cd frameflix
+cp .env.example .env          # edit PAYLOAD_SECRET and public URLs
+mkdir -p data media
+npm ci
+npm run build:standalone
+pm2 start ecosystem.config.cjs
+```
+
+Live at **`https://inmomentservices.com`** via Raspberry Pi + Cloudflare Tunnel — see [DEPLOY.md](./DEPLOY.md).
 
 ## Features
 
 - Premium marketing pages (Home, About, Packages, Stickers, Gallery, FAQ, Contact)
 - Interactive **quote builder** with packages, add-ons, and lead capture
 - **Payload CMS** admin at `/admin` for packages, add-ons, leads, gallery, FAQs, and site settings
-- Cloudflare: D1 database + R2 media · Local/Pi: SQLite + filesystem
+- SQLite database + local media uploads on the Pi
 - Lead capture with honeypot + rate limiting; optional Resend email alerts
 
-## Quick start (local)
+## Quick start (local dev)
 
 ```bash
 cp .env.example .env
@@ -35,8 +50,8 @@ Default packages, add-ons, FAQs, and site settings seed automatically on first b
 | Command | Description |
 | --- | --- |
 | `npm run dev` | Development server |
-| `npm run build:standalone` | Production build for Pi/VPS (standalone + asset copy) |
-| `npm start` | Start on `0.0.0.0:3000` |
+| `npm run build:standalone` | Production build for Pi (standalone + asset copy) |
+| `npm start` | Start standalone server on `0.0.0.0:3000` |
 | `npm run generate:types` | Regenerate Payload types |
 | `npm run generate:importmap` | Regenerate admin import map |
 
@@ -44,8 +59,8 @@ Default packages, add-ons, FAQs, and site settings seed automatically on first b
 
 - Next.js 16, React 19, Tailwind CSS 4
 - Payload CMS 3 + SQLite
-- Motion, Lucide, Resend
+- Motion, Lucide, Resend, Sharp
 
 ## Deploy
 
-See [DEPLOY.md](./DEPLOY.md) for Raspberry Pi + PM2 + ngrok instructions.
+See [DEPLOY.md](./DEPLOY.md) for Raspberry Pi setup, PM2, Caddy, backups, and updates.

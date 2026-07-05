@@ -8,6 +8,7 @@ export type PageKey =
   | 'contact'
   | 'quote'
   | 'stickers'
+  | 'blog'
 
 export function isPageEnabled(settings: SiteSettingsData, page: PageKey): boolean {
   switch (page) {
@@ -25,6 +26,8 @@ export function isPageEnabled(settings: SiteSettingsData, page: PageKey): boolea
       return settings.showQuotePage
     case 'stickers':
       return settings.showStickersPage
+    case 'blog':
+      return settings.showBlogPage
     default:
       return true
   }
@@ -41,6 +44,7 @@ export function navLinks(settings: SiteSettingsData) {
   if (settings.showPackagesPage) links.push({ href: '/packages', label: 'Frames' })
   if (settings.showStickersPage) links.push({ href: '/stickers', label: 'Stickers' })
   if (settings.showGalleryPage) links.push({ href: '/gallery', label: 'Gallery' })
+  if (settings.showBlogPage) links.push({ href: '/blog', label: 'Blog' })
   if (settings.showFaqPage) links.push({ href: '/faq', label: 'FAQ' })
   if (settings.showContactPage) links.push({ href: '/contact', label: 'Contact' })
   return links

@@ -1,10 +1,12 @@
 import type { Payload } from 'payload'
+import type { Post } from '@/payload-types'
 
 import {
   defaultAddOns,
   defaultFaqs,
   defaultFrameStyles,
   defaultPackages,
+  defaultPosts,
   defaultSiteSettings,
 } from './defaults'
 
@@ -20,6 +22,7 @@ export async function seedIfEmpty(payload: Payload) {
       await syncAddOns(payload)
       await syncFrameStyles(payload)
       await syncFaqs(payload)
+      await syncPosts(payload)
       await syncSiteSettings(payload)
       return
     } catch (err) {
@@ -64,6 +67,17 @@ async function runSeed(payload: Payload) {
       await payload.create({ collection: 'faqs', data: faq })
     }
     payload.logger.info('Seeded FAQs')
+  }
+
+  const posts = await payload.count({ collection: 'posts' })
+  if (posts.totalDocs === 0) {
+    for (const post of defaultPosts) {
+      await payload.create({
+        collection: 'posts',
+        data: { ...post, content: post.content as Post['content'] },
+      })
+    }
+    payload.logger.info('Seeded blog posts')
   }
 
   const settings = await payload.findGlobal({ slug: 'site-settings' })
@@ -322,6 +336,14 @@ async function syncSiteSettings(payload: Payload) {
       heroSubtitle: defaultSiteSettings.heroSubtitle,
       trustBadges: defaultSiteSettings.trustBadges,
       serviceArea: defaultSiteSettings.serviceArea,
+      showBlogPage:
+        typeof current.showBlogPage === 'boolean'
+          ? current.showBlogPage
+          : defaultSiteSettings.showBlogPage,
+      showBlogPreview:
+        typeof current.showBlogPreview === 'boolean'
+          ? current.showBlogPreview
+          : defaultSiteSettings.showBlogPreview,
       // Only force testimonials off if still empty / never configured
       showTestimonials:
         typeof current.showTestimonials === 'boolean'
@@ -336,4 +358,21 @@ async function syncSiteSettings(payload: Payload) {
       testimonials: current.testimonials?.length ? current.testimonials : [],
     },
   })
+}
+
+async function syncPosts(payload: Payload) {
+  for (const def of defaultPosts) {
+    const found = await payload.find({
+      collection: 'posts',
+      where: { slug: { equals: def.slug } },
+      limit: 1,
+    })
+    if (found.totalDocs === 0) {
+      await payload.create({
+        collection: 'posts',
+        data: { ...def, content: def.content as Post['content'] },
+      })
+      payload.logger.info(`Added blog post: ${def.title}`)
+    }
+  }
 }

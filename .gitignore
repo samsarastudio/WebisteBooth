@@ -16,6 +16,7 @@
 # next.js
 /.next/
 /out/
+/.open-next/
 
 # production
 /build
@@ -48,8 +49,4 @@ next-env.d.ts
 /media/*
 !/media/.gitkeep
 *.db
-
-# Cloudflare / OpenNext build output
-.open-next/
-.wrangler/
 

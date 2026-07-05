@@ -4,6 +4,7 @@ import { Sparkles } from 'lucide-react'
 import { DualHero } from '@/components/marketing/DualHero'
 import { IllustrativeDisclaimer } from '@/components/marketing/IllustrativeDisclaimer'
 import { PackageCards } from '@/components/marketing/PackageCards'
+import { BlogCardCompact } from '@/components/marketing/BlogCard'
 import { ProductImage } from '@/components/marketing/ProductImage'
 import { Reveal, Stagger, StaggerItem } from '@/components/marketing/Reveal'
 import { StyleSlider } from '@/components/marketing/StyleSlider'
@@ -12,15 +13,17 @@ import {
   getActiveFrameStyles,
   getActivePackages,
   getGalleryItems,
+  getPublishedPosts,
   getSiteSettings,
 } from '@/lib/payload'
 
 export default async function HomePage() {
-  const [settings, packages, gallery, frameStyles] = await Promise.all([
+  const [settings, packages, gallery, frameStyles, blogData] = await Promise.all([
     getSiteSettings(),
     getActivePackages(),
     getGalleryItems({ limit: 6 }),
     getActiveFrameStyles(),
+    getPublishedPosts({ limit: 3 }),
   ])
 
   const previewImages =
@@ -218,6 +221,31 @@ export default async function HomePage() {
                 </div>
               </div>
             </Reveal>
+          </div>
+        </section>
+      )}
+
+      {settings.showBlogPreview && settings.showBlogPage && blogData.posts.length > 0 && (
+        <section className="section">
+          <div className="container-wide">
+            <Reveal className="text-center mb-8 md:mb-10">
+              <h2 className="text-3xl md:text-4xl mb-3">From the blog</h2>
+              <p className="text-text-secondary">
+                Planning tips and keepsake inspiration for your next celebration.
+              </p>
+            </Reveal>
+            <div className="grid md:grid-cols-3 gap-4">
+              {blogData.posts.map((post, i) => (
+                <Reveal key={String(post.id)} delay={i * 0.06}>
+                  <BlogCardCompact post={post} />
+                </Reveal>
+              ))}
+            </div>
+            <div className="text-center mt-8">
+              <Link href="/blog" className="btn-secondary">
+                Read All Articles
+              </Link>
+            </div>
           </div>
         </section>
       )}

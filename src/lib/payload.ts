@@ -8,6 +8,7 @@ import {
   defaultFaqs,
   defaultFrameStyles,
   defaultPackages,
+  defaultPosts,
   defaultSiteSettings,
 } from '@/seed/defaults'
 import { fallbackFrameStyles, type FrameStyleData } from '@/lib/brand-images'
@@ -263,6 +264,7 @@ export async function getSiteSettings(): Promise<SiteSettingsData> {
       showPackagesPage: bool(settings.showPackagesPage, defaultSiteSettings.showPackagesPage),
       showStickersPage: bool(settings.showStickersPage, defaultSiteSettings.showStickersPage),
       showGalleryPage: bool(settings.showGalleryPage, defaultSiteSettings.showGalleryPage),
+      showBlogPage: bool(settings.showBlogPage, defaultSiteSettings.showBlogPage),
       showFaqPage: bool(settings.showFaqPage, defaultSiteSettings.showFaqPage),
       showContactPage: bool(settings.showContactPage, defaultSiteSettings.showContactPage),
       showQuotePage: bool(settings.showQuotePage, defaultSiteSettings.showQuotePage),
@@ -279,6 +281,7 @@ export async function getSiteSettings(): Promise<SiteSettingsData> {
         defaultSiteSettings.showLifestyleBanner,
       ),
       showGalleryPreview: bool(settings.showGalleryPreview, defaultSiteSettings.showGalleryPreview),
+      showBlogPreview: bool(settings.showBlogPreview, defaultSiteSettings.showBlogPreview),
       showTestimonials: bool(settings.showTestimonials, defaultSiteSettings.showTestimonials),
       showFinalCta: bool(settings.showFinalCta, defaultSiteSettings.showFinalCta),
       showFrameCountOnHome: bool(
@@ -329,5 +332,193 @@ export async function getGalleryItems(options?: {
     })
   } catch {
     return []
+  }
+}
+
+export type BlogPostSummary = {
+  id: string | number
+  title: string
+  slug: string
+  excerpt: string
+  category: string
+  author?: string | null
+  publishedAt?: string | null
+  metaDescription?: string | null
+  featuredImageUrl?: string | null
+}
+
+export type BlogPostDetail = BlogPostSummary & {
+  content: unknown
+  tags: string[]
+}
+
+function mapPostSummary(doc: {
+  id: string | number
+  title: string
+  slug: string
+  excerpt: string
+  category: string
+  author?: string | null
+  publishedAt?: string | null
+  metaDescription?: string | null
+  featuredImage?: unknown
+}): BlogPostSummary {
+  const image =
+    typeof doc.featuredImage === 'object' && doc.featuredImage
+      ? (doc.featuredImage as { url?: string | null })
+      : null
+  return {
+    id: doc.id,
+    title: doc.title,
+    slug: doc.slug,
+    excerpt: doc.excerpt,
+    category: doc.category,
+    author: doc.author,
+    publishedAt: doc.publishedAt,
+    metaDescription: doc.metaDescription,
+    featuredImageUrl: image?.url ?? null,
+  }
+}
+
+export async function getPublishedPosts(options?: {
+  limit?: number
+  page?: number
+}): Promise<{ posts: BlogPostSummary[]; totalDocs: number }> {
+  noStore()
+  const limit = options?.limit ?? 12
+  const page = options?.page ?? 1
+
+  try {
+    const payload = await getPayloadClient()
+    const result = await payload.find({
+      collection: 'posts',
+      where: { status: { equals: 'published' } },
+      sort: '-publishedAt',
+      limit,
+      page,
+      depth: 1,
+    })
+
+    if (result.docs.length === 0) {
+      const fallback = defaultPosts
+        .filter((p) => p.status === 'published')
+        .slice(0, limit)
+        .map((p, i) => ({
+          id: `fallback-${i}`,
+          title: p.title,
+          slug: p.slug,
+          excerpt: p.excerpt,
+          category: p.category,
+          author: p.author,
+          publishedAt: p.publishedAt,
+          metaDescription: p.metaDescription,
+          featuredImageUrl: null,
+        }))
+      return { posts: fallback, totalDocs: fallback.length }
+    }
+
+    return {
+      posts: result.docs.map((doc) => mapPostSummary(doc)),
+      totalDocs: result.totalDocs,
+    }
+  } catch {
+    const fallback = defaultPosts
+      .filter((p) => p.status === 'published')
+      .slice(0, limit)
+      .map((p, i) => ({
+        id: `fallback-${i}`,
+        title: p.title,
+        slug: p.slug,
+        excerpt: p.excerpt,
+        category: p.category,
+        author: p.author,
+        publishedAt: p.publishedAt,
+        metaDescription: p.metaDescription,
+        featuredImageUrl: null,
+      }))
+    return { posts: fallback, totalDocs: fallback.length }
+  }
+}
+
+export async function getPostBySlug(slug: string): Promise<BlogPostDetail | null> {
+  noStore()
+  try {
+    const payload = await getPayloadClient()
+    const result = await payload.find({
+      collection: 'posts',
+      where: {
+        and: [{ slug: { equals: slug } }, { status: { equals: 'published' } }],
+      },
+      limit: 1,
+      depth: 1,
+    })
+
+    if (result.docs.length === 0) {
+      const fallback = defaultPosts.find((p) => p.slug === slug && p.status === 'published')
+      if (!fallback) return null
+      return {
+        id: `fallback-${fallback.slug}`,
+        title: fallback.title,
+        slug: fallback.slug,
+        excerpt: fallback.excerpt,
+        category: fallback.category,
+        author: fallback.author,
+        publishedAt: fallback.publishedAt,
+        metaDescription: fallback.metaDescription,
+        featuredImageUrl: null,
+        content: fallback.content,
+        tags: fallback.tags.map((t) => t.tag),
+      }
+    }
+
+    const doc = result.docs[0]
+    return {
+      ...mapPostSummary(doc),
+      content: doc.content,
+      tags: (doc.tags || []).map((t) => t.tag),
+    }
+  } catch {
+    const fallback = defaultPosts.find((p) => p.slug === slug && p.status === 'published')
+    if (!fallback) return null
+    return {
+      id: `fallback-${fallback.slug}`,
+      title: fallback.title,
+      slug: fallback.slug,
+      excerpt: fallback.excerpt,
+      category: fallback.category,
+      author: fallback.author,
+      publishedAt: fallback.publishedAt,
+      metaDescription: fallback.metaDescription,
+      featuredImageUrl: null,
+      content: fallback.content,
+      tags: fallback.tags.map((t) => t.tag),
+    }
+  }
+}
+
+export async function getPublishedPostSlugs(): Promise<{ slug: string; publishedAt?: string | null }[]> {
+  noStore()
+  try {
+    const payload = await getPayloadClient()
+    const result = await payload.find({
+      collection: 'posts',
+      where: { status: { equals: 'published' } },
+      sort: '-publishedAt',
+      limit: 200,
+      depth: 0,
+    })
+    if (result.docs.length === 0) {
+      return defaultPosts
+        .filter((p) => p.status === 'published')
+        .map((p) => ({ slug: p.slug, publishedAt: p.publishedAt }))
+    }
+    return result.docs.map((doc) => ({
+      slug: doc.slug,
+      publishedAt: doc.publishedAt,
+    }))
+  } catch {
+    return defaultPosts
+      .filter((p) => p.status === 'published')
+      .map((p) => ({ slug: p.slug, publishedAt: p.publishedAt }))
   }
 }

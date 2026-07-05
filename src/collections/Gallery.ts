@@ -5,12 +5,6 @@ export const Gallery: CollectionConfig = {
   admin: {
     useAsTitle: 'caption',
     defaultColumns: ['caption', 'eventType', 'featured', 'sortOrder'],
-    hidden:
-      process.env.DEPLOY_TARGET === 'cloudflare' && process.env.ENABLE_R2 !== 'true',
-    description:
-      process.env.DEPLOY_TARGET === 'cloudflare' && process.env.ENABLE_R2 !== 'true'
-        ? 'Requires R2 storage (paid). The public gallery uses curated brand images until R2 is enabled.'
-        : undefined,
   },
   access: {
     read: () => true,
