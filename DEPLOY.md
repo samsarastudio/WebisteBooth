@@ -240,9 +240,13 @@ Copy the archive to another machine or cloud storage.
 cd ~/frameflix
 git pull
 npm ci
+npm run generate:importmap
 npm run build:standalone
+npm run migrate
 pm2 restart frameflix
 ```
+
+After schema changes (new collections or fields), **`npm run migrate`** is required on the Pi — production does not auto-update the SQLite schema.
 
 The Cloudflare Tunnel keeps running — no tunnel restart needed unless you change the hostname or port.
 
@@ -269,6 +273,8 @@ The Cloudflare Tunnel keeps running — no tunnel restart needed unless you chan
 | **502 Bad Gateway** | Tunnel URL must be `localhost:3000` (not `127.0.0.1:3000` in some setups — try both) |
 | Site loads but images broken | Set both URL env vars to `https://inmomentservices.com` and `pm2 restart frameflix` |
 | `/admin` login fails | Confirm `PAYLOAD_SECRET` is set; URLs must match the public domain |
+| **`/admin` shows server error after update** | Run `npm run generate:importmap && npm run migrate && pm2 restart frameflix` |
+| **`/admin` 500 after blog update** | Production DB missing `posts` table — run `npm run migrate` on the Pi |
 | Tunnel not connecting | `sudo systemctl restart cloudflared`; re-check install token in Zero Trust dashboard |
 | Build runs out of memory | Add swap (step 1) or build on a PC and `rsync` the project to the Pi |
 | Leads not emailing | Add `RESEND_API_KEY`; leads still appear in `/admin` → Leads |

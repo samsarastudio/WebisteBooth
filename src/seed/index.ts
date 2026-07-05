@@ -323,41 +323,45 @@ async function syncFaqs(payload: Payload) {
 }
 
 async function syncSiteSettings(payload: Payload) {
-  const current = await payload.findGlobal({ slug: 'site-settings' })
-  const email =
-    !current.email || current.email === 'hello@frameflixstudio.com'
-      ? defaultSiteSettings.email
-      : current.email
+  try {
+    const current = await payload.findGlobal({ slug: 'site-settings' })
+    const email =
+      !current.email || current.email === 'hello@frameflixstudio.com'
+        ? defaultSiteSettings.email
+        : current.email
 
-  await payload.updateGlobal({
-    slug: 'site-settings',
-    data: {
-      email,
-      heroSubtitle: defaultSiteSettings.heroSubtitle,
-      trustBadges: defaultSiteSettings.trustBadges,
-      serviceArea: defaultSiteSettings.serviceArea,
-      showBlogPage:
-        typeof current.showBlogPage === 'boolean'
-          ? current.showBlogPage
-          : defaultSiteSettings.showBlogPage,
-      showBlogPreview:
-        typeof current.showBlogPreview === 'boolean'
-          ? current.showBlogPreview
-          : defaultSiteSettings.showBlogPreview,
-      // Only force testimonials off if still empty / never configured
-      showTestimonials:
-        typeof current.showTestimonials === 'boolean'
-          ? current.showTestimonials
-          : false,
-      showFrameCountOnHome:
-        typeof current.showFrameCountOnHome === 'boolean'
-          ? current.showFrameCountOnHome
-          : false,
-      showPricing:
-        typeof current.showPricing === 'boolean' ? current.showPricing : false,
-      testimonials: current.testimonials?.length ? current.testimonials : [],
-    },
-  })
+    await payload.updateGlobal({
+      slug: 'site-settings',
+      data: {
+        email,
+        heroSubtitle: defaultSiteSettings.heroSubtitle,
+        trustBadges: defaultSiteSettings.trustBadges,
+        serviceArea: defaultSiteSettings.serviceArea,
+        showBlogPage:
+          typeof current.showBlogPage === 'boolean'
+            ? current.showBlogPage
+            : defaultSiteSettings.showBlogPage,
+        showBlogPreview:
+          typeof current.showBlogPreview === 'boolean'
+            ? current.showBlogPreview
+            : defaultSiteSettings.showBlogPreview,
+        showTestimonials:
+          typeof current.showTestimonials === 'boolean'
+            ? current.showTestimonials
+            : false,
+        showFrameCountOnHome:
+          typeof current.showFrameCountOnHome === 'boolean'
+            ? current.showFrameCountOnHome
+            : false,
+        showPricing:
+          typeof current.showPricing === 'boolean' ? current.showPricing : false,
+        testimonials: current.testimonials?.length ? current.testimonials : [],
+      },
+    })
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err)
+    payload.logger.warn(`Site settings sync skipped: ${message}`)
+  }
 }
 
 async function syncPosts(payload: Payload) {
