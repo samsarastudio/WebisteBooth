@@ -3,11 +3,44 @@
 FrameFlix is configured for **Cloudflare Workers** via GitHub, using:
 
 - **OpenNext** (`@opennextjs/cloudflare`) — runs Next.js 16 on Workers
-- **Cloudflare D1** — SQLite database for Payload CMS
-- **Cloudflare R2** — media uploads (gallery/admin images)
+- **Cloudflare D1** — SQLite database for Payload CMS (free tier available)
+- **Optional R2** — admin media/gallery uploads only (paid; not required to launch)
 - **Custom domain** — `frameflix.inmoment.com` (subdomain of inmoment)
 
-> **Plan note:** Payload + Next.js on Workers needs a **paid Workers plan** (bundle size is typically >3 MB). Free tier limits are too small for this app.
+> **Plan note:** Payload + Next.js on Workers typically needs a **paid Workers plan** (bundle size is usually >3 MB on the free tier). D1 has a free tier; R2 does not — but **R2 is optional** for this site (see below).
+
+---
+
+## Free tier: D1 only (no R2)
+
+**R2 is not required** to launch FrameFlix. It is only used if you want to upload new images through `/admin` (Media / Gallery collections).
+
+Without R2, you still get:
+
+- Full marketing site (all pages, animations, brand images from `/public/brand`)
+- Quote builder + lead capture → stored in **D1**
+- Packages, add-ons, FAQs, site settings in **D1**
+- Resend email notifications
+
+**What you skip without R2:**
+
+- Uploading new photos via Payload admin (Gallery / Media)
+- The public gallery still shows curated sample images built into the repo
+
+**Can KV or other free bindings substitute?** No — not for this app:
+
+| Service | Good for | Why not for uploads |
+|---------|----------|---------------------|
+| **D1** | Database (leads, packages, FAQs) | Already used — not for binary files |
+| **KV** | Small config/flags | ~25 MB value limit, no Payload adapter, wrong for images |
+| **Images** | CDN transforms | Separate product; not a Payload upload target |
+| **R2** | Object/file storage | What Payload expects — but paid |
+
+**Minimum bindings to add in Cloudflare:**
+
+1. **D1 database** only — binding name **`D1`**
+
+Do **not** add R2 unless you subscribe later. Leave `ENABLE_R2` unset (or `false`).
 
 ---
 
@@ -28,16 +61,27 @@ Cloudflare will clone the repo and run build + deploy on each push to `main`.
 
 ---
 
-## 2. Create D1 + R2 (first-time setup)
+## 2. Create D1 (required)
 
 When prompted (or in **Workers → frameflix → Settings → Bindings**):
 
 1. **D1 database** — name: `frameflix`  
    - Binding name must be **`D1`** (matches `wrangler.jsonc`)
-2. **R2 bucket** — name: `frameflix-media`  
-   - Binding name must be **`R2`**
+
+**R2 is optional** — skip it on the free tier. Add later if you want admin image uploads (see [Free tier: D1 only](#free-tier-d1-only-no-r2)).
 
 After Cloudflare creates D1, copy the **database ID** into `wrangler.jsonc` if it still shows `REPLACE_WITH_D1_DATABASE_ID`.
+
+---
+
+## 2b. Enable R2 later (optional, paid)
+
+When you add an R2 subscription:
+
+1. Add binding **`R2`** → bucket `frameflix-media`
+2. Uncomment the `r2_buckets` block in `wrangler.jsonc`
+3. Set env var `ENABLE_R2=true`
+4. Redeploy — Media and Gallery collections appear in `/admin`
 
 ---
 
@@ -48,6 +92,7 @@ After Cloudflare creates D1, copy the **database ID** into `wrangler.jsonc` if i
 | Variable | Example | Required |
 |----------|---------|----------|
 | `DEPLOY_TARGET` | `cloudflare` | Yes (set for all envs) |
+| `ENABLE_R2` | `true` | Only if using paid R2 binding |
 | `PAYLOAD_SECRET` | long random string (`openssl rand -hex 32`) | Yes — **encrypt as secret** |
 | `NEXT_PUBLIC_SERVER_URL` | `https://frameflix.inmoment.com` | Yes |
 | `PAYLOAD_PUBLIC_SERVER_URL` | `https://frameflix.inmoment.com` | Yes |
@@ -134,7 +179,7 @@ No Raspberry Pi or ngrok required for this path. See `DEPLOY.md` if you still wa
 |-------|-----|
 | Build fails — bundle too large | Upgrade to **Workers Paid** plan |
 | `D1` binding not found | Ensure binding name is exactly `D1` in dashboard + `wrangler.jsonc` |
-| Admin/media uploads fail | Ensure `R2` bucket binding exists |
+| Admin/media uploads fail | R2 not enabled — expected on free tier; set `ENABLE_R2=true` after adding R2 |
 | Wrong URLs / broken images | Set `NEXT_PUBLIC_SERVER_URL` and redeploy |
 | Migrations fail | Run `migrate:create` locally, commit `src/migrations`, push |
 | Resend emails not sending | Add `RESEND_API_KEY` secret; verify domain in Resend |

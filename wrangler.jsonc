@@ -14,11 +14,8 @@
       "database_name": "frameflix",
       "database_id": "REPLACE_WITH_D1_DATABASE_ID"
     }
-  ],
-  "r2_buckets": [
-    {
-      "binding": "R2",
-      "bucket_name": "frameflix-media"
-    }
   ]
+  // R2 is optional — only needed for admin media/gallery uploads.
+  // Enable later with ENABLE_R2=true and uncomment:
+  // "r2_buckets": [{ "binding": "R2", "bucket_name": "frameflix-media" }]
 }

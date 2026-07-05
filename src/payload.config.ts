@@ -30,6 +30,7 @@ const serverURL =
 
 const cloudflare = isCloudflareDeploy ? await getCloudflareBindings() : null
 const cfEnv = cloudflare ? cloudflareEnv(cloudflare) : null
+const useR2Storage = isCloudflareDeploy && process.env.ENABLE_R2 === 'true' && Boolean(cfEnv?.R2)
 
 export default buildConfig({
   admin: {
@@ -56,7 +57,7 @@ export default buildConfig({
         },
         push: true,
       }),
-  plugins: isCloudflareDeploy
+  plugins: useR2Storage
     ? [
         r2Storage({
           bucket: cfEnv!.R2,
