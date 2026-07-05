@@ -1,6 +1,14 @@
 # Deploy FrameFlix by inmoment
 
-FrameFlix runs as a subdomain of the inmoment main site (e.g. `https://frameflix.inmoment.com`). You can deploy on a Raspberry Pi with ngrok, or on any VPS/reverse proxy pointing at the subdomain.
+**Recommended:** [Cloudflare Workers + GitHub](CLOUDFLARE.md) — `frameflix.inmoment.com`
+
+**Alternative:** Raspberry Pi + ngrok (see below)
+
+FrameFlix runs as a subdomain of the inmoment main site (e.g. `https://frameflix.inmoment.com`). See **CLOUDFLARE.md** for GitHub → Cloudflare Workers setup (D1, R2, custom domain).
+
+---
+
+# Deploy on Raspberry Pi + ngrok (alternative)
 
 ## Requirements
 

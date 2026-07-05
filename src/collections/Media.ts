@@ -12,8 +12,8 @@ export const Media: CollectionConfig = {
       required: true,
     },
   ],
-  upload: {
-    staticDir: 'media',
-    mimeTypes: ['image/*'],
-  },
+  upload:
+    process.env.DEPLOY_TARGET === 'cloudflare'
+      ? { mimeTypes: ['image/*'] }
+      : { staticDir: 'media', mimeTypes: ['image/*'] },
 }

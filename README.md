@@ -1,15 +1,19 @@
-# FrameFlix Studio
+# FrameFlix by inmoment
 
-Lead-generating marketing site for FrameFlix Studio — custom 3D-printed photobooth frames with dye-sublimation prints.
+Lead-generating marketing site for **FrameFlix by inmoment** — custom photobooth frames, sticker studio, and quote builder.
+
+## Deploy
+
+- **Production (recommended):** [Cloudflare Workers + GitHub](CLOUDFLARE.md) → `frameflix.inmoment.com`
+- **Alternative:** Raspberry Pi + ngrok → [DEPLOY.md](./DEPLOY.md)
 
 ## Features
 
-- Premium marketing pages (Home, About, Packages, Gallery, FAQ, Contact)
-- Interactive **quote builder** with packages, add-ons, and live estimate
+- Premium marketing pages (Home, About, Packages, Stickers, Gallery, FAQ, Contact)
+- Interactive **quote builder** with packages, add-ons, and lead capture
 - **Payload CMS** admin at `/admin` for packages, add-ons, leads, gallery, FAQs, and site settings
-- SQLite database + local media (Raspberry Pi friendly)
+- Cloudflare: D1 database + R2 media · Local/Pi: SQLite + filesystem
 - Lead capture with honeypot + rate limiting; optional Resend email alerts
-- Designed for **Pi + ngrok** public access (see [DEPLOY.md](./DEPLOY.md))
 
 ## Quick start (local)
 

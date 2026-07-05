@@ -6,12 +6,17 @@ import { fileURLToPath } from 'url'
 const __filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(__filename)
 
+const isCloudflareDeploy = process.env.DEPLOY_TARGET === 'cloudflare'
+
 const NEXT_PUBLIC_SERVER_URL =
   process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
 
 const nextConfig: NextConfig = {
-  output: 'standalone',
+  ...(isCloudflareDeploy ? {} : { output: 'standalone' }),
   reactStrictMode: true,
+  ...(isCloudflareDeploy
+    ? { serverExternalPackages: ['jose', 'pg-cloudflare'] as string[] }
+    : {}),
   images: {
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920],

@@ -1,0 +1,2 @@
+# Payload D1 migrations for Cloudflare deploys.
+# Generate after schema changes: npm run payload -- migrate:create

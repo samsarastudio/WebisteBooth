@@ -49,3 +49,7 @@ next-env.d.ts
 !/media/.gitkeep
 *.db
 
+# Cloudflare / OpenNext build output
+.open-next/
+.wrangler/
+
