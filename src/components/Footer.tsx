@@ -66,6 +66,13 @@ export default function Footer({
           <div className="text-center sm:text-left">
             <p>© {new Date().getFullYear()} {brand.fullName}. All rights reserved.</p>
             <p className="text-xs mt-1">
+              By using this site you agree to our{' '}
+              <Link href="/privacy" className="nav-link">
+                Privacy Policy
+              </Link>
+              .
+            </p>
+            <p className="text-xs mt-1">
               A service by{' '}
               <a
                 href={brand.parentUrl}

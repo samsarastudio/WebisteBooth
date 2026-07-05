@@ -76,6 +76,7 @@ export interface Config {
     gallery: Gallery;
     faqs: Faq;
     posts: Post;
+    'page-views': PageView;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -92,6 +93,7 @@ export interface Config {
     gallery: GallerySelect<false> | GallerySelect<true>;
     faqs: FaqsSelect<false> | FaqsSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
+    'page-views': PageViewsSelect<false> | PageViewsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -284,11 +286,14 @@ export interface FrameStyle {
   createdAt: string;
 }
 /**
+ * All quote and contact requests. Filter Status = New for your inbox.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "leads".
  */
 export interface Lead {
   id: number;
+  intent?: ('quote' | 'contact') | null;
   serviceType?: ('frames' | 'stickers' | 'both') | null;
   name: string;
   email: string;
@@ -338,8 +343,22 @@ export interface Lead {
    * Total estimate in cents
    */
   estimatedTotal: number;
+  /**
+   * Write your reply to the customer. Check “Send response” and save to email them.
+   */
+  responseMessage?: string | null;
+  sendResponse?: boolean | null;
+  lastRespondedAt?: string | null;
+  /**
+   * Last message sent to the customer.
+   */
+  lastResponsePreview?: string | null;
   status?: ('new' | 'contacted' | 'booked' | 'closed') | null;
+  /**
+   * Internal notes (not emailed to the customer).
+   */
   notes?: string | null;
+  privacyConsentAt?: string | null;
   inquiryId?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -426,6 +445,30 @@ export interface Post {
   createdAt: string;
 }
 /**
+ * First-party page view analytics (anonymous, no PII).
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "page-views".
+ */
+export interface PageView {
+  id: number;
+  path: string;
+  /**
+   * External referrer when available (truncated).
+   */
+  referrer?: string | null;
+  /**
+   * Anonymous session identifier from the browser.
+   */
+  sessionId?: string | null;
+  /**
+   * Truncated browser user agent.
+   */
+  userAgent?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -484,6 +527,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'posts';
         value: number | Post;
+      } | null)
+    | ({
+        relationTo: 'page-views';
+        value: number | PageView;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -642,6 +689,7 @@ export interface FrameStylesSelect<T extends boolean = true> {
  * via the `definition` "leads_select".
  */
 export interface LeadsSelect<T extends boolean = true> {
+  intent?: T;
   serviceType?: T;
   name?: T;
   email?: T;
@@ -670,8 +718,13 @@ export interface LeadsSelect<T extends boolean = true> {
         id?: T;
       };
   estimatedTotal?: T;
+  responseMessage?: T;
+  sendResponse?: T;
+  lastRespondedAt?: T;
+  lastResponsePreview?: T;
   status?: T;
   notes?: T;
+  privacyConsentAt?: T;
   inquiryId?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -723,6 +776,18 @@ export interface PostsSelect<T extends boolean = true> {
   publishedAt?: T;
   metaDescription?: T;
   source?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "page-views_select".
+ */
+export interface PageViewsSelect<T extends boolean = true> {
+  path?: T;
+  referrer?: T;
+  sessionId?: T;
+  userAgent?: T;
   updatedAt?: T;
   createdAt?: T;
 }

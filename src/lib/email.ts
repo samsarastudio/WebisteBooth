@@ -125,3 +125,40 @@ We look forward to helping you give your guests a keepsake they'll love.
 
 /** Alias for older imports */
 export const sendLeadNotification = sendLeadEmails
+
+export async function sendLeadResponseEmail(input: {
+  inquiryId: string
+  name: string
+  email: string
+  message: string
+  intent: 'quote' | 'contact'
+}) {
+  const apiKey = process.env.RESEND_API_KEY
+
+  if (!apiKey) {
+    console.log('Lead response email skipped — missing RESEND_API_KEY:', input.inquiryId)
+    return
+  }
+
+  const resend = new Resend(apiKey)
+  const subjectPrefix =
+    input.intent === 'quote' ? 'Your FrameFlix quote' : 'Re: your FrameFlix inquiry'
+
+  await resend.emails.send({
+    from: fromAddress,
+    to: input.email,
+    replyTo: studioEmail,
+    subject: `${subjectPrefix} (${input.inquiryId})`,
+    text: `
+Hi ${input.name},
+
+${input.message}
+
+Reference: ${input.inquiryId}
+
+Questions? Reply to this email or call us at ${studioPhone}.
+
+— ${brand.fullName}
+`.trim(),
+  })
+}

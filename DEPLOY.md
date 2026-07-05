@@ -216,8 +216,30 @@ pm2 restart frameflix
 
 1. Open **`https://inmomentservices.com/admin`**
 2. Create the first admin account (use a strong password)
-3. Browse **Leads**, **Packages**, **Gallery**, and **Site Settings**
+3. Browse **Inquiries → Leads**, **Analytics → Page Views**, **Packages**, **Gallery**, and **Site Settings**
 4. Upload gallery photos under **Media** → **Gallery**
+
+---
+
+## 6b. Lead inbox & responding to quotes
+
+All quote and contact submissions land in **Inquiries → Leads** in Payload admin.
+
+**Daily workflow:**
+
+1. Open **`https://inmomentservices.com/admin`** → **Inquiries → Leads**
+2. Filter **Status = New** and sort by newest (default)
+3. Open a lead — review package, frame style, add-ons, and the customer message
+4. Write your reply in **Response message**, check **Send response email on save**, then save
+5. Status auto-updates to **Contacted** when a response is sent; add **Notes** and move to **Booked** or **Closed** as follow-up progresses
+
+**Tips:**
+
+- Use the **Intent** column to distinguish **Quote request** vs **Contact message**
+- If `RESEND_API_KEY` is missing, leads still save — response emails are skipped (check PM2 logs)
+- Submit notifications on new leads are unchanged; admin replies use the same Resend integration
+
+**Page analytics:** After visitors accept the site notice, page views are stored in **Analytics → Page Views** (first-party only, no Google Analytics). Filter by path or date to see traffic patterns.
 
 ---
 
@@ -246,7 +268,7 @@ npm run migrate:prod
 pm2 restart frameflix
 ```
 
-After schema changes (new collections or fields), **`npm run migrate`** is required on the Pi — production does not auto-update the SQLite schema.
+After schema changes (new collections or fields such as **Page Views** or lead response fields), run **`npm run migrate:prod`** on the Pi. PM2 startup via `scripts/start-production.mjs` also runs migrations on boot, but run migrate manually after `git pull` if admin lists fail with database errors.
 
 The Cloudflare Tunnel keeps running — no tunnel restart needed unless you change the hostname or port.
 

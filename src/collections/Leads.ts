@@ -1,10 +1,26 @@
 import type { CollectionConfig } from 'payload'
 
+import { leadResponseAfterChange } from './hooks/lead-response'
+
 export const Leads: CollectionConfig = {
   slug: 'leads',
   admin: {
     useAsTitle: 'name',
-    defaultColumns: ['name', 'email', 'eventType', 'eventDate', 'estimatedTotal', 'status', 'createdAt'],
+    group: 'Inquiries',
+    description: 'All quote and contact requests. Filter Status = New for your inbox.',
+    defaultColumns: [
+      'inquiryId',
+      'intent',
+      'name',
+      'eventType',
+      'eventDate',
+      'status',
+      'createdAt',
+    ],
+  },
+  defaultSort: '-createdAt',
+  hooks: {
+    afterChange: [leadResponseAfterChange],
   },
   access: {
     read: ({ req }) => Boolean(req.user),
@@ -13,6 +29,18 @@ export const Leads: CollectionConfig = {
     delete: ({ req }) => Boolean(req.user),
   },
   fields: [
+    {
+      name: 'intent',
+      type: 'select',
+      defaultValue: 'contact',
+      options: [
+        { label: 'Quote request', value: 'quote' },
+        { label: 'Contact message', value: 'contact' },
+      ],
+      admin: {
+        position: 'sidebar',
+      },
+    },
     {
       name: 'serviceType',
       type: 'select',
@@ -165,6 +193,44 @@ export const Leads: CollectionConfig = {
       },
     },
     {
+      type: 'collapsible',
+      label: 'Send reply',
+      admin: {
+        initCollapsed: false,
+      },
+      fields: [
+        {
+          name: 'responseMessage',
+          type: 'textarea',
+          admin: {
+            description: 'Write your reply to the customer. Check “Send response” and save to email them.',
+          },
+        },
+        {
+          name: 'sendResponse',
+          type: 'checkbox',
+          defaultValue: false,
+          label: 'Send response email on save',
+        },
+        {
+          name: 'lastRespondedAt',
+          type: 'date',
+          admin: {
+            readOnly: true,
+            date: { pickerAppearance: 'dayAndTime' },
+          },
+        },
+        {
+          name: 'lastResponsePreview',
+          type: 'textarea',
+          admin: {
+            readOnly: true,
+            description: 'Last message sent to the customer.',
+          },
+        },
+      ],
+    },
+    {
       name: 'status',
       type: 'select',
       defaultValue: 'new',
@@ -183,6 +249,16 @@ export const Leads: CollectionConfig = {
       type: 'textarea',
       admin: {
         position: 'sidebar',
+        description: 'Internal notes (not emailed to the customer).',
+      },
+    },
+    {
+      name: 'privacyConsentAt',
+      type: 'date',
+      admin: {
+        readOnly: true,
+        position: 'sidebar',
+        date: { pickerAppearance: 'dayAndTime' },
       },
     },
     {

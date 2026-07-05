@@ -46,6 +46,7 @@ export async function submitLeadFromFormData(
   }
 
   const intent = String(formData.get('intent') || 'contact')
+  const intentValue = intent === 'quote' ? 'quote' : 'contact'
   const serviceTypeRaw = String(formData.get('serviceType') || 'frames').trim()
   const serviceType =
     serviceTypeRaw === 'stickers' || serviceTypeRaw === 'both' ? serviceTypeRaw : 'frames'
@@ -65,6 +66,14 @@ export async function submitLeadFromFormData(
 
   if (!email.includes('@')) {
     return { ok: false, error: 'Please provide a valid email address.' }
+  }
+
+  const privacyConsent = String(formData.get('privacyConsent') || '').trim()
+  if (privacyConsent !== '1') {
+    return {
+      ok: false,
+      error: 'Please agree to the Privacy Policy to submit your inquiry.',
+    }
   }
 
   let selected: { id: string; quantity: number }[] = []
@@ -138,6 +147,7 @@ export async function submitLeadFromFormData(
     await payload.create({
       collection: 'leads',
       data: {
+        intent: intentValue,
         serviceType,
         name,
         email,
@@ -165,6 +175,7 @@ export async function submitLeadFromFormData(
         estimatedTotal: estimate.total,
         status: 'new',
         inquiryId,
+        privacyConsentAt: new Date().toISOString(),
       },
     })
 

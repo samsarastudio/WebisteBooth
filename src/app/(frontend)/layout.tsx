@@ -5,6 +5,8 @@ import '../globals.css'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import { StickyCta } from '@/components/marketing/StickyCta'
+import { ConsentBanner } from '@/components/marketing/ConsentBanner'
+import { SiteAnalytics } from '@/components/marketing/SiteAnalytics'
 import { getSiteSettings } from '@/lib/payload'
 import { pageTitle, brand } from '@/lib/brand'
 import { navLinks } from '@/lib/visibility'
@@ -98,6 +100,8 @@ export default async function FrontendLayout({
           showQuote={settings.showQuotePage}
         />
         {settings.showQuotePage ? <StickyCta /> : null}
+        <ConsentBanner />
+        <SiteAnalytics />
       </body>
     </html>
   )

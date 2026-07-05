@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useState, type FormEvent } from 'react'
 import { CheckCircle2, Sparkles } from 'lucide-react'
 
@@ -73,6 +74,7 @@ export function ContactForm() {
       <div className="absolute -left-[9999px] opacity-0" aria-hidden="true">
         <label htmlFor="website">Website</label>
         <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
+        <input type="hidden" name="intent" value="contact" />
       </div>
 
       <div className="grid sm:grid-cols-2 gap-5">
@@ -116,6 +118,23 @@ export function ContactForm() {
           {state.error}
         </p>
       )}
+
+      <label className="flex items-start gap-3 text-sm text-text-secondary cursor-pointer">
+        <input
+          type="checkbox"
+          name="privacyConsent"
+          value="1"
+          required
+          className="mt-1 h-4 w-4 rounded border-border accent-accent shrink-0"
+        />
+        <span>
+          I agree to the{' '}
+          <Link href="/privacy" className="text-accent hover:underline font-medium">
+            Privacy Policy
+          </Link>{' '}
+          and consent to being contacted about my inquiry. <ReqStar />
+        </span>
+      </label>
 
       <button type="submit" className="btn-primary w-full justify-center" disabled={pending}>
         {pending ? 'Sending...' : 'Send Message'}

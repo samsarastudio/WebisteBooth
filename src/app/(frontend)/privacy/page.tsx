@@ -19,7 +19,7 @@ export default function PrivacyPage() {
               Legal
             </span>
             <h1 className="text-4xl md:text-5xl mb-3">Privacy Policy</h1>
-            <p className="text-text-secondary text-sm mb-10">Last updated: July 4, 2026</p>
+            <p className="text-text-secondary text-sm mb-10">Last updated: July 5, 2026</p>
           </Reveal>
 
           <Reveal delay={0.05} className="prose-legal space-y-8 text-text-secondary leading-relaxed">
@@ -129,11 +129,24 @@ export default function PrivacyPage() {
             </section>
 
             <section>
-              <h2 className="text-xl font-serif text-text-primary mb-3">8. Cookies & similar technologies</h2>
-              <p>
-                Our site may use essential cookies or similar technologies to operate the service
-                and remember preferences. You can control cookies through your browser settings;
+              <h2 className="text-xl font-serif text-text-primary mb-3">8. Cookies, analytics & consent</h2>
+              <p className="mb-3">
+                Our site uses essential cookies and similar technologies to operate the service and
+                remember your preferences. You can control cookies through your browser settings;
                 disabling some cookies may affect site functionality.
+              </p>
+              <p className="mb-3">
+                We also collect <strong className="text-text-primary">first-party analytics</strong>{' '}
+                to understand which pages are visited and improve the site. This includes the page
+                path, an anonymous session identifier stored in your browser, and optionally a
+                truncated referrer or browser type. We do not use third-party ad trackers, do not
+                sell this data, and do not use it to profile you for advertising.
+              </p>
+              <p className="mb-3">
+                By continuing to use this website after seeing our notice, you agree to this
+                analytics use as described here. When you submit a quote or contact form, you must
+                check a separate consent box allowing us to store your contact details and respond
+                to your inquiry.
               </p>
             </section>
 

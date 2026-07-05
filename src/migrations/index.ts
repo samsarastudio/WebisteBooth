@@ -1,5 +1,6 @@
 import * as migration_20260705_042147_initial from './20260705_042147_initial';
 import * as migration_20260705_051000_add_posts_blog from './20260705_051000_add_posts_blog';
+import * as migration_20260705_014500_analytics_consent_leads from './20260705_014500_analytics_consent_leads';
 
 export const migrations = [
   {
@@ -11,5 +12,10 @@ export const migrations = [
     up: migration_20260705_051000_add_posts_blog.up,
     down: migration_20260705_051000_add_posts_blog.down,
     name: '20260705_051000_add_posts_blog'
+  },
+  {
+    up: migration_20260705_014500_analytics_consent_leads.up,
+    down: migration_20260705_014500_analytics_consent_leads.down,
+    name: '20260705_014500_analytics_consent_leads'
   },
 ];

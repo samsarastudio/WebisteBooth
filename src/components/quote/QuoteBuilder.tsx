@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useMemo, useState, type FormEvent } from 'react'
 import { Check, CheckCircle2, Clock, Minus, Plus, Sparkles } from 'lucide-react'
 
@@ -515,6 +516,26 @@ export function QuoteBuilder({
                 {state.error}
               </p>
             )}
+
+            <label className="flex items-start gap-3 text-sm text-text-secondary cursor-pointer">
+              <input
+                type="checkbox"
+                name="privacyConsent"
+                value="1"
+                required
+                className="mt-1 h-4 w-4 rounded border-border accent-accent shrink-0"
+              />
+              <span>
+                I agree to the{' '}
+                <Link href="/privacy" className="text-accent hover:underline font-medium">
+                  Privacy Policy
+                </Link>{' '}
+                and consent to being contacted about my inquiry.{' '}
+                <span className="text-accent font-semibold" aria-hidden="true">
+                  *
+                </span>
+              </span>
+            </label>
 
             <button type="submit" className="btn-primary w-full justify-center" disabled={pending}>
               {pending ? 'Sending...' : 'Get my quote'}
