@@ -1,4 +1,4 @@
-import { cpSync, existsSync, mkdirSync } from 'fs'
+import { cpSync, existsSync, mkdirSync, readdirSync } from 'fs'
 import { join } from 'path'
 
 const standalone = '.next/standalone'
@@ -10,4 +10,50 @@ if (!existsSync(standalone)) {
 cpSync('public', join(standalone, 'public'), { recursive: true })
 mkdirSync(join(standalone, '.next'), { recursive: true })
 cpSync(join('.next', 'static'), join(standalone, '.next', 'static'), { recursive: true })
-console.log('Copied public/ and .next/static into standalone output')
+
+/** Copy native modules that Next standalone tracing often omits (breaks sharp on Pi). */
+function copyPackage(name, fromDir = 'node_modules', toDir = join(standalone, 'node_modules')) {
+  const src = join(fromDir, name)
+  if (!existsSync(src)) return false
+
+  const dest = join(toDir, name)
+  mkdirSync(toDir, { recursive: true })
+  cpSync(src, dest, { recursive: true })
+  return true
+}
+
+function copySharpDeps() {
+  const destModules = join(standalone, 'node_modules')
+  const copied = []
+
+  if (copyPackage('sharp', 'node_modules', destModules)) {
+    copied.push('sharp')
+  }
+
+  const imgScope = join('node_modules', '@img')
+  if (existsSync(imgScope)) {
+    const destImg = join(destModules, '@img')
+    mkdirSync(destImg, { recursive: true })
+
+    for (const pkg of readdirSync(imgScope)) {
+      if (!pkg.startsWith('sharp') && pkg !== 'colour') continue
+      cpSync(join(imgScope, pkg), join(destImg, pkg), { recursive: true })
+      copied.push(`@img/${pkg}`)
+    }
+  }
+
+  for (const dep of ['detect-libc', 'semver']) {
+    if (copyPackage(dep, 'node_modules', destModules)) {
+      copied.push(dep)
+    }
+  }
+
+  if (copied.length > 0) {
+    console.log(`Copied into standalone: ${copied.join(', ')}`)
+  } else {
+    console.warn('Warning: sharp was not found in node_modules — image processing may fail in production')
+  }
+}
+
+copySharpDeps()
+console.log('Copied public/, .next/static, and native deps into standalone output')

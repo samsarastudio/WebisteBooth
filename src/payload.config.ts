@@ -1,8 +1,8 @@
 import { sqliteAdapter } from '@payloadcms/db-sqlite'
 import path from 'path'
-import sharp from 'sharp'
 import { fileURLToPath } from 'url'
 
+import { loadSharp } from './lib/sharp-loader'
 import { buildSharedPayloadConfig } from './payload.config.shared'
 import { seedIfEmpty } from './seed'
 
@@ -18,7 +18,7 @@ export default buildSharedPayloadConfig({
     push: process.env.NODE_ENV !== 'production',
     migrationDir: path.resolve(dirname, 'migrations'),
   }),
-  sharp,
+  sharp: loadSharp(),
   onInit: async (payload) => {
     await seedIfEmpty(payload)
   },

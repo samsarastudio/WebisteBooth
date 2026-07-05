@@ -27,6 +27,7 @@ function loadEnv(filePath) {
 }
 
 const dotenv = loadEnv(path.join(__dirname, '.env'))
+const sharpPath = path.join(__dirname, '.next', 'standalone', 'node_modules', 'sharp')
 
 module.exports = {
   apps: [
@@ -43,6 +44,7 @@ module.exports = {
         NODE_ENV: 'production',
         PORT: 3000,
         HOSTNAME: '0.0.0.0',
+        ...(fs.existsSync(sharpPath) ? { NEXT_SHARP_PATH: sharpPath } : {}),
         ...dotenv,
       },
     },
