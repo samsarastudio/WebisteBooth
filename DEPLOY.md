@@ -275,6 +275,7 @@ The Cloudflare Tunnel keeps running — no tunnel restart needed unless you chan
 | `/admin` login fails | Confirm `PAYLOAD_SECRET` is set; URLs must match the public domain |
 | **`/admin` shows server error after update** | Run `npm run generate:importmap && npm run migrate:prod && pm2 restart frameflix` |
 | **`/admin` 500 after blog update** | Production DB missing `posts` table — run `npm run migrate:prod` on the Pi (or restart PM2; startup now auto-migrates) |
+| **SQLite `frameflix.db: 14` (can't open)** | Run `mkdir -p data media`, then `pm2 delete frameflix && pm2 start ecosystem.config.cjs`. Ensure `data/` is writable. |
 | Tunnel not connecting | `sudo systemctl restart cloudflared`; re-check install token in Zero Trust dashboard |
 | Build runs out of memory | Add swap (step 1) or build on a PC and `rsync` the project to the Pi |
 | Leads not emailing | Add `RESEND_API_KEY`; leads still appear in `/admin` → Leads |

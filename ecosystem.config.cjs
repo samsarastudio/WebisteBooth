@@ -46,6 +46,7 @@ module.exports = {
         NODE_ENV: 'production',
         PORT: 3000,
         HOSTNAME: '0.0.0.0',
+        FRAMEFLIX_ROOT: __dirname,
         ...(fs.existsSync(sharpPath) ? { NEXT_SHARP_PATH: sharpPath } : {}),
         ...dotenv,
         // Always use an absolute DB path in production so standalone cwd never breaks SQLite.
