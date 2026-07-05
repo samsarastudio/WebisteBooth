@@ -1,57 +1,92 @@
-import Link from "next/link";
+import Link from 'next/link'
 
+import { BrandLogoLink } from '@/components/BrandLogo'
+import { brand } from '@/lib/brand'
 
-export default function Footer() {
+export default function Footer({
+  email = brand.email,
+  serviceArea = 'Kitchener, Cambridge, Waterloo, Guelph & beyond',
+  links = [],
+  showQuote = true,
+}: {
+  email?: string
+  serviceArea?: string
+  links?: { href: string; label: string }[]
+  showQuote?: boolean
+}) {
+  const pages = [{ href: '/', label: 'Home' }, ...links]
+  if (showQuote) pages.push({ href: '/quote', label: 'Get a Quote' })
+
   return (
-    <footer className="border-t border-border bg-bg-secondary/50">
-      <div className="max-w-6xl mx-auto px-6 py-12">
-        <div className="grid md:grid-cols-4 gap-8 mb-10">
-          {/* Brand */}
-          <div className="md:col-span-2">
-            <h3 className="text-lg font-serif font-semibold mb-3">FrameFlix Studio</h3>
-            <p className="text-text-secondary text-sm max-w-xs leading-relaxed">
-              Custom photobooth souvenirs that last forever. 3D-printed frames with dye-sublimation prints for your most memorable moments.
-            </p>
-            <div className="flex gap-4 mt-5">
-              <a href="https://instagram.com/frameflix.studio" target="_blank" rel="noopener" className="text-text-secondary hover:text-accent transition-colors">
-                <Instagram size={20} />
-              </a>
-              <a href="#" className="text-text-secondary hover:text-accent transition-colors">
-                <Facebook size={20} />
-              </a>
-            </div>
+    <footer className="border-t border-border bg-bg-secondary mt-auto">
+      <div className="container-wide py-14 grid md:grid-cols-3 gap-10">
+        <div>
+          <div className="mb-4">
+            <BrandLogoLink size="sm" />
           </div>
-
-          {/* Links */}
-          <div>
-            <h4 className="font-semibold text-sm mb-3 uppercase tracking-wider text-text-secondary">Pages</h4>
-            <div className="flex flex-col gap-2">
-              {["Home", "About", "Packages", "Gallery", "FAQ", "Contact"].map((p) => (
-                <Link key={p} href={p === "Home" ? "/" : `/${p.toLowerCase()}`} className="text-sm text-text-secondary hover:text-accent transition-colors">
-                  {p}
-                </Link>
-              ))}
-            </div>
-          </div>
-
-          {/* Contact */}
-          <div>
-            <h4 className="font-semibold text-sm mb-3 uppercase tracking-wider text-text-secondary">Contact</h4>
-            <div className="flex flex-col gap-2 text-sm text-text-secondary">
-              <span>hello@frameflixstudio.com</span>
-              <span>Serving GTA & surroundings</span>
-            </div>
-          </div>
+          <p className="text-text-secondary text-sm leading-relaxed max-w-sm">
+            Personalized photo frames and on-site custom stickers — keepsakes your guests will
+            actually keep.
+          </p>
         </div>
 
-        <div className="border-t border-border pt-6 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-text-secondary">
-          <span>© 2026 FrameFlix Studio. All rights reserved.</span>
-          <div className="flex gap-4">
-            <Link href="/contact" className="hover:text-accent transition-colors">Privacy Policy</Link>
-            <Link href="/faq" className="hover:text-accent transition-colors">Terms of Service</Link>
+        <div>
+          <h4 className="font-medium mb-4 text-sm uppercase tracking-wide text-text-secondary">
+            Pages
+          </h4>
+          <ul className="space-y-2">
+            {pages.map((p) => (
+              <li key={p.href}>
+                <Link href={p.href} className="nav-link text-sm">
+                  {p.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <h4 className="font-medium mb-4 text-sm uppercase tracking-wide text-text-secondary">
+            Contact
+          </h4>
+          <a href={`mailto:${email}`} className="nav-link text-sm block mb-2">
+            {email}
+          </a>
+          <p className="text-text-secondary text-sm">{serviceArea}</p>
+          {showQuote && (
+            <Link href="/quote" className="btn-primary mt-6 !py-2.5 !px-5 text-sm">
+              Get a Quote
+            </Link>
+          )}
+        </div>
+      </div>
+
+      <div className="border-t border-border">
+        <div className="container-wide py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-text-secondary">
+          <div className="text-center sm:text-left">
+            <p>© {new Date().getFullYear()} {brand.fullName}. All rights reserved.</p>
+            <p className="text-xs mt-1">
+              A service by{' '}
+              <a
+                href={brand.parentUrl}
+                className="nav-link"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {brand.parentName}
+              </a>
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-4 justify-center sm:justify-end">
+            <Link href="/privacy" className="nav-link text-sm">
+              Privacy Policy
+            </Link>
+            <Link href="/disclaimer" className="nav-link text-sm">
+              Disclaimer
+            </Link>
           </div>
         </div>
       </div>
     </footer>
-  );
+  )
 }

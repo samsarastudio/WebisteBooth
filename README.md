@@ -1,36 +1,47 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# FrameFlix Studio
 
-## Getting Started
+Lead-generating marketing site for FrameFlix Studio — custom 3D-printed photobooth frames with dye-sublimation prints.
 
-First, run the development server:
+## Features
+
+- Premium marketing pages (Home, About, Packages, Gallery, FAQ, Contact)
+- Interactive **quote builder** with packages, add-ons, and live estimate
+- **Payload CMS** admin at `/admin` for packages, add-ons, leads, gallery, FAQs, and site settings
+- SQLite database + local media (Raspberry Pi friendly)
+- Lead capture with honeypot + rate limiting; optional Resend email alerts
+- Designed for **Pi + ngrok** public access (see [DEPLOY.md](./DEPLOY.md))
+
+## Quick start (local)
 
 ```bash
+cp .env.example .env
+npm install
+mkdir -p data media
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Site: [http://localhost:3000](http://localhost:3000)
+- Admin: [http://localhost:3000/admin](http://localhost:3000/admin) (create first user on first visit)
+- Quote builder: [http://localhost:3000/quote](http://localhost:3000/quote)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Default packages, add-ons, FAQs, and site settings seed automatically on first boot.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Scripts
 
-## Learn More
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Development server |
+| `npm run build` | Production build (standalone) |
+| `npm start` | Start on `0.0.0.0:3000` |
+| `npm run generate:types` | Regenerate Payload types |
+| `npm run generate:importmap` | Regenerate admin import map |
 
-To learn more about Next.js, take a look at the following resources:
+## Stack
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Next.js 16, React 19, Tailwind CSS 4
+- Payload CMS 3 + SQLite
+- Motion, Lucide, Resend
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Deploy
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+See [DEPLOY.md](./DEPLOY.md) for Raspberry Pi + PM2 + ngrok instructions.

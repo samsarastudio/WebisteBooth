@@ -1,24 +1,41 @@
 {
-  "name": "mmh-site",
+  "name": "frameflix-site",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
+    "dev": "cross-env NODE_OPTIONS=--no-deprecation next dev",
+    "build": "cross-env NODE_OPTIONS=--no-deprecation next build && node scripts/postbuild.mjs",
+    "start": "cross-env NODE_OPTIONS=--no-deprecation HOSTNAME=0.0.0.0 PORT=3000 node .next/standalone/server.js",
+    "start:next": "cross-env NODE_OPTIONS=--no-deprecation next start -H 0.0.0.0 -p 3000",
+    "lint": "eslint",
+    "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
+    "generate:types": "cross-env NODE_OPTIONS=--no-deprecation payload generate:types",
+    "generate:importmap": "cross-env NODE_OPTIONS=--no-deprecation payload generate:importmap"
   },
   "dependencies": {
+    "@payloadcms/db-sqlite": "^3.85.2",
+    "@payloadcms/drizzle": "^3.85.2",
+    "@payloadcms/next": "^3.85.2",
+    "@payloadcms/richtext-lexical": "^3.85.2",
+    "@payloadcms/ui": "^3.85.2",
+    "graphql": "^16.8.1",
     "lucide-react": "^1.23.0",
+    "motion": "^12.42.2",
     "next": "16.2.10",
+    "payload": "^3.85.2",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "resend": "^6.17.1",
+    "sharp": "^0.35.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "cross-env": "^10.1.0",
+    "dotenv": "^17.4.2",
     "eslint": "^9",
     "eslint-config-next": "16.2.10",
     "tailwindcss": "^4",
