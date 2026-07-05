@@ -4,6 +4,20 @@
   "name": "frameflix",
   "compatibility_date": "2025-08-15",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  // Upload OpenNext output as modules without re-parsing the prebundled handler (avoids esbuild
+  // errors on node:sqlite polyfills and dynamic import attributes in handler.mjs).
+  "find_additional_modules": true,
+  "base_dir": ".open-next",
+  "rules": [
+    {
+      "type": "ESModule",
+      "globs": ["**/*.mjs", "**/*.js"],
+      "fallthrough": true
+    }
+  ],
+  "alias": {
+    "sqlite": "./scripts/stubs/sqlite-stub.mjs"
+  },
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS"

@@ -10,7 +10,7 @@
     "postinstall": "node scripts/patch-opennext-env.mjs",
     "build:cloudflare": "node scripts/patch-opennext-env.mjs && cross-env NODE_OPTIONS=--no-deprecation DEPLOY_TARGET=cloudflare opennextjs-cloudflare build",
     "typecheck:cloudflare": "cross-env DEPLOY_TARGET=cloudflare tsc --noEmit",
-    "deploy:cloudflare": "cross-env NODE_OPTIONS=--no-deprecation DEPLOY_TARGET=cloudflare NODE_ENV=production payload migrate && wrangler deploy",
+    "deploy:cloudflare": "cross-env NODE_OPTIONS=--no-deprecation DEPLOY_TARGET=cloudflare NODE_ENV=production payload migrate && cross-env WRANGLER_BUILD_CONDITIONS= WRANGLER_BUILD_PLATFORM=node opennextjs-cloudflare deploy",
     "preview:cloudflare": "cross-env NODE_OPTIONS=--no-deprecation DEPLOY_TARGET=cloudflare opennextjs-cloudflare build && opennextjs-cloudflare preview",
     "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
     "start": "cross-env NODE_OPTIONS=--no-deprecation HOSTNAME=0.0.0.0 PORT=3000 node .next/standalone/server.js",

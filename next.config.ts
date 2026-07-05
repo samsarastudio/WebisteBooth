@@ -8,23 +8,30 @@ const dirname = path.dirname(__filename)
 
 const isCloudflareDeploy = process.env.DEPLOY_TARGET === 'cloudflare'
 
+const cloudflarePayloadConfig = path.resolve(dirname, 'src/payload.config.cloudflare.ts')
+
 const NEXT_PUBLIC_SERVER_URL =
   process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
+
+const cloudflareExternalPackages = [
+  'jose',
+  'pg-cloudflare',
+  '@payloadcms/db-d1-sqlite',
+  '@payloadcms/drizzle/sqlite',
+  '@libsql/isomorphic-ws',
+  '@libsql/client',
+  'drizzle-kit',
+  '@payloadcms/drizzle',
+  '@payloadcms/db-sqlite',
+  'sharp',
+] as string[]
 
 const nextConfig: NextConfig = {
   ...(isCloudflareDeploy ? {} : { output: 'standalone' }),
   reactStrictMode: true,
   ...(isCloudflareDeploy
     ? {
-        serverExternalPackages: [
-          'jose',
-          'pg-cloudflare',
-          '@payloadcms/db-d1-sqlite',
-          'drizzle-kit',
-          '@payloadcms/drizzle',
-          '@payloadcms/db-sqlite',
-          'sharp',
-        ] as string[],
+        serverExternalPackages: cloudflareExternalPackages,
       }
     : {}),
   images: {
@@ -56,10 +63,23 @@ const nextConfig: NextConfig = {
       '.js': ['.ts', '.tsx', '.js', '.jsx'],
       '.mjs': ['.mts', '.mjs'],
     }
+    if (isCloudflareDeploy) {
+      webpackConfig.resolve.alias = {
+        ...webpackConfig.resolve.alias,
+        '@payload-config': cloudflarePayloadConfig,
+      }
+    }
     return webpackConfig
   },
   turbopack: {
     root: path.resolve(dirname),
+    ...(isCloudflareDeploy
+      ? {
+          resolveAlias: {
+            '@payload-config': cloudflarePayloadConfig,
+          },
+        }
+      : {}),
   },
 }
 
