@@ -15,7 +15,16 @@ const nextConfig: NextConfig = {
   ...(isCloudflareDeploy ? {} : { output: 'standalone' }),
   reactStrictMode: true,
   ...(isCloudflareDeploy
-    ? { serverExternalPackages: ['jose', 'pg-cloudflare'] as string[] }
+    ? {
+        serverExternalPackages: [
+          'jose',
+          'pg-cloudflare',
+          'drizzle-kit',
+          '@payloadcms/drizzle',
+          '@payloadcms/db-sqlite',
+          'sharp',
+        ] as string[],
+      }
     : {}),
   images: {
     formats: ['image/avif', 'image/webp'],
