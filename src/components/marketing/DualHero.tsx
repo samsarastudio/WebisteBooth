@@ -19,7 +19,7 @@ export function DualHero({
   const reduce = useReducedMotion()
 
   return (
-    <section className="relative min-h-[100svh] flex items-center overflow-hidden wave-bg">
+    <section className="relative min-h-[calc(100svh-4rem)] md:min-h-[calc(100svh-4.5rem)] flex flex-col justify-start overflow-hidden wave-bg">
       <div className="absolute inset-0 motif-overlay animate-wave opacity-40" />
       <div className="absolute inset-0 bg-gradient-to-b from-bg-primary/50 via-transparent to-bg-primary" />
 

@@ -102,5 +102,22 @@ export const FrameStyles: CollectionConfig = {
       type: 'number',
       defaultValue: 0,
     },
+    {
+      name: 'template',
+      type: 'relationship',
+      relationTo: 'frame-templates',
+      admin: {
+        description: 'Optional default canvas template for the configurator.',
+      },
+    },
+    {
+      name: 'defaultOrnaments',
+      type: 'relationship',
+      relationTo: 'frame-ornaments',
+      hasMany: true,
+      admin: {
+        description: 'Ornaments applied when this style preset is chosen.',
+      },
+    },
   ],
 }

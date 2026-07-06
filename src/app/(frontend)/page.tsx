@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { Sparkles } from 'lucide-react'
 
 import { DualHero } from '@/components/marketing/DualHero'
+import { EventOrganisersSection } from '@/components/marketing/EventOrganisersSection'
 import { IllustrativeDisclaimer } from '@/components/marketing/IllustrativeDisclaimer'
 import { PackageCards } from '@/components/marketing/PackageCards'
 import { BlogCardCompact } from '@/components/marketing/BlogCard'
@@ -87,7 +88,11 @@ export default async function HomePage() {
               </p>
               <IllustrativeDisclaimer />
             </Reveal>
-            <StyleSlider styles={frameStyles} showQuote={settings.showQuotePage} />
+            <StyleSlider
+              styles={frameStyles}
+              showQuote={settings.showQuotePage}
+              showDesign={settings.showDesignPage}
+            />
           </div>
         </section>
       )}
@@ -192,6 +197,15 @@ export default async function HomePage() {
             />
           </div>
         </section>
+      )}
+
+      {settings.showEventOrganisersSection && (
+        <EventOrganisersSection
+          title={settings.eventOrganisersTitle}
+          body={settings.eventOrganisersBody}
+          contactHref="/contact"
+          quoteHref={settings.showQuotePage ? '/quote?service=both' : '/contact'}
+        />
       )}
 
       {settings.showLifestyleBanner && (
@@ -318,7 +332,7 @@ export default async function HomePage() {
                   Pick a style, add your names — proposal within 24 hours.
                 </p>
                 <p className="text-sm font-medium text-accent-hover mb-8">
-                  3 hours of coverage · online photos for 3 months
+                  3 hours of coverage · online photos up to 1 year on Premium
                 </p>
                 <Link href={quoteHref} className="btn-primary">
                   Get Your Proposal

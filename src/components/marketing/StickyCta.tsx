@@ -1,11 +1,13 @@
 'use client'
 
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { Sparkles } from 'lucide-react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { useEffect, useState } from 'react'
 
 export function StickyCta() {
+  const pathname = usePathname()
   const [visible, setVisible] = useState(false)
   const reduce = useReducedMotion()
 
@@ -15,6 +17,8 @@ export function StickyCta() {
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
+
+  if (pathname === '/quote') return null
 
   return (
     <AnimatePresence>

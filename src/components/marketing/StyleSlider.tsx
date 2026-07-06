@@ -12,9 +12,11 @@ import { variationsForStyle } from '@/lib/brand-images'
 export function StyleSlider({
   styles,
   showQuote = true,
+  showDesign = true,
 }: {
   styles: FrameStyleData[]
   showQuote?: boolean
+  showDesign?: boolean
 }) {
   const [styleIndex, setStyleIndex] = useState(0)
   const [varIndex, setVarIndex] = useState(0)
@@ -166,15 +168,26 @@ export function StyleSlider({
           ))}
         </div>
 
-        {showQuote && (
-          <Link
-            href={`/quote?style=${style.slug}`}
-            className="btn-primary mt-6 w-full sm:w-auto justify-center"
-          >
-            Choose this style
-            <Sparkles size={16} />
-          </Link>
-        )}
+        <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start mt-6">
+          {showDesign && (
+            <Link
+              href={`/design?style=${style.slug}`}
+              className="btn-primary w-full sm:w-auto justify-center"
+            >
+              Design your frame
+              <Sparkles size={16} />
+            </Link>
+          )}
+          {showQuote && (
+            <Link
+              href={`/quote?style=${style.slug}`}
+              className={`${showDesign ? 'btn-secondary' : 'btn-primary'} w-full sm:w-auto justify-center`}
+            >
+              Choose this style
+              <Sparkles size={16} />
+            </Link>
+          )}
+        </div>
       </div>
     </div>
   )

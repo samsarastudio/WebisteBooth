@@ -4,7 +4,20 @@ import { Check, Clock, Sparkles } from 'lucide-react'
 import type { PricedPackage } from '@/lib/pricing'
 
 const HOURS_HINT = '3 hours coverage (excluding setup time)'
-const ONLINE_HINT = 'Online photos — 3 months access'
+
+function onlineHintForPackage(slug: string): string | null {
+  if (slug === 'premium') return 'Online photos — up to 1 year'
+  if (slug === 'signature' || slug === 'enterprise') return null
+  return 'Online photos — 3 months access'
+}
+
+function onlineFootnoteForPackage(slug: string): string | null {
+  if (slug === 'premium') return 'Extended retention plans available'
+  if (slug === 'signature' || slug === 'enterprise') {
+    return 'Custom online access — contact us to plan your event'
+  }
+  return null
+}
 
 function hasHoursFeature(pkg: PricedPackage) {
   return pkg.features.some(
@@ -15,7 +28,12 @@ function hasHoursFeature(pkg: PricedPackage) {
 }
 
 function isFrameQuantityLine(text: string) {
-  return /\d+\s*(custom\s*)?(photo\s*)?frames?/i.test(text) || /20-pack/i.test(text) || /custom guest frame/i.test(text) || /custom frame count/i.test(text)
+  return (
+    /\d+\s*(custom\s*)?(photo\s*)?frames?/i.test(text) ||
+    /20-pack/i.test(text) ||
+    /custom guest frame/i.test(text) ||
+    /custom frame count/i.test(text)
+  )
 }
 
 export function PackageCards({
@@ -38,6 +56,9 @@ export function PackageCards({
           pkg.slug === 'signature' ||
           pkg.slug === 'enterprise' ||
           (pkg.priceRange || '').toLowerCase().includes('custom')
+
+        const onlineHint = onlineHintForPackage(pkg.slug)
+        const onlineFootnote = onlineFootnoteForPackage(pkg.slug)
 
         const features = (hasHoursFeature(pkg) || isCustomTier
           ? pkg.features
@@ -78,7 +99,12 @@ export function PackageCards({
               {!isCustomTier && (
                 <p className="text-xs font-medium text-text-secondary">{HOURS_HINT}</p>
               )}
-              <p className="text-xs font-medium text-text-secondary">{ONLINE_HINT}</p>
+              {onlineHint ? (
+                <p className="text-xs font-medium text-text-secondary">{onlineHint}</p>
+              ) : null}
+              {onlineFootnote ? (
+                <p className="text-[11px] text-text-secondary/90">{onlineFootnote}</p>
+              ) : null}
             </div>
             <p className="text-text-secondary text-sm mb-6 leading-relaxed">{pkg.description}</p>
 
@@ -97,7 +123,7 @@ export function PackageCards({
               href={`${ctaHref}?package=${pkg.slug}`}
               className={pkg.popular ? 'btn-primary justify-center' : 'btn-secondary justify-center'}
             >
-              Request a quote
+              {isCustomTier ? 'Contact us' : 'Request a quote'}
               <Sparkles size={16} />
             </Link>
           </article>

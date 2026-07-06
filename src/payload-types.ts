@@ -72,6 +72,10 @@ export interface Config {
     packages: Package;
     addons: Addon;
     'frame-styles': FrameStyle;
+    'frame-templates': FrameTemplate;
+    'frame-ornaments': FrameOrnament;
+    'frame-designs': FrameDesign;
+    designers: Designer;
     leads: Lead;
     gallery: Gallery;
     faqs: Faq;
@@ -89,6 +93,10 @@ export interface Config {
     packages: PackagesSelect<false> | PackagesSelect<true>;
     addons: AddonsSelect<false> | AddonsSelect<true>;
     'frame-styles': FrameStylesSelect<false> | FrameStylesSelect<true>;
+    'frame-templates': FrameTemplatesSelect<false> | FrameTemplatesSelect<true>;
+    'frame-ornaments': FrameOrnamentsSelect<false> | FrameOrnamentsSelect<true>;
+    'frame-designs': FrameDesignsSelect<false> | FrameDesignsSelect<true>;
+    designers: DesignersSelect<false> | DesignersSelect<true>;
     leads: LeadsSelect<false> | LeadsSelect<true>;
     gallery: GallerySelect<false> | GallerySelect<true>;
     faqs: FaqsSelect<false> | FaqsSelect<true>;
@@ -282,6 +290,136 @@ export interface FrameStyle {
   }[];
   active?: boolean | null;
   sortOrder?: number | null;
+  /**
+   * Optional default canvas template for the configurator.
+   */
+  template?: (number | null) | FrameTemplate;
+  /**
+   * Ornaments applied when this style preset is chosen.
+   */
+  defaultOrnaments?: (number | FrameOrnament)[] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Canvas layouts for the frame configurator (photo slot, caption zone).
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "frame-templates".
+ */
+export interface FrameTemplate {
+  id: number;
+  name: string;
+  slug: string;
+  format: '6x4' | 'original';
+  canvasWidth: number;
+  canvasHeight: number;
+  photoSlot: {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  };
+  /**
+   * Optional bottom caption text area.
+   */
+  captionZone?: {
+    x?: number | null;
+    y?: number | null;
+    width?: number | null;
+    height?: number | null;
+  };
+  borderRadius?: number | null;
+  /**
+   * Optional PNG overlay path e.g. /brand/style-romance.png
+   */
+  borderImagePath?: string | null;
+  active?: boolean | null;
+  sortOrder?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Decorative assets for the frame configurator.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "frame-ornaments".
+ */
+export interface FrameOrnament {
+  id: number;
+  name: string;
+  slug: string;
+  category: 'corner' | 'floral' | 'geometric' | 'seasonal';
+  finish: 'raised3d' | 'sticker';
+  kind: 'image' | 'shape';
+  /**
+   * Public path for image ornaments e.g. /brand/motif-banner.png
+   */
+  assetPath?: string | null;
+  image?: (number | null) | Media;
+  shapeType?:
+    | (
+        | 'heart'
+        | 'star'
+        | 'circle'
+        | 'diamond'
+        | 'flourish'
+        | 'arc'
+        | 'tulip'
+        | 'bird-mail'
+        | 'envelope'
+        | 'vine-scroll'
+        | 'vine-corner'
+        | 'floral-cluster'
+        | 'rose-bud'
+        | 'leaf-sprig'
+      )
+    | null;
+  tags?:
+    | {
+        tag?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  active?: boolean | null;
+  sortOrder?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Visitor frame designs saved from /design.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "frame-designs".
+ */
+export interface FrameDesign {
+  id: number;
+  designToken: string;
+  /**
+   * Visitor email from design studio sign-in.
+   */
+  designerEmail?: string | null;
+  /**
+   * Friendly snapshot label for admin.
+   */
+  label?: string | null;
+  lastSavedAt?: string | null;
+  state:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  previewImage?: (number | null) | Media;
+  /**
+   * Guest sample photo uploaded during design.
+   */
+  photoMedia?: (number | null) | Media;
+  status?: ('draft' | 'submitted') | null;
+  lead?: (number | null) | Lead;
   updatedAt: string;
   createdAt: string;
 }
@@ -317,13 +455,33 @@ export interface Lead {
    */
   frameStyleColors?: string | null;
   /**
-   * Polaroid (classic) or 4×6 (premium size)
+   * Keepsake frame size at time of order
    */
-  frameFormat?: ('polaroid' | '4x6') | null;
+  frameFormat?: ('6x4' | 'original') | null;
   /**
    * Snapshot label for emails
    */
   frameFormatLabel?: string | null;
+  /**
+   * Linked design from /design configurator.
+   */
+  frameDesign?: (number | null) | FrameDesign;
+  /**
+   * Snapshot of configurator state at submit time.
+   */
+  frameConfig?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Preview PNG from the configurator.
+   */
+  designPreview?: (number | null) | Media;
   /**
    * Package base price in cents at submit time
    */
@@ -360,6 +518,20 @@ export interface Lead {
   notes?: string | null;
   privacyConsentAt?: string | null;
   inquiryId?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Visitors who signed in to the frame design studio.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "designers".
+ */
+export interface Designer {
+  id: number;
+  email: string;
+  firstSeenAt: string;
+  lastSeenAt: string;
   updatedAt: string;
   createdAt: string;
 }
@@ -511,6 +683,22 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'frame-styles';
         value: number | FrameStyle;
+      } | null)
+    | ({
+        relationTo: 'frame-templates';
+        value: number | FrameTemplate;
+      } | null)
+    | ({
+        relationTo: 'frame-ornaments';
+        value: number | FrameOrnament;
+      } | null)
+    | ({
+        relationTo: 'frame-designs';
+        value: number | FrameDesign;
+      } | null)
+    | ({
+        relationTo: 'designers';
+        value: number | Designer;
       } | null)
     | ({
         relationTo: 'leads';
@@ -681,6 +869,93 @@ export interface FrameStylesSelect<T extends boolean = true> {
       };
   active?: T;
   sortOrder?: T;
+  template?: T;
+  defaultOrnaments?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "frame-templates_select".
+ */
+export interface FrameTemplatesSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
+  format?: T;
+  canvasWidth?: T;
+  canvasHeight?: T;
+  photoSlot?:
+    | T
+    | {
+        x?: T;
+        y?: T;
+        width?: T;
+        height?: T;
+      };
+  captionZone?:
+    | T
+    | {
+        x?: T;
+        y?: T;
+        width?: T;
+        height?: T;
+      };
+  borderRadius?: T;
+  borderImagePath?: T;
+  active?: T;
+  sortOrder?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "frame-ornaments_select".
+ */
+export interface FrameOrnamentsSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
+  category?: T;
+  finish?: T;
+  kind?: T;
+  assetPath?: T;
+  image?: T;
+  shapeType?: T;
+  tags?:
+    | T
+    | {
+        tag?: T;
+        id?: T;
+      };
+  active?: T;
+  sortOrder?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "frame-designs_select".
+ */
+export interface FrameDesignsSelect<T extends boolean = true> {
+  designToken?: T;
+  designerEmail?: T;
+  label?: T;
+  lastSavedAt?: T;
+  state?: T;
+  previewImage?: T;
+  photoMedia?: T;
+  status?: T;
+  lead?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "designers_select".
+ */
+export interface DesignersSelect<T extends boolean = true> {
+  email?: T;
+  firstSeenAt?: T;
+  lastSeenAt?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -705,6 +980,9 @@ export interface LeadsSelect<T extends boolean = true> {
   frameStyleColors?: T;
   frameFormat?: T;
   frameFormatLabel?: T;
+  frameDesign?: T;
+  frameConfig?: T;
+  designPreview?: T;
   packagePrice?: T;
   selectedAddOns?:
     | T
@@ -871,11 +1149,15 @@ export interface SiteSetting {
   showFaqPage?: boolean | null;
   showContactPage?: boolean | null;
   showQuotePage?: boolean | null;
+  showDesignPage?: boolean | null;
   showTrustBar?: boolean | null;
   showStylesSection?: boolean | null;
   showProductStory?: boolean | null;
   showHowItWorks?: boolean | null;
   showPackagesSection?: boolean | null;
+  showEventOrganisersSection?: boolean | null;
+  eventOrganisersTitle?: string | null;
+  eventOrganisersBody?: string | null;
   showLifestyleBanner?: boolean | null;
   showGalleryPreview?: boolean | null;
   showBlogPreview?: boolean | null;
@@ -928,11 +1210,15 @@ export interface SiteSettingsSelect<T extends boolean = true> {
   showFaqPage?: T;
   showContactPage?: T;
   showQuotePage?: T;
+  showDesignPage?: T;
   showTrustBar?: T;
   showStylesSection?: T;
   showProductStory?: T;
   showHowItWorks?: T;
   showPackagesSection?: T;
+  showEventOrganisersSection?: T;
+  eventOrganisersTitle?: T;
+  eventOrganisersBody?: T;
   showLifestyleBanner?: T;
   showGalleryPreview?: T;
   showBlogPreview?: T;

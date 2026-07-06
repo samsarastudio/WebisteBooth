@@ -4,7 +4,9 @@ import type { Post } from '@/payload-types'
 import {
   defaultAddOns,
   defaultFaqs,
+  defaultFrameOrnaments,
   defaultFrameStyles,
+  defaultFrameTemplates,
   defaultPackages,
   defaultPosts,
   defaultSiteSettings,
@@ -21,6 +23,8 @@ export async function seedIfEmpty(payload: Payload) {
       await syncPackages(payload)
       await syncAddOns(payload)
       await syncFrameStyles(payload)
+      await syncFrameTemplates(payload)
+      await syncFrameOrnaments(payload)
       await syncFaqs(payload)
       await syncPosts(payload)
       await syncSiteSettings(payload)
@@ -59,6 +63,22 @@ async function runSeed(payload: Payload) {
       await payload.create({ collection: 'frame-styles', data: style })
     }
     payload.logger.info('Seeded frame styles')
+  }
+
+  const templates = await payload.count({ collection: 'frame-templates' })
+  if (templates.totalDocs === 0) {
+    for (const template of defaultFrameTemplates) {
+      await payload.create({ collection: 'frame-templates', data: template })
+    }
+    payload.logger.info('Seeded frame templates')
+  }
+
+  const ornaments = await payload.count({ collection: 'frame-ornaments' })
+  if (ornaments.totalDocs === 0) {
+    for (const ornament of defaultFrameOrnaments) {
+      await payload.create({ collection: 'frame-ornaments', data: ornament })
+    }
+    payload.logger.info('Seeded frame ornaments')
   }
 
   const faqs = await payload.count({ collection: 'faqs' })
@@ -280,6 +300,80 @@ async function syncFrameStyles(payload: Payload) {
   }
 }
 
+async function syncFrameTemplates(payload: Payload) {
+  for (const def of defaultFrameTemplates) {
+    const found = await payload.find({
+      collection: 'frame-templates',
+      where: { slug: { equals: def.slug } },
+      limit: 1,
+    })
+    if (found.totalDocs === 0) {
+      await payload.create({ collection: 'frame-templates', data: def })
+      payload.logger.info(`Added frame template: ${def.name}`)
+    } else {
+      await payload.update({
+        collection: 'frame-templates',
+        id: found.docs[0].id,
+        data: def,
+      })
+    }
+  }
+
+  const legacySlugs = ['polaroid-classic', 'polaroid-soft', 'frame-4x6-classic']
+  for (const slug of legacySlugs) {
+    const found = await payload.find({
+      collection: 'frame-templates',
+      where: { slug: { equals: slug } },
+      limit: 1,
+    })
+    if (found.docs[0]) {
+      await payload.update({
+        collection: 'frame-templates',
+        id: found.docs[0].id,
+        data: { active: false, format: 'original' },
+      })
+    }
+  }
+}
+
+async function syncFrameOrnaments(payload: Payload) {
+  const validSlugs = new Set(defaultFrameOrnaments.map((d) => d.slug))
+
+  for (const def of defaultFrameOrnaments) {
+    const found = await payload.find({
+      collection: 'frame-ornaments',
+      where: { slug: { equals: def.slug } },
+      limit: 1,
+    })
+    if (found.totalDocs === 0) {
+      await payload.create({ collection: 'frame-ornaments', data: def })
+      payload.logger.info(`Added frame ornament: ${def.name}`)
+    } else {
+      await payload.update({
+        collection: 'frame-ornaments',
+        id: found.docs[0].id,
+        data: def,
+      })
+    }
+  }
+
+  const extras = await payload.find({
+    collection: 'frame-ornaments',
+    limit: 100,
+    depth: 0,
+  })
+  for (const doc of extras.docs) {
+    if (!validSlugs.has(doc.slug)) {
+      await payload.update({
+        collection: 'frame-ornaments',
+        id: doc.id,
+        data: { active: false },
+      })
+      payload.logger.info(`Retired frame ornament: ${doc.name}`)
+    }
+  }
+}
+
 async function syncFaqs(payload: Payload) {
   // Retire old GTA travel FAQ title if present
   const oldTravel = await payload.find({
@@ -345,6 +439,10 @@ async function syncSiteSettings(payload: Payload) {
           typeof current.showBlogPreview === 'boolean'
             ? current.showBlogPreview
             : defaultSiteSettings.showBlogPreview,
+        showDesignPage:
+          typeof current.showDesignPage === 'boolean'
+            ? current.showDesignPage
+            : defaultSiteSettings.showDesignPage,
         showTestimonials:
           typeof current.showTestimonials === 'boolean'
             ? current.showTestimonials

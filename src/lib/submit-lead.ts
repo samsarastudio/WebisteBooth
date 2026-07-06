@@ -3,6 +3,8 @@ import { getPayloadClient } from '@/lib/payload'
 import { calculateEstimate, type PricingUnit } from '@/lib/pricing'
 import { sendLeadEmails } from '@/lib/email'
 import { rateLimit } from '@/lib/rate-limit'
+import { getFrameDesignByToken, linkDesignToLead } from '@/lib/frame-design/save-design'
+import type { FrameDesignState } from '@/lib/frame-design/types'
 
 type HeaderStore = {
   get(name: string): string | null
@@ -36,9 +38,12 @@ export async function submitLeadFromFormData(
   const message = String(formData.get('message') || '').trim()
   const packageId = String(formData.get('packageId') || '').trim()
   const frameStyleId = String(formData.get('frameStyleId') || '').trim()
-  const frameFormatRaw = String(formData.get('frameFormat') || 'polaroid').trim()
-  const frameFormat = frameFormatRaw === '4x6' ? '4x6' : 'polaroid'
-  const frameFormatLabel = frameFormat === '4x6' ? '4×6 frame (premium size)' : 'Polaroid style'
+  const designToken = String(formData.get('designToken') || '').trim()
+  const frameFormatRaw = String(formData.get('frameFormat') || '6x4').trim()
+  const frameFormat =
+    frameFormatRaw === 'original' || frameFormatRaw === 'polaroid' ? 'original' : '6x4'
+  const frameFormatLabel =
+    frameFormat === 'original' ? 'Original keepsake frame' : '6×4 landscape frame'
   const selectedRaw = String(formData.get('selectedAddOns') || '[]')
 
   if (!name || !email || !phone || !eventType || !eventDate) {
@@ -56,11 +61,8 @@ export async function submitLeadFromFormData(
     if (!packageId) {
       return { ok: false, error: 'Please choose a package.' }
     }
-    if (!frameStyleId) {
-      return { ok: false, error: 'Please choose a frame style.' }
-    }
-    if (!frameFormatRaw) {
-      return { ok: false, error: 'Please choose a frame format.' }
+    if (!frameStyleId && !designToken) {
+      return { ok: false, error: 'Please choose a frame style or complete the design studio.' }
     }
   }
 
@@ -86,6 +88,24 @@ export async function submitLeadFromFormData(
   try {
     const payload = await getPayloadClient()
 
+    let savedDesign = designToken ? await getFrameDesignByToken(designToken) : null
+    let designState = savedDesign?.state as FrameDesignState | undefined
+    let resolvedFrameStyleId = frameStyleId
+    let resolvedFrameFormat = frameFormat
+    let resolvedFrameFormatLabel = frameFormatLabel
+
+    if (designState) {
+      if (designState.stylePresetId) resolvedFrameStyleId = designState.stylePresetId
+      if (designState.format) {
+        resolvedFrameFormat =
+          designState.format === 'original' ? 'original' : '6x4'
+        resolvedFrameFormatLabel =
+          resolvedFrameFormat === 'original'
+            ? 'Original keepsake frame'
+            : '6×4 landscape frame'
+      }
+    }
+
     const [packages, addons, styles] = await Promise.all([
       payload.find({
         collection: 'packages',
@@ -102,13 +122,13 @@ export async function submitLeadFromFormData(
       payload.find({
         collection: 'frame-styles',
         where: { active: { equals: true } },
-        limit: 4,
+        limit: 10,
         depth: 0,
       }),
     ])
 
     const pkg = packages.docs.find((p) => String(p.id) === packageId) || null
-    const style = styles.docs.find((s) => String(s.id) === frameStyleId) || null
+    const style = styles.docs.find((s) => String(s.id) === resolvedFrameStyleId) || null
     const styleColors =
       style?.plaColors
         ?.slice(0, 4)
@@ -144,7 +164,12 @@ export async function submitLeadFromFormData(
 
     const inquiryId = `FF-${Date.now()}`
 
-    await payload.create({
+    const previewMedia =
+      savedDesign?.previewImage && typeof savedDesign.previewImage === 'object'
+        ? savedDesign.previewImage
+        : null
+
+    const createdLead = await payload.create({
       collection: 'leads',
       data: {
         intent: intentValue,
@@ -162,8 +187,11 @@ export async function submitLeadFromFormData(
         frameStyle: style?.id ?? undefined,
         frameStyleName: style?.name,
         frameStyleColors: styleColors,
-        frameFormat,
-        frameFormatLabel,
+        frameFormat: resolvedFrameFormat as '6x4' | 'original',
+        frameFormatLabel: resolvedFrameFormatLabel,
+        frameDesign: savedDesign?.id ?? undefined,
+        frameConfig: designState ?? undefined,
+        designPreview: previewMedia?.id ?? undefined,
         selectedAddOns: estimate.addOnLines.map((line) => ({
           addonId: String(line.id),
           name: line.name,
@@ -179,6 +207,15 @@ export async function submitLeadFromFormData(
       },
     })
 
+    if (designToken && createdLead.id) {
+      await linkDesignToLead(designToken, Number(createdLead.id))
+    }
+
+    const designPreviewUrl =
+      previewMedia && 'url' in previewMedia && previewMedia.url
+        ? previewMedia.url
+        : undefined
+
     const serviceLabel =
       serviceType === 'stickers'
         ? 'Sticker Studio'
@@ -186,28 +223,34 @@ export async function submitLeadFromFormData(
           ? 'Frames + Stickers'
           : 'Custom Frames'
 
-    await sendLeadEmails({
-      inquiryId,
-      name,
-      email,
-      phone,
-      eventType,
-      eventDate,
-      guestCount,
-      message,
-      serviceLabel,
-      packageName: pkg?.name,
-      priceRange: pkg?.priceRange || (wantsFrames ? 'Custom quote' : undefined),
-      frameSummary: pkg?.frameSummary || undefined,
-      frameStyleName: style?.name,
-      frameStyleColors: styleColors,
-      frameFormatLabel: wantsFrames ? frameFormatLabel : undefined,
-      addOnLines: estimate.addOnLines.map((line) => ({
-        name: line.name,
-        quantity: line.quantity,
-        pricingUnit: line.pricingUnit,
-      })),
-    })
+    try {
+      await sendLeadEmails({
+        inquiryId,
+        name,
+        email,
+        phone,
+        eventType,
+        eventDate,
+        guestCount,
+        message,
+        serviceLabel,
+        packageName: pkg?.name,
+        priceRange: pkg?.priceRange || (wantsFrames ? 'Custom quote' : undefined),
+        frameSummary: pkg?.frameSummary || undefined,
+        frameStyleName: style?.name,
+        frameStyleColors: styleColors,
+        frameFormatLabel: wantsFrames ? resolvedFrameFormatLabel : undefined,
+        hasFrameDesign: Boolean(savedDesign),
+        designPreviewUrl,
+        addOnLines: estimate.addOnLines.map((line) => ({
+          name: line.name,
+          quantity: line.quantity,
+          pricingUnit: line.pricingUnit,
+        })),
+      })
+    } catch (err) {
+      console.error('Lead notification emails failed:', inquiryId, err)
+    }
 
     return { ok: true, inquiryId }
   } catch (err) {

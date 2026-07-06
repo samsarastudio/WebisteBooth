@@ -118,6 +118,12 @@ export const SiteSettings: GlobalConfig = {
               defaultValue: true,
               label: 'Show Quote page',
             },
+            {
+              name: 'showDesignPage',
+              type: 'checkbox',
+              defaultValue: true,
+              label: 'Show Design Studio page',
+            },
           ],
         },
         {
@@ -152,6 +158,29 @@ export const SiteSettings: GlobalConfig = {
               type: 'checkbox',
               defaultValue: true,
               label: 'Show packages section',
+            },
+            {
+              name: 'showEventOrganisersSection',
+              type: 'checkbox',
+              defaultValue: true,
+              label: 'Show event organisers section',
+            },
+            {
+              name: 'eventOrganisersTitle',
+              type: 'text',
+              defaultValue: 'We would love to be part of your success stories',
+              admin: {
+                condition: (_, siblingData) => siblingData?.showEventOrganisersSection,
+              },
+            },
+            {
+              name: 'eventOrganisersBody',
+              type: 'textarea',
+              defaultValue:
+                'Partner with FrameFlix for weddings, corporate activations, and milestone events — branded keepsakes your guests share long after the night ends.',
+              admin: {
+                condition: (_, siblingData) => siblingData?.showEventOrganisersSection,
+              },
             },
             {
               name: 'showLifestyleBanner',

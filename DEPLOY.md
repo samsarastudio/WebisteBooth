@@ -221,6 +221,20 @@ pm2 restart frameflix
 
 ---
 
+## 6c. Design Studio (`/design`)
+
+Visitors can design frames before requesting a quote:
+
+1. **Design Studio** at **`https://inmomentservices.com/design`**
+2. Upload a sample photo, pick colors/text/ornaments, save design
+3. Continue to **Quote** — design JSON + preview PNG attach to the Lead in admin
+
+**Admin:** **Design Studio → Frame Designs** for saved drafts; **Inquiries → Leads** shows linked design, config JSON, and preview image.
+
+Toggle visibility via **Site Settings → Show Design Studio page**.
+
+---
+
 ## 6b. Lead inbox & responding to quotes
 
 All quote and contact submissions land in **Inquiries → Leads** in Payload admin.

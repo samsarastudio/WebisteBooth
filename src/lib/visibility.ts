@@ -7,6 +7,7 @@ export type PageKey =
   | 'faq'
   | 'contact'
   | 'quote'
+  | 'design'
   | 'stickers'
   | 'blog'
 
@@ -24,6 +25,8 @@ export function isPageEnabled(settings: SiteSettingsData, page: PageKey): boolea
       return settings.showContactPage
     case 'quote':
       return settings.showQuotePage
+    case 'design':
+      return settings.showDesignPage
     case 'stickers':
       return settings.showStickersPage
     case 'blog':
@@ -45,6 +48,7 @@ export function navLinks(settings: SiteSettingsData) {
   if (settings.showStickersPage) links.push({ href: '/stickers', label: 'Stickers' })
   if (settings.showGalleryPage) links.push({ href: '/gallery', label: 'Gallery' })
   if (settings.showBlogPage) links.push({ href: '/blog', label: 'Blog' })
+  if (settings.showDesignPage) links.push({ href: '/design', label: 'Design Studio' })
   if (settings.showFaqPage) links.push({ href: '/faq', label: 'FAQ' })
   if (settings.showContactPage) links.push({ href: '/contact', label: 'Contact' })
   return links

@@ -6,14 +6,14 @@ export const frameOffering = {
   eyebrow: 'Guest keepsakes',
   headline: 'Personalized photo frames',
   summary:
-    'Translucent frames with your guests’ photos — Polaroid or 4×6, raised 3D or stickered & painted finishes.',
+    'Translucent 6×4 landscape frames with your guests’ photos — raised 3D or stickered & painted finishes.',
   href: '/packages',
   quoteHref: '/quote?service=frames',
   highlights: [
     'Attendant included',
     '3 hours of coverage',
-    'Polaroid or 4×6',
-    'Online photos for 3 months',
+    '6×4 landscape keepsakes',
+    'Online photos up to 1 year (Premium)',
   ],
 }
 

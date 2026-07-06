@@ -268,6 +268,7 @@ export async function getSiteSettings(): Promise<SiteSettingsData> {
       showFaqPage: bool(settings.showFaqPage, defaultSiteSettings.showFaqPage),
       showContactPage: bool(settings.showContactPage, defaultSiteSettings.showContactPage),
       showQuotePage: bool(settings.showQuotePage, defaultSiteSettings.showQuotePage),
+      showDesignPage: bool(settings.showDesignPage, defaultSiteSettings.showDesignPage),
       showTrustBar: bool(settings.showTrustBar, defaultSiteSettings.showTrustBar),
       showStylesSection: bool(settings.showStylesSection, defaultSiteSettings.showStylesSection),
       showProductStory: bool(settings.showProductStory, defaultSiteSettings.showProductStory),
@@ -276,6 +277,14 @@ export async function getSiteSettings(): Promise<SiteSettingsData> {
         settings.showPackagesSection,
         defaultSiteSettings.showPackagesSection,
       ),
+      showEventOrganisersSection: bool(
+        settings.showEventOrganisersSection,
+        defaultSiteSettings.showEventOrganisersSection,
+      ),
+      eventOrganisersTitle:
+        settings.eventOrganisersTitle || defaultSiteSettings.eventOrganisersTitle,
+      eventOrganisersBody:
+        settings.eventOrganisersBody || defaultSiteSettings.eventOrganisersBody,
       showLifestyleBanner: bool(
         settings.showLifestyleBanner,
         defaultSiteSettings.showLifestyleBanner,

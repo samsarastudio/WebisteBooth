@@ -16,6 +16,8 @@ type LeadEmailPayload = {
   frameStyleName?: string | null
   frameStyleColors?: string | null
   frameFormatLabel?: string | null
+  designPreviewUrl?: string | null
+  hasFrameDesign?: boolean
   addOnLines: {
     name: string
     quantity: number
@@ -52,7 +54,7 @@ Format: ${lead.frameFormatLabel || '—'}
 Colors: ${lead.frameStyleColors || '—'}
 Add-ons:
 ${lines || '• None selected'}
-
+${lead.hasFrameDesign ? '\nFrame design: Customer attached a configurator design (see admin for preview).\n' : ''}${lead.designPreviewUrl ? `Design preview: ${lead.designPreviewUrl}\n` : ''}
 Event: ${lead.eventType}
 Date: ${lead.eventDate}
 Guests: ${lead.guestCount || '—'}

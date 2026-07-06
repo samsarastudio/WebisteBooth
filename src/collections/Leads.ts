@@ -127,11 +127,12 @@ export const Leads: CollectionConfig = {
       name: 'frameFormat',
       type: 'select',
       options: [
-        { label: 'Polaroid style', value: 'polaroid' },
-        { label: '4×6 frame', value: '4x6' },
+        { label: '6×4 landscape frame', value: '6x4' },
+        { label: 'Original keepsake frame', value: 'original' },
       ],
+      defaultValue: '6x4',
       admin: {
-        description: 'Polaroid (classic) or 4×6 (premium size)',
+        description: 'Keepsake frame size at time of order',
       },
     },
     {
@@ -140,6 +141,38 @@ export const Leads: CollectionConfig = {
       admin: {
         description: 'Snapshot label for emails',
       },
+    },
+    {
+      type: 'collapsible',
+      label: 'Frame design',
+      admin: {
+        initCollapsed: true,
+      },
+      fields: [
+        {
+          name: 'frameDesign',
+          type: 'relationship',
+          relationTo: 'frame-designs',
+          admin: {
+            description: 'Linked design from /design configurator.',
+          },
+        },
+        {
+          name: 'frameConfig',
+          type: 'json',
+          admin: {
+            description: 'Snapshot of configurator state at submit time.',
+          },
+        },
+        {
+          name: 'designPreview',
+          type: 'upload',
+          relationTo: 'media',
+          admin: {
+            description: 'Preview PNG from the configurator.',
+          },
+        },
+      ],
     },
     {
       name: 'packagePrice',

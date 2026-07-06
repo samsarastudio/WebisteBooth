@@ -6,6 +6,7 @@ import { Clock, Sparkles } from 'lucide-react'
 import { brandImages } from '@/lib/brand-images'
 import { getActiveAddOns, getActivePackages } from '@/lib/payload'
 import { PackageCards } from '@/components/marketing/PackageCards'
+import { EventOrganisersSection } from '@/components/marketing/EventOrganisersSection'
 import { Reveal, Stagger, StaggerItem } from '@/components/marketing/Reveal'
 import { guardPage } from '@/lib/page-guard'
 
@@ -50,6 +51,15 @@ export default async function PackagesPage() {
           <PackageCards packages={packages} showPricing={settings.showPricing} />
         </div>
       </section>
+
+      {settings.showEventOrganisersSection && (
+        <EventOrganisersSection
+          title={settings.eventOrganisersTitle}
+          body={settings.eventOrganisersBody}
+          contactHref="/contact"
+          quoteHref={settings.showQuotePage ? '/quote?service=both' : '/contact'}
+        />
+      )}
 
       <section className="section bg-bg-secondary/50">
         <div className="container-wide grid lg:grid-cols-2 gap-8 items-center">

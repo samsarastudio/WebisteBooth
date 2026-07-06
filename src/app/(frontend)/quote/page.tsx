@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 }
 
 type Props = {
-  searchParams: Promise<{ package?: string; style?: string; service?: string }>
+  searchParams: Promise<{ package?: string; style?: string; service?: string; design?: string }>
 }
 
 export default async function QuotePage({ searchParams }: Props) {
@@ -55,6 +55,7 @@ export default async function QuotePage({ searchParams }: Props) {
             initialPackageSlug={params.package}
             initialStyleSlug={params.style}
             initialService={service}
+            initialDesignToken={params.design}
             showPricing={settings.showPricing}
           />
         </div>
