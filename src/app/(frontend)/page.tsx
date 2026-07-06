@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { Sparkles } from 'lucide-react'
 
 import { DualHero } from '@/components/marketing/DualHero'
+import { DesignStudioSection } from '@/components/marketing/DesignStudioSection'
 import { EventOrganisersSection } from '@/components/marketing/EventOrganisersSection'
 import { IllustrativeDisclaimer } from '@/components/marketing/IllustrativeDisclaimer'
 import { PackageCards } from '@/components/marketing/PackageCards'
@@ -95,6 +96,13 @@ export default async function HomePage() {
             />
           </div>
         </section>
+      )}
+
+      {settings.showDesignPage && (
+        <DesignStudioSection
+          designHref="/design"
+          quoteHref={settings.showQuotePage ? '/quote?service=frames' : '/contact'}
+        />
       )}
 
       {settings.showProductStory && (
