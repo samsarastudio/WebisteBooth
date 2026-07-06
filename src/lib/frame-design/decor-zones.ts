@@ -1,3 +1,5 @@
+import type { FrameOrnamentData, OrnamentLayer } from '@/lib/frame-design/types'
+
 export type ZoneRect = { x: number; y: number; width: number; height: number }
 
 export function getDecorZones(
@@ -106,14 +108,94 @@ export function clampToDecorZones(
   return { x: photoSlot.x - halfSize - 4, y: photoSlot.y / 2 }
 }
 
+export function clampToCanvas(
+  x: number,
+  y: number,
+  halfSize: number,
+  canvasWidth: number,
+  canvasHeight: number,
+  edgePad = 4,
+): { x: number; y: number } {
+  const pad = edgePad + halfSize
+  return {
+    x: Math.min(Math.max(x, pad), canvasWidth - pad),
+    y: Math.min(Math.max(y, pad), canvasHeight - pad),
+  }
+}
+
+const FLORAL_SHAPES = new Set([
+  'tulip',
+  'bird-mail',
+  'envelope',
+  'vine-scroll',
+  'vine-corner',
+  'floral-cluster',
+  'rose-bud',
+  'leaf-sprig',
+  'flourish',
+])
+
+export function getOrnamentHalfSize(ornament: FrameOrnamentData | undefined, scale = 1) {
+  const baseSize =
+    ornament?.finish === 'sticker'
+      ? 56
+      : FLORAL_SHAPES.has(ornament?.shapeType || '')
+        ? 48
+        : 40
+  return (baseSize * scale) / 2
+}
+
+export function clampOrnamentPosition(
+  x: number,
+  y: number,
+  halfSize: number,
+  zones: ZoneRect[],
+  photoSlot: ZoneRect,
+  canvasWidth: number,
+  canvasHeight: number,
+): { x: number; y: number } {
+  const inDecor = clampToDecorZones(x, y, halfSize, zones, photoSlot)
+  return clampToCanvas(inDecor.x, inDecor.y, halfSize, canvasWidth, canvasHeight)
+}
+
+export function normalizeOrnamentLayer(
+  layer: OrnamentLayer,
+  ornament: FrameOrnamentData | undefined,
+  zones: ZoneRect[],
+  photoSlot: ZoneRect,
+  canvasWidth: number,
+  canvasHeight: number,
+): OrnamentLayer {
+  const half = getOrnamentHalfSize(ornament, layer.scale)
+  const pos = clampOrnamentPosition(
+    layer.x,
+    layer.y,
+    half,
+    zones,
+    photoSlot,
+    canvasWidth,
+    canvasHeight,
+  )
+  return { ...layer, x: pos.x, y: pos.y }
+}
+
 export function spawnOrnamentPosition(
   zones: ZoneRect[],
   photoSlot: ZoneRect,
   canvasWidth: number,
+  canvasHeight: number,
 ): { x: number; y: number } {
   const top = zones.find((z) => z.y === 0 && z.height <= photoSlot.y + 4)
-  if (top) return { x: top.x + Math.min(48, top.width * 0.12), y: top.y + top.height / 2 }
+  if (top) {
+    const x = top.x + Math.min(48, top.width * 0.12)
+    const y = top.y + top.height / 2
+    return clampToCanvas(x, y, 28, canvasWidth, canvasHeight)
+  }
   const side = zones.find((z) => z.width < photoSlot.width * 0.5)
-  if (side) return { x: side.x + side.width / 2, y: side.y + side.height * 0.25 }
-  return { x: canvasWidth * 0.1, y: photoSlot.y / 2 }
+  if (side) {
+    const x = side.x + side.width / 2
+    const y = side.y + side.height * 0.25
+    return clampToCanvas(x, y, 28, canvasWidth, canvasHeight)
+  }
+  return clampToCanvas(canvasWidth * 0.1, photoSlot.y / 2, 28, canvasWidth, canvasHeight)
 }

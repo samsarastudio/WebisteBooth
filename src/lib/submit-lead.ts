@@ -88,8 +88,8 @@ export async function submitLeadFromFormData(
   try {
     const payload = await getPayloadClient()
 
-    let savedDesign = designToken ? await getFrameDesignByToken(designToken) : null
-    let designState = savedDesign?.state as FrameDesignState | undefined
+    const savedDesign = designToken ? await getFrameDesignByToken(designToken) : null
+    const designState = savedDesign?.state as FrameDesignState | undefined
     let resolvedFrameStyleId = frameStyleId
     let resolvedFrameFormat = frameFormat
     let resolvedFrameFormatLabel = frameFormatLabel

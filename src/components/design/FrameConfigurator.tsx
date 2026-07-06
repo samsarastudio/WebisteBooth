@@ -7,6 +7,7 @@ import { Loader2, ArrowRight } from 'lucide-react'
 
 import { DesignCanvas } from '@/components/design/DesignCanvas'
 import { DesignToolbar, type DesignPanel } from '@/components/design/DesignToolbar'
+import { ResetDesignDialog } from '@/components/design/ResetDesignDialog'
 import { PalettePanel } from '@/components/design/PalettePanel'
 import { TextPanel } from '@/components/design/TextPanel'
 import { OrnamentPanel } from '@/components/design/OrnamentPanel'
@@ -24,7 +25,13 @@ import {
   getPalette,
   type ColorPaletteId,
 } from '@/lib/frame-design/color-palettes'
-import { getDecorZones, spawnOrnamentPosition } from '@/lib/frame-design/decor-zones'
+import {
+  clampOrnamentPosition,
+  getDecorZones,
+  getOrnamentHalfSize,
+  spawnOrnamentPosition,
+} from '@/lib/frame-design/decor-zones'
+import { applyOrnamentTemplate } from '@/lib/frame-design/ornament-templates'
 import {
   formatDisplayLabel,
   getFrameLayout,
@@ -92,6 +99,7 @@ export function FrameConfigurator({
   const [ornamentTab, setOrnamentTab] = useState<'raised3d' | 'sticker'>('raised3d')
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [designToken, setDesignToken] = useState(initialDesignToken || '')
+  const [resetOpen, setResetOpen] = useState(false)
   const [uploading, setUploading] = useState(false)
   const [saving, setSaving] = useState(false)
   const [autosaveStatus, setAutosaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle')
@@ -392,7 +400,22 @@ export function FrameConfigurator({
       layout.photoSlot,
       layout.captionZone,
     )
-    const spawn = spawnOrnamentPosition(zones, layout.photoSlot, layout.canvasWidth)
+    const spawn = spawnOrnamentPosition(
+      zones,
+      layout.photoSlot,
+      layout.canvasWidth,
+      layout.canvasHeight,
+    )
+    const half = getOrnamentHalfSize(ornament, 1)
+    const placed = clampOrnamentPosition(
+      spawn.x,
+      spawn.y,
+      half,
+      zones,
+      layout.photoSlot,
+      layout.canvasWidth,
+      layout.canvasHeight,
+    )
     setState((prev) => ({
       ...prev,
       ornaments: [
@@ -400,8 +423,8 @@ export function FrameConfigurator({
         {
           id,
           assetId: String(ornament.id),
-          x: spawn.x,
-          y: spawn.y,
+          x: placed.x,
+          y: placed.y,
           scale: 1,
           rotation: 0,
           zIndex: prev.ornaments.length + 1,
@@ -411,10 +434,58 @@ export function FrameConfigurator({
     setSelectedId(id)
   }
 
+  function applyTemplate(templateId: string) {
+    const layout = getFrameLayout(
+      design.format,
+      design.shapeVariant || 'classic',
+      activeBase.layoutProfile,
+    )
+    const template = applyOrnamentTemplate(templateId, layout, ornaments)
+    if (template.length === 0) return
+
+    const finish = templateId.startsWith('sticker') ? 'sticker' : 'raised3d'
+    setState((prev) => ({
+      ...prev,
+      ornaments: [
+        ...prev.ornaments.filter((layer) => {
+          const orn = ornaments.find((o) => String(o.id) === layer.assetId)
+          return orn?.finish !== finish
+        }),
+        ...template,
+      ],
+    }))
+    setSelectedId(null)
+  }
+
+  function confirmResetDesign() {
+    const baseId = (design.baseId || 'original-romance') as FrameBaseId
+    const fresh = buildFrameFromBase(baseId, ornaments, stylePresets)
+    setState(fresh)
+    setDesignToken('')
+    setSelectedId(null)
+    setError(null)
+    setSaveNotice(null)
+    setAutosaveStatus('idle')
+    setActivePanel('photo')
+    try {
+      sessionStorage.removeItem(designStorageKey(designToken || undefined))
+      sessionStorage.removeItem(designStorageKey())
+    } catch {
+      // ignore
+    }
+    setResetOpen(false)
+  }
+
   const formatLabel = formatDisplayLabel(design.format)
 
   return (
-    <div className="grid lg:grid-cols-[240px_1fr_280px] gap-6">
+    <>
+      <ResetDesignDialog
+        open={resetOpen}
+        onCancel={() => setResetOpen(false)}
+        onConfirm={confirmResetDesign}
+      />
+      <div className="grid lg:grid-cols-[240px_1fr_280px] gap-6">
       <aside className="space-y-4 order-2 lg:order-1">
         <div className="card p-4 space-y-3">
           <h3 className="font-serif text-lg">Size</h3>
@@ -458,6 +529,7 @@ export function FrameConfigurator({
           onRedo={redo}
           canUndo={canUndo}
           canRedo={canRedo}
+          onReset={() => setResetOpen(true)}
         />
 
         <div className="card p-4 md:p-6">
@@ -592,9 +664,11 @@ export function FrameConfigurator({
             activeTab={ornamentTab}
             onTabChange={setOrnamentTab}
             onAdd={addOrnament}
+            onApplyTemplate={applyTemplate}
           />
         ) : null}
       </aside>
     </div>
+    </>
   )
 }

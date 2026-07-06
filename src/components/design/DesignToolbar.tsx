@@ -1,6 +1,6 @@
 'use client'
 
-import { Undo2, Redo2, Type, Palette, Sparkles, ImagePlus } from 'lucide-react'
+import { Undo2, Redo2, Type, Palette, Sparkles, ImagePlus, RotateCcw } from 'lucide-react'
 
 export type DesignPanel = 'photo' | 'style' | 'colors' | 'text' | 'ornaments'
 
@@ -11,6 +11,7 @@ export function DesignToolbar({
   onRedo,
   canUndo,
   canRedo,
+  onReset,
 }: {
   activePanel: DesignPanel
   onPanelChange: (panel: DesignPanel) => void
@@ -18,6 +19,7 @@ export function DesignToolbar({
   onRedo: () => void
   canUndo: boolean
   canRedo: boolean
+  onReset: () => void
 }) {
   const items: { id: DesignPanel; label: string; icon: React.ReactNode }[] = [
     { id: 'photo', label: 'Photo', icon: <ImagePlus size={16} /> },
@@ -66,6 +68,15 @@ export function DesignToolbar({
           </button>
         ))}
       </div>
+      <button
+        type="button"
+        onClick={onReset}
+        className="btn-secondary !px-3 !py-1.5 text-xs shrink-0"
+        aria-label="Reset design"
+      >
+        <RotateCcw size={14} aria-hidden />
+        <span className="hidden sm:inline">Reset</span>
+      </button>
     </div>
   )
 }

@@ -10,7 +10,12 @@ export function DesignStudioIllustration() {
       ? {}
       : {
           animate: { y: [0, -y, 0] },
-          transition: { duration: 4 + delay, repeat: Infinity, ease: 'easeInOut', delay },
+          transition: {
+            duration: 4 + delay,
+            repeat: Infinity,
+            ease: 'easeInOut' as const,
+            delay,
+          },
         }
 
   return (

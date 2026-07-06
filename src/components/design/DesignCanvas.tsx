@@ -18,8 +18,10 @@ import { useImage } from '@/components/design/useImage'
 import { ShapeOrnament } from '@/components/design/ShapeOrnament'
 import { getBaseStructure, type FrameBaseRenderStyle } from '@/lib/frame-design/base-structures'
 import {
-  clampToDecorZones,
+  clampOrnamentPosition,
   getDecorZones,
+  getOrnamentHalfSize,
+  normalizeOrnamentLayer,
 } from '@/lib/frame-design/decor-zones'
 import { getFrameLayout } from '@/lib/frame-design/layouts'
 import { getTheme, shadeHex } from '@/lib/frame-design/themes'
@@ -52,6 +54,8 @@ function OrnamentNode({
   detailColor,
   photoSlot,
   decorZones,
+  canvasWidth,
+  canvasHeight,
   selected,
   onSelect,
   onDragEnd,
@@ -62,45 +66,41 @@ function OrnamentNode({
   detailColor: string
   photoSlot: { x: number; y: number; width: number; height: number }
   decorZones: ReturnType<typeof getDecorZones>
+  canvasWidth: number
+  canvasHeight: number
   selected: boolean
   onSelect: () => void
   onDragEnd: (x: number, y: number) => void
 }) {
   const isSticker = ornament?.finish === 'sticker'
-  const floralShapes = new Set([
-    'tulip',
-    'bird-mail',
-    'envelope',
-    'vine-scroll',
-    'vine-corner',
-    'floral-cluster',
-    'rose-bud',
-    'leaf-sprig',
-    'flourish',
-  ])
-  const baseSize =
-    ornament?.finish === 'sticker' ? 56 : floralShapes.has(ornament?.shapeType || '') ? 48 : 40
-  const size = baseSize * layer.scale
-  const half = size / 2
+  const half = getOrnamentHalfSize(ornament, layer.scale)
+  const size = half * 2
   const fill = ornament?.finish === 'raised3d' ? accentColor : detailColor
   const src = ornament?.imageUrl || ornament?.assetPath || ''
 
+  const bound = (pos: { x: number; y: number }) =>
+    clampOrnamentPosition(
+      pos.x,
+      pos.y,
+      half,
+      decorZones,
+      photoSlot,
+      canvasWidth,
+      canvasHeight,
+    )
+
   return (
     <Group
+      id={layer.id}
       x={layer.x}
       y={layer.y}
       rotation={layer.rotation}
       draggable
+      dragBoundFunc={bound}
       onClick={onSelect}
       onTap={onSelect}
       onDragEnd={(e) => {
-        const clamped = clampToDecorZones(
-          e.target.x(),
-          e.target.y(),
-          half,
-          decorZones,
-          photoSlot,
-        )
+        const clamped = bound({ x: e.target.x(), y: e.target.y() })
         e.target.x(clamped.x)
         e.target.y(clamped.y)
         onDragEnd(clamped.x, clamped.y)
@@ -613,7 +613,21 @@ export function DesignCanvas({
   function updateOrnamentLayer(id: string, patch: Partial<OrnamentLayer>) {
     onChange({
       ...design,
-      ornaments: design.ornaments.map((o) => (o.id === id ? { ...o, ...patch } : o)),
+      ornaments: design.ornaments.map((o) => {
+        if (o.id !== id) return o
+        const next = { ...o, ...patch }
+        const ornament = ornaments.find((orn) => String(orn.id) === next.assetId)
+        const maxScale = ornament?.finish === 'sticker' ? 1.15 : 1.1
+        if (next.scale > maxScale) next.scale = maxScale
+        return normalizeOrnamentLayer(
+          next,
+          ornament,
+          decorZones,
+          photoSlot,
+          canvasWidth,
+          canvasHeight,
+        )
+      }),
     })
   }
 
@@ -738,26 +752,36 @@ export function DesignCanvas({
                 ) : null,
               )}
 
-              {design.ornaments
-                .slice()
-                .sort((a, b) => a.zIndex - b.zIndex)
-                .map((layer) => {
-                  const ornament = ornaments.find((o) => String(o.id) === layer.assetId)
-                  return (
-                    <OrnamentNode
-                      key={layer.id}
-                      layer={layer}
-                      ornament={ornament}
-                      accentColor={colors.accent}
-                      detailColor={colors.detail}
-                      photoSlot={photoSlot}
-                      decorZones={decorZones}
-                      selected={selectedId === layer.id}
-                      onSelect={() => onSelect(layer.id)}
-                      onDragEnd={(x, y) => updateOrnamentLayer(layer.id, { x, y })}
-                    />
-                  )
-                })}
+              <Group
+                clipFunc={(ctx) => {
+                  ctx.beginPath()
+                  ctx.rect(0, 0, canvasWidth, canvasHeight)
+                  ctx.closePath()
+                }}
+              >
+                {design.ornaments
+                  .slice()
+                  .sort((a, b) => a.zIndex - b.zIndex)
+                  .map((layer) => {
+                    const ornament = ornaments.find((o) => String(o.id) === layer.assetId)
+                    return (
+                      <OrnamentNode
+                        key={layer.id}
+                        layer={layer}
+                        ornament={ornament}
+                        accentColor={colors.accent}
+                        detailColor={colors.detail}
+                        photoSlot={photoSlot}
+                        decorZones={decorZones}
+                        canvasWidth={canvasWidth}
+                        canvasHeight={canvasHeight}
+                        selected={selectedId === layer.id}
+                        onSelect={() => onSelect(layer.id)}
+                        onDragEnd={(x, y) => updateOrnamentLayer(layer.id, { x, y })}
+                      />
+                    )
+                  })}
+              </Group>
 
               <Transformer
                 ref={transformerRef}
@@ -766,6 +790,29 @@ export function DesignCanvas({
                 anchorStroke="#3b82f6"
                 anchorFill="#ffffff"
                 centeredScaling
+                onTransformEnd={() => {
+                  if (!selectedId) return
+                  const node = stageRef.current?.findOne(`#${selectedId}`)
+                  if (!node) return
+                  const scaleX = node.scaleX()
+                  const ornament = ornaments.find(
+                    (o) =>
+                      String(o.id) ===
+                      design.ornaments.find((l) => l.id === selectedId)?.assetId,
+                  )
+                  const maxScale = ornament?.finish === 'sticker' ? 1.15 : 1.1
+                  const layer = design.ornaments.find((l) => l.id === selectedId)
+                  if (!layer) return
+                  const nextScale = Math.min(maxScale, Math.max(0.45, layer.scale * scaleX))
+                  node.scaleX(1)
+                  node.scaleY(1)
+                  updateOrnamentLayer(selectedId, {
+                    scale: nextScale,
+                    x: node.x(),
+                    y: node.y(),
+                    rotation: node.rotation(),
+                  })
+                }}
               />
             </Layer>
           </Stage>
