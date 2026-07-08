@@ -38,8 +38,7 @@ export const metadata: Metadata = {
     siteName: brand.fullName,
     title: pageTitle(),
     description: brand.profileDescription,
-    description: brand.profileDescription,
-    images: ['/brand/style-romance-photo.png'],
+    images: [{ url: '/brand/style-romance-photo.png' }],
   },
   twitter: {
     card: 'summary_large_image',
