@@ -213,7 +213,7 @@ export function FrameConfigurator({
         .then((r) => r.json())
         .then((data: { ok?: boolean; designToken?: string }) => {
           if (data.ok && data.designToken) {
-            if (!designToken) setDesignToken(data.designToken)
+            if (data.designToken !== designToken) setDesignToken(data.designToken)
             setAutosaveStatus('saved')
           } else {
             setAutosaveStatus('idle')

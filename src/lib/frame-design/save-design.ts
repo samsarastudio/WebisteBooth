@@ -110,7 +110,7 @@ export async function saveFrameDesign(input: {
       }
     }
 
-    const token = input.designToken?.trim() || randomUUID()
+    let token = input.designToken?.trim() || randomUUID()
 
     const existing = input.designToken
       ? await payload.find({
@@ -121,6 +121,10 @@ export async function saveFrameDesign(input: {
         })
       : { totalDocs: 0, docs: [] }
 
+    // Decide whether we update the existing doc or fork a new one. We fork
+    // (rather than error) when the token belongs to a different signed-in
+    // person or was already submitted, so the current user is never stuck.
+    let updateExistingId: number | string | null = null
     if (existing.totalDocs > 0) {
       const doc = existing.docs[0]
       const owner = doc.designerEmail
@@ -130,12 +134,13 @@ export async function saveFrameDesign(input: {
         ? normalizeDesignerEmail(input.designerEmail)
         : null
 
-      if (owner && sessionEmail && owner !== sessionEmail) {
-        return { ok: false, error: 'This design belongs to another session.', status: 403 }
-      }
+      const differentOwner = Boolean(owner && sessionEmail && owner !== sessionEmail)
+      const alreadySubmitted = doc.status === 'submitted'
 
-      if (doc.status === 'submitted') {
-        return { ok: false, error: 'This design was already submitted.', status: 409 }
+      if (differentOwner || alreadySubmitted) {
+        token = randomUUID()
+      } else {
+        updateExistingId = doc.id
       }
     }
 
@@ -166,15 +171,14 @@ export async function saveFrameDesign(input: {
       lastSavedAt: now,
     }
 
-    if (existing.totalDocs > 0) {
-      const docId = existing.docs[0].id
+    if (updateExistingId !== null) {
       await payload.update({
         collection: 'frame-designs',
-        id: docId,
+        id: updateExistingId,
         data,
         overrideAccess: true,
       })
-      return { ok: true, designToken: token, id: Number(docId) }
+      return { ok: true, designToken: token, id: Number(updateExistingId) }
     }
 
     const created = await payload.create({

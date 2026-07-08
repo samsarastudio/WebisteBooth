@@ -4,6 +4,7 @@ import * as migration_20260705_014500_analytics_consent_leads from './20260705_0
 import * as migration_20260705_031000_frame_configurator from './20260705_031000_frame_configurator';
 import * as migration_20260706_design_snapshot_fields from './20260706_design_snapshot_fields';
 import * as migration_20260706_designers from './20260706_designers';
+import * as migration_20260708_designers_locked_rel from './20260708_designers_locked_rel';
 
 export const migrations = [
   {
@@ -35,5 +36,10 @@ export const migrations = [
     up: migration_20260706_designers.up,
     down: migration_20260706_designers.down,
     name: '20260706_designers'
+  },
+  {
+    up: migration_20260708_designers_locked_rel.up,
+    down: migration_20260708_designers_locked_rel.down,
+    name: '20260708_designers_locked_rel'
   },
 ];
