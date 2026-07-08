@@ -272,14 +272,57 @@ Copy the archive to another machine or cloud storage.
 
 ## 8. Deploy updates
 
+If `git pull` reports **"local changes would be overwritten"** or you see modified tracked files
+in `git status`, the Pi has local edits (config tweaks, or CRLF/LF line-ending noise). Don't blow
+them away — **stash, pull, then reapply all local edits** so the Pi keeps its own config.
+
 ```bash
 cd ~/frameflix
-git pull
+
+# 1. See exactly what changed on the Pi (optional, for peace of mind)
+git status
+git diff --stat
+
+# 2. Preserve every local change, pull clean, then reapply everything
+git stash push -u -m "pi-local-$(date +%F)"
+git pull --ff-only        # fast-forward to the latest committed code
+git stash pop             # reapply ALL local edits on top of the new code
+
+# If `git stash pop` reports a conflict, open the file(s), keep the lines you
+# want, then:  git add <file>   (the stash is dropped automatically on success)
+
+# 3. Rebuild and restart
 npm ci
 npm run generate:importmap
 npm run build:standalone
 npm run migrate:prod
 pm2 restart frameflix
+```
+
+<details>
+<summary>Alternative: keep only <em>specific</em> files from the stash (cherry-pick)</summary>
+
+```bash
+git stash push -u -m "pi-local-$(date +%F)"
+git pull --ff-only
+git checkout 'stash@{0}' -- ecosystem.config.cjs   # repeat -- <path> per file
+git stash drop
+```
+</details>
+
+> **Never** commit on the Pi. Keep the Pi read-only for code — make edits in the dev repo, push,
+> and pull here. The only things that live only on the Pi are `.env`, `data/`, and `media/` (all
+> git-ignored). If `git status` shows dozens of files as modified with no real content change, it's
+> line-ending noise — safe to discard with `git checkout -- .` (see the `.gitattributes` note below).
+
+**Line-ending noise:** the repo now ships a `.gitattributes` that normalizes everything to LF, so
+after the first pull that includes it, the "everything is modified" churn stops. To clear it once:
+
+```bash
+git stash push -u -m pre-normalize   # if git blocks the pull
+git pull --ff-only
+git checkout -- .                    # drop pure CRLF/LF diffs
+git stash drop 2>/dev/null || true
 ```
 
 After schema changes (new collections or fields such as **Page Views** or lead response fields), run **`npm run migrate:prod`** on the Pi. PM2 startup via `scripts/start-production.mjs` also runs migrations on boot, but run migrate manually after `git pull` if admin lists fail with database errors.
