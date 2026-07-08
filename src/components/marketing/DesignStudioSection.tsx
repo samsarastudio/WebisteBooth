@@ -3,6 +3,7 @@ import { ArrowRight, Check, Palette, Sparkles, Upload, Wand2 } from 'lucide-reac
 
 import { DesignStudioIllustration } from '@/components/marketing/DesignStudioIllustration'
 import { Reveal, Stagger, StaggerItem } from '@/components/marketing/Reveal'
+import { brand } from '@/lib/brand'
 
 const STEPS = [
   {
@@ -75,7 +76,7 @@ export function DesignStudioSection({
             <Reveal delay={0.12}>
               <div className="flex flex-col sm:flex-row gap-3 mb-10">
                 <Link href={designHref} className="btn-primary justify-center">
-                  Open design studio
+                  {brand.ctaDesign}
                   <ArrowRight size={16} />
                 </Link>
                 <Link href={quoteHref} className="btn-secondary justify-center">

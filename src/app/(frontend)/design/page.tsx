@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 
 import { DesignStudio } from '@/components/design/DesignStudio'
+import { brand } from '@/lib/brand'
 import { Reveal } from '@/components/marketing/Reveal'
 import { getDesignCatalog } from '@/lib/frame-design/catalog'
 import { getFrameDesignByToken } from '@/lib/frame-design/save-design'
@@ -8,9 +9,8 @@ import type { FrameDesignState } from '@/lib/frame-design/types'
 import { guardPage } from '@/lib/page-guard'
 
 export const metadata: Metadata = {
-  title: 'Design Your Frame',
-  description:
-    'Upload a photo, customize your FrameFlix keepsake frame — colors, text, and decorations — then continue to your free quote.',
+  title: brand.ctaDesign,
+  description: `${brand.profileDescription} Upload a photo, customize colours, captions, and ornaments — your draft saves automatically.`,
 }
 
 type Props = {

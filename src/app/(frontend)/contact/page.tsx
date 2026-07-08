@@ -1,11 +1,12 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { Clock, Mail, MapPin, Phone, Sparkles } from 'lucide-react'
+import { Clock, Mail, MapPin, Sparkles } from 'lucide-react'
 
 import { ContactForm } from '@/components/contact/ContactForm'
 import { Reveal } from '@/components/marketing/Reveal'
 import { brand } from '@/lib/brand'
 import { guardPage } from '@/lib/page-guard'
+import { serviceAreas } from '@/lib/service-areas'
 
 export const metadata: Metadata = {
   title: 'Contact',
@@ -54,17 +55,19 @@ export default async function ContactPage() {
                 </div>
               </div>
               <div className="flex gap-3 text-sm">
-                <Phone size={18} className="text-accent shrink-0 mt-0.5" />
-                <div>
-                  <p className="font-medium">Call or text</p>
-                  <p className="text-text-secondary">{settings.phone}</p>
-                </div>
-              </div>
-              <div className="flex gap-3 text-sm">
                 <MapPin size={18} className="text-accent shrink-0 mt-0.5" />
                 <div>
                   <p className="font-medium">We host in</p>
                   <p className="text-text-secondary">{settings.serviceArea}</p>
+                  <ul className="mt-2 space-y-1">
+                    {serviceAreas.map((area) => (
+                      <li key={area.href}>
+                        <Link href={area.href} className="text-text-secondary hover:text-accent">
+                          Photo booth — {area.name}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </div>
             </div>
@@ -82,8 +85,8 @@ export default async function ContactPage() {
 
             <div className="card p-6 bg-accent-light border-accent/20">
               <p className="text-sm leading-relaxed">
-                <strong>Pro Tip:</strong> Book 2-3 months ahead for weddings and peak season. We love
-                last-minute requests too — just give us a call!
+                <strong>Pro Tip:</strong> Book 2–3 months ahead for weddings and peak season. We love
+                last-minute requests too — email us your date and we&apos;ll see what we can do.
               </p>
             </div>
 

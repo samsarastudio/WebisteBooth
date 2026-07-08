@@ -13,7 +13,7 @@ export const frameOffering = {
     'Attendant included',
     '3 hours of coverage',
     '6×4 landscape keepsakes',
-    'Online photos up to 1 year (Premium)',
+    'Online photos — Essential: 3 months · Premium: up to 1 year',
   ],
 }
 

@@ -2,9 +2,9 @@ import Link from 'next/link'
 import { Sparkles } from 'lucide-react'
 
 import { DualHero } from '@/components/marketing/DualHero'
+import { brand } from '@/lib/brand'
 import { DesignStudioSection } from '@/components/marketing/DesignStudioSection'
 import { EventOrganisersSection } from '@/components/marketing/EventOrganisersSection'
-import { IllustrativeDisclaimer } from '@/components/marketing/IllustrativeDisclaimer'
 import { PackageCards } from '@/components/marketing/PackageCards'
 import { BlogCardCompact } from '@/components/marketing/BlogCard'
 import { ProductImage } from '@/components/marketing/ProductImage'
@@ -43,10 +43,15 @@ export default async function HomePage() {
 
   const quoteHref = settings.showQuotePage ? '/quote?service=frames' : '/contact'
   const stickersQuoteHref = settings.showQuotePage ? '/quote?service=stickers' : '/contact'
+  const designHref = settings.showDesignPage ? '/design' : quoteHref
 
   return (
     <div>
       <DualHero
+        headline={settings.heroTitle || undefined}
+        supporting={settings.heroSubtitle || undefined}
+        designHref={designHref}
+        showDesign={settings.showDesignPage}
         quoteFramesHref={settings.showQuotePage ? '/quote?service=frames' : '/contact'}
         quoteStickersHref={
           settings.showStickersPage
@@ -56,10 +61,6 @@ export default async function HomePage() {
               : '/contact'
         }
       />
-      <div className="container-wide -mt-4 mb-6 relative z-10">
-        <IllustrativeDisclaimer />
-      </div>
-
       {settings.showTrustBar && settings.trustBadges.length > 0 && (
         <section className="border-y border-border bg-bg-secondary/70 backdrop-blur-sm">
           <div className="container-wide py-5">
@@ -87,7 +88,6 @@ export default async function HomePage() {
                 Beautiful styles your guests will love — personalized with names and messages for
                 your celebration.
               </p>
-              <IllustrativeDisclaimer />
             </Reveal>
             <StyleSlider
               styles={frameStyles}
@@ -334,18 +334,27 @@ export default async function HomePage() {
               <div className="absolute inset-0 motif-overlay opacity-30" />
               <div className="relative z-10">
                 <h2 className="text-3xl md:text-4xl mb-4">
-                  Ready to gift your guests a keepsake?
+                  Try the design studio — it&apos;s free
                 </h2>
                 <p className="text-text-secondary mb-3 max-w-xl mx-auto">
-                  Pick a style, add your names — proposal within 24 hours.
+                  Preview colours, captions, and ornaments before you book. Save your draft and
+                  continue to a quote when you&apos;re ready.
                 </p>
                 <p className="text-sm font-medium text-accent-hover mb-8">
-                  3 hours of coverage · online photos up to 1 year on Premium
+                  3 hours of coverage · Essential: 3 months online · Premium: up to 1 year
                 </p>
-                <Link href={quoteHref} className="btn-primary">
-                  Get Your Proposal
-                  <Sparkles size={16} />
-                </Link>
+                <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                  {settings.showDesignPage ? (
+                    <Link href="/design" className="btn-primary">
+                      {brand.ctaDesign}
+                      <Sparkles size={16} />
+                    </Link>
+                  ) : null}
+                  <Link href={quoteHref} className={settings.showDesignPage ? 'btn-secondary' : 'btn-primary'}>
+                    Get a Quote
+                    <Sparkles size={16} />
+                  </Link>
+                </div>
               </div>
             </Reveal>
           </div>

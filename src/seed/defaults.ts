@@ -7,8 +7,7 @@ export const FRAMES_LINE = FRAMES_60
 export const ONLINE_PHOTOS_LINE =
   'Online digital photos available for download — access expires after 3 months'
 export const ONLINE_PHOTOS_PREMIUM =
-  'Online digital photos available for download — access up to 1 year'
-export const ONLINE_PHOTOS_RETENTION_NOTE = 'Extended retention plans available on request'
+  'Online digital photos available for download — access up to 1 year (Premium)'
 export const ONLINE_PHOTOS_SIGNATURE =
   'Online gallery access tailored to your event — discuss options with us'
 
@@ -57,7 +56,6 @@ export const defaultPackages = [
       { item: 'Custom frame design + QR code insert' },
       { item: 'Guest engagement & crowd support' },
       { item: ONLINE_PHOTOS_PREMIUM },
-      { item: ONLINE_PHOTOS_RETENTION_NOTE },
       { item: 'Premium prop set with themed accessories' },
     ],
     notIncluded: [
@@ -159,7 +157,7 @@ export const defaultFaqs = [
   {
     question: 'How long before my event do I need to book?',
     answer:
-      'We recommend booking at least 2-3 months in advance for weddings and peak season events. For corporate events and birthdays, 4-6 weeks usually works. We do accommodate rush requests — just call us!',
+      'We recommend booking at least 2-3 months in advance for weddings and peak season events. For corporate events and birthdays, 4-6 weeks usually works. We do accommodate rush requests — just email us!',
     active: true,
     sortOrder: 3,
   },
@@ -194,7 +192,7 @@ export const defaultFaqs = [
   {
     question: 'How long are online photos available?',
     answer:
-      'Essential includes 3 months of online gallery access. Premium includes access up to 1 year, with extended retention plans available on request. Signature packages are fully custom — we will tailor online access to your event when we plan together.',
+      'Essential includes 3 months of online gallery access. Premium includes up to 1 year of online gallery access. Signature packages are fully custom — we will tailor online access to your event when we plan together.',
     active: true,
     sortOrder: 8,
   },
@@ -535,18 +533,18 @@ export const defaultFrameOrnaments = [
 ]
 
 export const defaultSiteSettings = {
-  phone: '(416) 555-1234',
+  phone: '',
   email: 'frameflix@inmoment.com',
   serviceArea: 'Kitchener, Cambridge, Waterloo, Guelph & beyond',
-  heroEyebrow: 'Frames & sticker experiences',
-  heroTitle: 'Souvenirs Your Guests Will Actually Keep',
+  heroEyebrow: 'FrameFlix by InMoment',
+  heroTitle: 'A photo booth experience your guests take home',
   heroSubtitle:
-    'Personalized photo frames and on-site custom stickers — two ways to send every guest home with something special.',
+    'Every guest receives their photo inside a personalized frame—or watches their custom sticker get printed and cut live at your event.',
   testimonials: [] as { text: string; author: string }[],
   trustBadges: [
     { icon: '⏱️', label: '3 hrs coverage' },
     { icon: '🙋', label: 'Attendant included' },
-    { icon: '☁️', label: 'Online photos up to 1 yr' },
+    { icon: '☁️', label: 'Online gallery included' },
     { icon: '✨', label: 'Fully custom' },
   ],
   // Pages

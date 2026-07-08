@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Sparkles } from 'lucide-react'
 
-import { IllustrativeDisclaimer } from '@/components/marketing/IllustrativeDisclaimer'
 import { ProductImage } from '@/components/marketing/ProductImage'
 import { Reveal, Stagger, StaggerItem } from '@/components/marketing/Reveal'
 import { stickerOffering } from '@/lib/offerings'
@@ -55,7 +54,6 @@ export default async function StickersPage() {
                 />
               </div>
             </div>
-            <IllustrativeDisclaimer className="mt-4" />
           </Reveal>
         </div>
       </section>

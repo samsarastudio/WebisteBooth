@@ -80,7 +80,6 @@ export function ContactForm() {
       <div className="grid sm:grid-cols-2 gap-5">
         <Field label="Full Name" name="name" required />
         <Field label="Email" name="email" type="email" required />
-        <Field label="Phone" name="phone" type="tel" required />
         <div>
           <label className="block text-sm font-medium mb-1.5" htmlFor="eventType">
             Event Type <ReqStar />

@@ -6,7 +6,9 @@ import { Sparkles } from 'lucide-react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { useEffect, useState } from 'react'
 
-export function StickyCta() {
+import { brand } from '@/lib/brand'
+
+export function StickyCta({ showDesign = true }: { showDesign?: boolean }) {
   const pathname = usePathname()
   const [visible, setVisible] = useState(false)
   const reduce = useReducedMotion()
@@ -18,7 +20,10 @@ export function StickyCta() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  if (pathname === '/quote') return null
+  if (pathname === '/quote' || pathname === '/design') return null
+
+  const href = showDesign ? '/design' : '/quote'
+  const label = showDesign ? brand.ctaDesign : 'Get Your Quote'
 
   return (
     <AnimatePresence>
@@ -32,10 +37,10 @@ export function StickyCta() {
           transition={{ type: 'spring', stiffness: 320, damping: 28 }}
         >
           <Link
-            href="/quote"
+            href={href}
             className="btn-primary w-full justify-center shadow-lg pointer-events-auto"
           >
-            Get Your Quote
+            {label}
             <Sparkles size={16} />
           </Link>
         </motion.div>

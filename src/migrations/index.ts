@@ -5,6 +5,7 @@ import * as migration_20260705_031000_frame_configurator from './20260705_031000
 import * as migration_20260706_design_snapshot_fields from './20260706_design_snapshot_fields';
 import * as migration_20260706_designers from './20260706_designers';
 import * as migration_20260708_designers_locked_rel from './20260708_designers_locked_rel';
+import * as migration_20260708_content_trust_cleanup from './20260708_content_trust_cleanup';
 
 export const migrations = [
   {
@@ -41,5 +42,10 @@ export const migrations = [
     up: migration_20260708_designers_locked_rel.up,
     down: migration_20260708_designers_locked_rel.down,
     name: '20260708_designers_locked_rel'
+  },
+  {
+    up: migration_20260708_content_trust_cleanup.up,
+    down: migration_20260708_content_trust_cleanup.down,
+    name: '20260708_content_trust_cleanup'
   },
 ];

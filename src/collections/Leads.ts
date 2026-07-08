@@ -67,7 +67,10 @@ export const Leads: CollectionConfig = {
     {
       name: 'phone',
       type: 'text',
-      required: true,
+      required: false,
+      admin: {
+        description: 'Optional for contact messages. Required for quote requests on the public form.',
+      },
     },
     {
       name: 'eventType',

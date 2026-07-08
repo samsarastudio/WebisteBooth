@@ -15,7 +15,9 @@ export const SiteSettings: GlobalConfig = {
             {
               name: 'phone',
               type: 'text',
-              defaultValue: '(416) 555-1234',
+              admin: {
+                description: 'Optional. Leave blank to hide phone on the contact page (email-only enquiries).',
+              },
             },
             {
               name: 'email',
@@ -30,18 +32,18 @@ export const SiteSettings: GlobalConfig = {
             {
               name: 'heroEyebrow',
               type: 'text',
-              defaultValue: 'Custom 3D-Printed Frames',
+              defaultValue: 'FrameFlix by InMoment',
             },
             {
               name: 'heroTitle',
               type: 'text',
-              defaultValue: 'Souvenirs Your Guests Will Actually Keep',
+              defaultValue: 'A photo booth experience your guests take home',
             },
             {
               name: 'heroSubtitle',
               type: 'textarea',
               defaultValue:
-                'Translucent 3D-printed frames with personalized details and dye-sublimation prints that last forever. Every package includes 3 hours of coverage, excluding setup.',
+                'Every guest receives their photo inside a personalized frame—or watches their custom sticker get printed and cut live at your event.',
             },
             {
               name: 'trustBadges',

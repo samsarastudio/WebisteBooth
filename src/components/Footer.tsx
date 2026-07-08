@@ -3,6 +3,8 @@ import Link from 'next/link'
 import { BrandLogoLink } from '@/components/BrandLogo'
 import { brand } from '@/lib/brand'
 
+import { serviceAreas } from '@/lib/service-areas'
+
 export default function Footer({
   email = brand.email,
   serviceArea = 'Kitchener, Cambridge, Waterloo, Guelph & beyond',
@@ -25,8 +27,7 @@ export default function Footer({
             <BrandLogoLink size="sm" />
           </div>
           <p className="text-text-secondary text-sm leading-relaxed max-w-sm">
-            Personalized photo frames and on-site custom stickers — keepsakes your guests will
-            actually keep.
+            {brand.profileDescription}
           </p>
         </div>
 
@@ -53,6 +54,15 @@ export default function Footer({
             {email}
           </a>
           <p className="text-text-secondary text-sm">{serviceArea}</p>
+          <ul className="mt-3 space-y-1">
+            {serviceAreas.map((area) => (
+              <li key={area.href}>
+                <Link href={area.href} className="nav-link text-sm">
+                  Photo booth — {area.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
           {showQuote && (
             <Link href="/quote" className="btn-primary mt-6 !py-2.5 !px-5 text-sm">
               Get a Quote

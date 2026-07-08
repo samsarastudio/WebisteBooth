@@ -3,7 +3,6 @@ import Link from 'next/link'
 import { Sparkles } from 'lucide-react'
 
 import { GalleryGrid } from '@/components/marketing/GalleryGrid'
-import { IllustrativeDisclaimer } from '@/components/marketing/IllustrativeDisclaimer'
 import { Reveal } from '@/components/marketing/Reveal'
 import { brand } from '@/lib/brand'
 import { getGalleryItems } from '@/lib/payload'
@@ -29,9 +28,9 @@ export default async function GalleryPage() {
             </span>
             <h1 className="text-4xl md:text-5xl mb-4">Guest keepsakes</h1>
             <p className="text-text-secondary text-lg leading-relaxed mb-4">
-              Sample frames and styles — souvenirs your guests take home.
+              Real frame styles, printed results, and finishes — the keepsakes your guests take
+              home from weddings, birthdays, and corporate events across Ontario.
             </p>
-            <IllustrativeDisclaimer />
           </Reveal>
         </div>
       </section>

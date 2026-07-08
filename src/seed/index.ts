@@ -390,6 +390,7 @@ async function syncFaqs(payload: Payload) {
   }
 
   for (const question of [
+    'How long before my event do I need to book?',
     'How long is each package?',
     'What colors can you print?',
     'How many photo frames are included?',
@@ -423,11 +424,16 @@ async function syncSiteSettings(payload: Payload) {
       !current.email || current.email === 'hello@frameflixstudio.com'
         ? defaultSiteSettings.email
         : current.email
+    const phone =
+      !current.phone || current.phone === '(416) 555-1234' ? '' : current.phone
 
     await payload.updateGlobal({
       slug: 'site-settings',
       data: {
         email,
+        phone,
+        heroEyebrow: defaultSiteSettings.heroEyebrow,
+        heroTitle: defaultSiteSettings.heroTitle,
         heroSubtitle: defaultSiteSettings.heroSubtitle,
         trustBadges: defaultSiteSettings.trustBadges,
         serviceArea: defaultSiteSettings.serviceArea,
@@ -476,5 +482,39 @@ async function syncPosts(payload: Payload) {
       })
       payload.logger.info(`Added blog post: ${def.title}`)
     }
+  }
+
+  const offTopic = await payload.find({
+    collection: 'posts',
+    where: {
+      and: [
+        { status: { equals: 'published' } },
+        {
+          or: [
+            { title: { contains: 'Test Post' } },
+            { title: { contains: 'test post' } },
+            { slug: { contains: 'test-post' } },
+            { title: { contains: 'July 4' } },
+            { title: { contains: '4th of July' } },
+            { title: { contains: 'Independence Day' } },
+            { title: { contains: 'America250' } },
+            { title: { contains: 'America 250' } },
+            { slug: { contains: 'july-4' } },
+            { slug: { contains: 'america250' } },
+            { slug: { contains: 'independence-day' } },
+          ],
+        },
+      ],
+    },
+    limit: 50,
+  })
+
+  for (const post of offTopic.docs) {
+    await payload.update({
+      collection: 'posts',
+      id: post.id,
+      data: { status: 'draft' },
+    })
+    payload.logger.info(`Unpublished off-topic post: ${post.title}`)
   }
 }

@@ -28,7 +28,7 @@ type LeadEmailPayload = {
 import { brand } from '@/lib/brand'
 
 const studioEmail = brand.email
-const studioPhone = process.env.LEAD_NOTIFY_PHONE || '(416) 555-1234'
+const studioPhone = process.env.LEAD_NOTIFY_PHONE || ''
 const fromAddress = process.env.RESEND_FROM_EMAIL || `${brand.name} <onboarding@resend.dev>`
 
 function preferencesBlock(lead: LeadEmailPayload, includePricing = false) {
@@ -115,8 +115,7 @@ What you selected:
 ${prefsCustomer}
 
 Questions in the meantime? Reach out anytime:
-Email: ${studioEmail}
-Phone: ${studioPhone}
+Email: ${studioEmail}${studioPhone ? `\nPhone: ${studioPhone}` : ''}
 
 We look forward to helping you give your guests a keepsake they'll love.
 
@@ -158,7 +157,7 @@ ${input.message}
 
 Reference: ${input.inquiryId}
 
-Questions? Reply to this email or call us at ${studioPhone}.
+Questions? Reply to this email${studioPhone ? ` or call us at ${studioPhone}` : ''}.
 
 — ${brand.fullName}
 `.trim(),

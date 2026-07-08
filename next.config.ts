@@ -21,7 +21,14 @@ const nextConfig: NextConfig = {
     ],
   },
   async redirects() {
-    return [{ source: '/favicon.ico', destination: '/icon', permanent: false }]
+    return [
+      { source: '/favicon.ico', destination: '/icon', permanent: false },
+      { source: '/areas/kitchener', destination: '/photo-booth-kitchener', permanent: true },
+      { source: '/areas/waterloo', destination: '/photo-booth-waterloo', permanent: true },
+      { source: '/areas/cambridge', destination: '/photo-booth-cambridge', permanent: true },
+      { source: '/areas/guelph', destination: '/photo-booth-guelph', permanent: true },
+      { source: '/areas/:city', destination: '/photo-booth-:city', permanent: true },
+    ]
   },
   images: {
     formats: ['image/avif', 'image/webp'],

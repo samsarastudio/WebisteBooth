@@ -20,8 +20,8 @@ const values = [
   },
   {
     icon: Target,
-    title: 'Hands-on from day one',
-    desc: "We're a starting studio — which means you work directly with us on design, details, and delivery. No hand-offs, no call-center runaround.",
+    title: 'Founder-led from day one',
+    desc: 'FrameFlix is personally managed — you work directly with us on design, details, and delivery. No hand-offs, no call-center runaround.',
   },
   {
     icon: Heart,
@@ -30,8 +30,8 @@ const values = [
   },
   {
     icon: Sparkles,
-    title: 'Growing with you',
-    desc: "Every event helps us refine the experience. Book with a team that's invested in making your celebration feel personal.",
+    title: 'Locally operated',
+    desc: 'Based in the Waterloo Region and serving Kitchener, Waterloo, Cambridge, Guelph, and beyond — with a team invested in every celebration we host.',
   },
 ]
 
@@ -49,9 +49,9 @@ export default async function AboutPage() {
             </span>
             <h1 className="text-4xl md:text-5xl mb-4">Souvenirs for your guests</h1>
             <p className="text-text-secondary text-lg leading-relaxed">
-              FrameFlix is a new studio helping hosts give every guest a keepsake — their photo, in a
-              personalized frame they&apos;ll actually keep. We bring an attendant to every event so
-              you can enjoy the party.
+              FrameFlix is a locally operated studio helping hosts give every guest a keepsake — their
+              photo, in a personalized frame they&apos;ll actually keep. We bring an attendant to every
+              event so you can enjoy the party.
             </p>
           </Reveal>
         </div>
@@ -63,8 +63,8 @@ export default async function AboutPage() {
             <div className="relative aspect-[4/3] rounded-[var(--radius-lg)] overflow-hidden shadow-[var(--shadow-lg)] frame-shell p-2">
               <div className="relative w-full h-full rounded-[1rem] overflow-hidden">
                 <Image
-                  src="/brand/hero-card-1.png"
-                  alt="Translucent FrameFlix custom frame"
+                  src="/brand/stickered-wedding-1.png"
+                  alt="Custom FrameFlix guest keepsake frame at a wedding"
                   fill
                   className="object-cover"
                   sizes="(max-width: 1024px) 100vw, 50vw"
@@ -85,8 +85,8 @@ export default async function AboutPage() {
                 print — designed for your theme, ready for your guests.
               </p>
               <p>
-                FrameFlix is a new company, and we&apos;re intentional about that. Early clients get
-                close collaboration, careful design, and a team that treats every booking like it
+                FrameFlix is founder-led and personally managed. Every booking gets close
+                collaboration, careful design, and a team that treats your celebration like it
                 matters — because it does.
               </p>
             </div>
@@ -114,7 +114,7 @@ export default async function AboutPage() {
       <section className="section pt-0">
         <div className="container-wide">
           <Reveal className="card p-10 md:p-14 text-center">
-            <h2 className="text-3xl mb-3">Be one of our first celebrations</h2>
+            <h2 className="text-3xl mb-3">Plan your celebration with us</h2>
             <p className="text-text-secondary mb-8 max-w-xl mx-auto">
               We&apos;d love to bring FrameFlix to your event. Get a custom proposal within 24 hours.
             </p>

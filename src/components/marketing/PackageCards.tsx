@@ -12,7 +12,6 @@ function onlineHintForPackage(slug: string): string | null {
 }
 
 function onlineFootnoteForPackage(slug: string): string | null {
-  if (slug === 'premium') return 'Extended retention plans available'
   if (slug === 'signature' || slug === 'enterprise') {
     return 'Custom online access — contact us to plan your event'
   }

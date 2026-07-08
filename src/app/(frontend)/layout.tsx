@@ -31,22 +31,20 @@ export const metadata: Metadata = {
     default: pageTitle(),
     template: `%s | ${brand.fullName}`,
   },
-  description:
-    'Give every guest a keepsake they will actually keep. Personalized photobooth frames and on-site stickers for weddings, parties, and events.',
+  description: brand.profileDescription,
   openGraph: {
     type: 'website',
     locale: 'en_CA',
     siteName: brand.fullName,
     title: pageTitle(),
-    description:
-      'Give every guest a keepsake they will actually keep — personalized frames and stickers from FrameFlix.',
-    images: [{ url: '/brand/style-romance-photo.png' }],
+    description: brand.profileDescription,
+    description: brand.profileDescription,
+    images: ['/brand/style-romance-photo.png'],
   },
   twitter: {
     card: 'summary_large_image',
     title: pageTitle(),
-    description:
-      'Give every guest a keepsake they will actually keep — personalized frames and stickers from FrameFlix.',
+    description: brand.profileDescription,
     images: ['/brand/style-romance-photo.png'],
   },
   robots: {
@@ -89,7 +87,11 @@ export default async function FrontendLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
         />
-        <Navbar links={links} showQuote={settings.showQuotePage} />
+        <Navbar
+          links={links}
+          showQuote={settings.showQuotePage}
+          showDesign={settings.showDesignPage}
+        />
         <main className="flex-1 pt-16 md:pt-[72px] pb-[calc(4.5rem+var(--safe-bottom))] md:pb-0">
           {children}
         </main>
@@ -99,7 +101,9 @@ export default async function FrontendLayout({
           links={links}
           showQuote={settings.showQuotePage}
         />
-        {settings.showQuotePage ? <StickyCta /> : null}
+        {settings.showQuotePage || settings.showDesignPage ? (
+          <StickyCta showDesign={settings.showDesignPage} />
+        ) : null}
         <ConsentBanner />
         <SiteAnalytics />
       </body>

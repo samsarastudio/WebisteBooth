@@ -6,13 +6,16 @@ import { Menu, X } from 'lucide-react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 
 import { BrandLogoLink } from '@/components/BrandLogo'
+import { brand } from '@/lib/brand'
 
 export default function Navbar({
   links,
   showQuote = true,
+  showDesign = true,
 }: {
   links: { href: string; label: string }[]
   showQuote?: boolean
+  showDesign?: boolean
 }) {
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
@@ -47,11 +50,20 @@ export default function Navbar({
               {l.label}
             </Link>
           ))}
-          {showQuote && (
+          {showDesign ? (
+            <Link href="/design" className="btn-primary !py-2.5 !px-5 !min-h-0 text-sm">
+              {brand.ctaDesign}
+            </Link>
+          ) : showQuote ? (
             <Link href="/quote" className="btn-primary !py-2.5 !px-5 !min-h-0 text-sm">
               Get a Quote
             </Link>
-          )}
+          ) : null}
+          {showDesign && showQuote ? (
+            <Link href="/quote" className="nav-link text-sm font-medium">
+              Quote
+            </Link>
+          ) : null}
         </div>
 
         <button
@@ -91,7 +103,15 @@ export default function Navbar({
                   </Link>
                 </motion.div>
               ))}
-              {showQuote && (
+              {showDesign ? (
+                <Link
+                  href="/design"
+                  className="btn-primary justify-center mt-2"
+                  onClick={() => setOpen(false)}
+                >
+                  {brand.ctaDesign}
+                </Link>
+              ) : showQuote ? (
                 <Link
                   href="/quote"
                   className="btn-primary justify-center mt-2"
@@ -99,7 +119,16 @@ export default function Navbar({
                 >
                   Get a Quote
                 </Link>
-              )}
+              ) : null}
+              {showDesign && showQuote ? (
+                <Link
+                  href="/quote"
+                  className="btn-secondary justify-center mt-2"
+                  onClick={() => setOpen(false)}
+                >
+                  Get a Quote
+                </Link>
+              ) : null}
             </div>
           </motion.div>
         )}

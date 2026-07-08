@@ -46,12 +46,16 @@ export async function submitLeadFromFormData(
     frameFormat === 'original' ? 'Original keepsake frame' : '6×4 landscape frame'
   const selectedRaw = String(formData.get('selectedAddOns') || '[]')
 
-  if (!name || !email || !phone || !eventType || !eventDate) {
-    return { ok: false, error: 'Name, email, phone, event type, and date are required.' }
-  }
-
   const intent = String(formData.get('intent') || 'contact')
   const intentValue = intent === 'quote' ? 'quote' : 'contact'
+
+  if (!name || !email || !eventType || !eventDate) {
+    return { ok: false, error: 'Name, email, event type, and date are required.' }
+  }
+
+  if (intentValue === 'quote' && !phone) {
+    return { ok: false, error: 'Phone is required for quote requests.' }
+  }
   const serviceTypeRaw = String(formData.get('serviceType') || 'frames').trim()
   const serviceType =
     serviceTypeRaw === 'stickers' || serviceTypeRaw === 'both' ? serviceTypeRaw : 'frames'
@@ -176,7 +180,7 @@ export async function submitLeadFromFormData(
         serviceType,
         name,
         email,
-        phone,
+        phone: phone || '—',
         eventType,
         eventDate,
         guestCount: guestCount || undefined,
@@ -228,7 +232,7 @@ export async function submitLeadFromFormData(
         inquiryId,
         name,
         email,
-        phone,
+        phone: phone || '—',
         eventType,
         eventDate,
         guestCount,

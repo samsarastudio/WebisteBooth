@@ -81,7 +81,7 @@ export function BrandLogoLink({
         {brand.name}
         <span className="block font-sans text-[0.58rem] md:text-[0.62rem] font-medium tracking-[0.08em] text-text-secondary mt-0.5">
           by{' '}
-          <span className="text-text-primary/80 lowercase tracking-normal font-semibold">{brand.parentName}</span>
+          <span className="text-text-primary/80 tracking-normal font-semibold">{brand.parentName}</span>
         </span>
       </span>
     </Link>

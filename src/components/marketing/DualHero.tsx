@@ -10,11 +10,19 @@ import { brand } from '@/lib/brand'
 import { frameOffering, stickerOffering } from '@/lib/offerings'
 
 export function DualHero({
+  headline = brand.heroHeadline,
+  supporting = brand.heroSupporting,
+  designHref = '/design',
   quoteFramesHref = '/quote?service=frames',
   quoteStickersHref = '/quote?service=stickers',
+  showDesign = true,
 }: {
+  headline?: string
+  supporting?: string
+  designHref?: string
   quoteFramesHref?: string
   quoteStickersHref?: string
+  showDesign?: boolean
 }) {
   const reduce = useReducedMotion()
 
@@ -30,7 +38,7 @@ export function DualHero({
             initial={reduce ? false : { opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            Two ways to wow your guests
+            {brand.fullName}
           </motion.span>
           <motion.h1
             className="text-[2.35rem] leading-[1.2] sm:text-5xl sm:leading-[1.18] md:text-6xl md:leading-[1.15] font-semibold mb-5 pb-1"
@@ -38,18 +46,33 @@ export function DualHero({
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.05 }}
           >
-            Keepsakes they&apos;ll{' '}
-            <span className="text-gradient italic inline-block pb-[0.12em]">actually keep</span>
+            {headline}
           </motion.h1>
           <motion.p
-            className="text-base sm:text-lg text-text-secondary max-w-2xl mx-auto leading-relaxed"
+            className="text-base sm:text-lg text-text-secondary max-w-2xl mx-auto leading-relaxed mb-8"
             initial={reduce ? false : { opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
           >
-            {brand.fullName} brings personalized photo frames and on-site custom stickers to your
-            event — two experiences, one unforgettable favor for every guest.
+            {supporting}
           </motion.p>
+          <motion.div
+            className="flex flex-col sm:flex-row gap-3 justify-center"
+            initial={reduce ? false : { opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.14 }}
+          >
+            {showDesign ? (
+              <Link href={designHref} className="btn-primary justify-center">
+                {brand.ctaDesign}
+                <Sparkles size={16} />
+              </Link>
+            ) : null}
+            <Link href={quoteFramesHref} className={showDesign ? 'btn-secondary justify-center' : 'btn-primary justify-center'}>
+              Get a Quote
+              <ArrowRight size={16} />
+            </Link>
+          </motion.div>
         </div>
 
         <div className="grid md:grid-cols-2 gap-5 md:gap-7 max-w-5xl mx-auto">
@@ -60,9 +83,9 @@ export function DualHero({
             summary={frameOffering.summary}
             highlights={frameOffering.highlights}
             image="/brand/style-romance-photo.png"
-            primaryHref={quoteFramesHref}
+            primaryHref={showDesign ? designHref : quoteFramesHref}
             secondaryHref="/packages"
-            primaryLabel="Quote frames"
+            primaryLabel={showDesign ? brand.ctaDesign : 'Get a Quote'}
             secondaryLabel="See packages"
             delay={0.15}
           />
@@ -75,7 +98,7 @@ export function DualHero({
             image="/brand/stickers-hero.png"
             primaryHref={quoteStickersHref}
             secondaryHref="/stickers"
-            primaryLabel="Quote stickers"
+            primaryLabel="Get a sticker quote"
             secondaryLabel="Learn more"
             delay={0.22}
           />
