@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 
 import { Reveal } from '@/components/marketing/Reveal'
+import { RETENTION_LEGAL_PARAGRAPH } from '@/lib/retention-policy'
 import { brand } from '@/lib/brand'
 
 export const metadata: Metadata = {
@@ -89,13 +90,7 @@ export default function DisclaimerPage() {
 
             <section>
               <h2 className="text-xl font-serif text-text-primary mb-3">6. Online photos</h2>
-              <p>
-                When online digital photos are included, access is provided for approximately{' '}
-                <strong className="text-text-primary">three (3) months</strong> from the event date,
-                after which access may expire and files may be removed. FrameFlix is not responsible
-                for loss of digital files after the access period. Guests and hosts should download
-                photos they wish to retain before expiry.
-              </p>
+              <p>{RETENTION_LEGAL_PARAGRAPH}</p>
             </section>
 
             <section>

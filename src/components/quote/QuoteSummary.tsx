@@ -3,6 +3,7 @@
 import { ProductImage } from '@/components/marketing/ProductImage'
 import type { FrameStyleData } from '@/lib/brand-images'
 import type { PricedAddOn, PricedPackage } from '@/lib/pricing'
+import { retentionHintForPackage } from '@/lib/retention-policy'
 
 export function QuoteSummary({
   compact = false,
@@ -83,7 +84,14 @@ export function QuoteSummary({
               ) : null}
             </p>
             {selectedPkg ? (
-              <p className="text-xs text-text-secondary mt-0.5">{selectedPkg.frameSummary}</p>
+              <>
+                <p className="text-xs text-text-secondary mt-0.5">{selectedPkg.frameSummary}</p>
+                {retentionHintForPackage(selectedPkg.slug) ? (
+                  <p className="text-xs text-text-secondary/90 mt-0.5">
+                    {retentionHintForPackage(selectedPkg.slug)}
+                  </p>
+                ) : null}
+              </>
             ) : null}
           </div>
         )}

@@ -35,6 +35,10 @@ export async function submitLeadFromFormData(
   const eventType = String(formData.get('eventType') || '').trim()
   const eventDate = String(formData.get('eventDate') || '').trim()
   const guestCount = String(formData.get('guestCount') || '').trim()
+  const eventCity = String(formData.get('eventCity') || '').trim()
+  const postalCode = String(formData.get('postalCode') || '').trim()
+  const packageRecommendationRequested =
+    String(formData.get('packageRecommendationRequested') || '').trim() === '1'
   const message = String(formData.get('message') || '').trim()
   const packageId = String(formData.get('packageId') || '').trim()
   const frameStyleId = String(formData.get('frameStyleId') || '').trim()
@@ -49,19 +53,19 @@ export async function submitLeadFromFormData(
   const intent = String(formData.get('intent') || 'contact')
   const intentValue = intent === 'quote' ? 'quote' : 'contact'
 
-  if (!name || !email || !eventType || !eventDate) {
-    return { ok: false, error: 'Name, email, event type, and date are required.' }
+  if (!name || !email || !eventType || !eventDate || !eventCity || !postalCode) {
+    return {
+      ok: false,
+      error: 'Name, email, event type, date, city, and postal code are required.',
+    }
   }
 
-  if (intentValue === 'quote' && !phone) {
-    return { ok: false, error: 'Phone is required for quote requests.' }
-  }
   const serviceTypeRaw = String(formData.get('serviceType') || 'frames').trim()
   const serviceType =
     serviceTypeRaw === 'stickers' || serviceTypeRaw === 'both' ? serviceTypeRaw : 'frames'
   const wantsFrames = serviceType === 'frames' || serviceType === 'both'
 
-  if (intent === 'quote' && wantsFrames) {
+  if (intent === 'quote' && wantsFrames && !packageRecommendationRequested) {
     if (!packageId) {
       return { ok: false, error: 'Please choose a package.' }
     }
@@ -184,6 +188,9 @@ export async function submitLeadFromFormData(
         eventType,
         eventDate,
         guestCount: guestCount || undefined,
+        eventCity: eventCity || undefined,
+        postalCode: postalCode || undefined,
+        packageRecommendationRequested,
         message: message || undefined,
         package: pkg?.id ?? undefined,
         packageName: pkg?.name,
@@ -236,6 +243,9 @@ export async function submitLeadFromFormData(
         eventType,
         eventDate,
         guestCount,
+        eventCity,
+        postalCode,
+        packageRecommendationRequested,
         message,
         serviceLabel,
         packageName: pkg?.name,

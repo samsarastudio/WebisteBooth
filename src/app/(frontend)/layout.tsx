@@ -29,13 +29,13 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
     default: pageTitle(),
-    template: `%s | ${brand.fullName}`,
+    template: `%s | ${brand.name}`,
   },
   description: brand.profileDescription,
   openGraph: {
     type: 'website',
     locale: 'en_CA',
-    siteName: brand.fullName,
+    siteName: brand.displayName,
     title: pageTitle(),
     description: brand.profileDescription,
     images: [{ url: '/brand/style-romance-photo.png' }],

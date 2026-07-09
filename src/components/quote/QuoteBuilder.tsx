@@ -22,6 +22,7 @@ import { formatDisplayLabel } from '@/lib/frame-design/layouts'
 import type { FrameStyleData } from '@/lib/brand-images'
 import { brand } from '@/lib/brand'
 import { calculateEstimate, type PricedAddOn, type PricedPackage } from '@/lib/pricing'
+import { retentionHintForPackage } from '@/lib/retention-policy'
 import {
   buildQuoteSteps,
   mapServerQuoteError,
@@ -56,6 +57,12 @@ const eventTypes = [
 
 function stepVisible(stepId: QuoteStepId, activeStepId: QuoteStepId) {
   return activeStepId === stepId ? 'block' : 'hidden lg:block'
+}
+
+function stepHeading(steps: { id: QuoteStepId; label: string }[], stepId: QuoteStepId, title: string) {
+  const idx = steps.findIndex((s) => s.id === stepId)
+  const prefix = idx >= 0 ? `${idx + 1}. ` : ''
+  return `${prefix}${title}`
 }
 
 export function QuoteBuilder({
@@ -103,8 +110,10 @@ export function QuoteBuilder({
     designerEmail?: string
   } | null>(null)
   const [prefillEmail, setPrefillEmail] = useState('')
+  const [helpMeChoose, setHelpMeChoose] = useState(false)
 
   const successRef = useRef<HTMLHeadingElement>(null)
+  const eventRef = useRef<HTMLElement>(null)
   const serviceRef = useRef<HTMLElement>(null)
   const packageRef = useRef<HTMLElement>(null)
   const styleRef = useRef<HTMLElement>(null)
@@ -113,6 +122,7 @@ export function QuoteBuilder({
   const formRef = useRef<HTMLFormElement>(null)
 
   const sectionRefs: Record<QuoteStepId, RefObject<HTMLElement | null>> = {
+    event: eventRef,
     service: serviceRef,
     package: packageRef,
     style: styleRef,
@@ -181,13 +191,13 @@ export function QuoteBuilder({
 
   useEffect(() => {
     setCurrentStepIndex(0)
-  }, [serviceType])
+  }, [serviceType, helpMeChoose])
 
   const hasDesign = Boolean(loadedDesign?.token)
 
   const steps = useMemo(
-    () => buildQuoteSteps(serviceType, hasDesign),
-    [serviceType, hasDesign],
+    () => buildQuoteSteps(serviceType, hasDesign, helpMeChoose),
+    [serviceType, hasDesign, helpMeChoose],
   )
 
   useEffect(() => {
@@ -202,9 +212,10 @@ export function QuoteBuilder({
       packageId,
       styleId,
       hasDesign,
+      helpMeChoose,
       form,
     }),
-    [serviceType, packageId, styleId, hasDesign],
+    [serviceType, packageId, styleId, hasDesign, helpMeChoose],
   )
 
   const scrollToStep = useCallback(
@@ -219,7 +230,15 @@ export function QuoteBuilder({
   )
 
   const focusFirstFieldError = useCallback((errors: Partial<Record<string, string>>) => {
-    const order = ['name', 'email', 'phone', 'eventType', 'eventDate', 'privacyConsent']
+    const order = [
+      'eventType',
+      'eventDate',
+      'eventCity',
+      'postalCode',
+      'name',
+      'email',
+      'privacyConsent',
+    ]
     const first = order.find((k) => errors[k])
     if (!first || !formRef.current) return
     const el = formRef.current.querySelector<HTMLElement>(`[name="${first}"], #${first}`)
@@ -238,10 +257,13 @@ export function QuoteBuilder({
   function goNext() {
     const step = steps[currentStepIndex]
     if (!step) return
-    const result = validateQuoteStep(step.id, validationInput())
+    const formData = formRef.current ? new FormData(formRef.current) : undefined
+    const result = validateQuoteStep(step.id, validationInput(formData))
     if (!result.ok) {
       setSectionErrors((prev) => ({ ...prev, ...result.sectionErrors }))
+      setFieldErrors((prev) => ({ ...prev, ...result.fieldErrors }))
       scrollToStep(step.id)
+      focusFirstFieldError(result.fieldErrors)
       return
     }
     clearStepError(step.id)
@@ -310,7 +332,7 @@ export function QuoteBuilder({
     ? '/brand/stickers-hero.png'
     : selectedStyle?.imagePath || '/brand/style-romance-photo.png'
 
-  const activeStepId = steps[currentStepIndex]?.id ?? 'service'
+  const activeStepId = steps[currentStepIndex]?.id ?? 'event'
   const isLastStep = currentStepIndex >= steps.length - 1
 
   function toggleAddOn(id: string) {
@@ -407,16 +429,93 @@ export function QuoteBuilder({
       </div>
 
       <div className="grid lg:grid-cols-[1fr_340px] gap-8 items-start">
-        <div className="space-y-10">
-          <section
-            ref={serviceRef}
-            className={stepVisible('service', activeStepId)}
-          >
+        <form ref={formRef} onSubmit={handleSubmit} className="space-y-10">
+          <input type="hidden" name="intent" value="quote" />
+          <input type="hidden" name="serviceType" value={serviceType} />
+          <input type="hidden" name="packageId" value={wantsFrames && !helpMeChoose ? packageId : ''} />
+          <input type="hidden" name="frameStyleId" value={wantsFrames && !helpMeChoose ? styleId : ''} />
+          <input
+            type="hidden"
+            name="frameFormat"
+            value={
+              wantsFrames
+                ? loadedDesign?.format === 'original'
+                  ? 'original'
+                  : '6x4'
+                : ''
+            }
+          />
+          <input type="hidden" name="designToken" value={loadedDesign?.token || ''} />
+          <input
+            type="hidden"
+            name="selectedAddOns"
+            value={JSON.stringify(wantsFrames ? selectedList : [])}
+          />
+          <input
+            type="hidden"
+            name="packageRecommendationRequested"
+            value={helpMeChoose ? '1' : '0'}
+          />
+          <div className="absolute -left-[9999px] opacity-0" aria-hidden="true">
+            <label htmlFor="website">Website</label>
+            <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
+          </div>
+
+          <section ref={eventRef} className={stepVisible('event', activeStepId)}>
             <h2 className="text-2xl font-serif mb-2">
-              1. What are you interested in? <ReqStar />
+              {stepHeading(steps, 'event', 'Tell us about your event')} <ReqStar />
+            </h2>
+            <SectionError message={sectionErrors.event} />
+            <div className="card p-6 md:p-8 grid sm:grid-cols-2 gap-5">
+              <div>
+                <label className="block text-sm font-medium mb-1.5" htmlFor="eventType">
+                  Event Type <ReqStar />
+                </label>
+                <select
+                  id="eventType"
+                  name="eventType"
+                  required
+                  defaultValue=""
+                  className={`field-input ${fieldErrors.eventType ? 'ring-1 ring-red-400' : ''}`}
+                >
+                  <option value="" disabled>
+                    Select type...
+                  </option>
+                  {eventTypes.map((t) => (
+                    <option key={t} value={t}>
+                      {t}
+                    </option>
+                  ))}
+                </select>
+                {fieldErrors.eventType ? (
+                  <p className="text-xs text-red-600 mt-1">{fieldErrors.eventType}</p>
+                ) : null}
+              </div>
+              <Field
+                label="Event Date"
+                name="eventDate"
+                type="date"
+                required
+                error={fieldErrors.eventDate}
+              />
+              <Field label="City" name="eventCity" required error={fieldErrors.eventCity} />
+              <Field
+                label="Postal Code"
+                name="postalCode"
+                required
+                error={fieldErrors.postalCode}
+                placeholder="N2G 1A1"
+              />
+              <Field label="Guest Count (approx.)" name="guestCount" />
+            </div>
+          </section>
+
+          <section ref={serviceRef} className={stepVisible('service', activeStepId)}>
+            <h2 className="text-2xl font-serif mb-2">
+              {stepHeading(steps, 'service', 'What are you interested in?')} <ReqStar />
             </h2>
             <SectionError message={sectionErrors.service} />
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
               {(
                 [
                   { id: 'frames' as const, label: 'Custom Frames', desc: 'Photo frames for guests' },
@@ -424,13 +523,14 @@ export function QuoteBuilder({
                   { id: 'both' as const, label: 'Both', desc: 'Frames + stickers' },
                 ] as const
               ).map((opt) => {
-                const active = serviceType === opt.id
+                const active = serviceType === opt.id && !helpMeChoose
                 return (
                   <button
                     key={opt.id}
                     type="button"
                     onClick={() => {
                       setServiceType(opt.id)
+                      setHelpMeChoose(false)
                       clearStepError('service')
                     }}
                     className={`card p-4 min-h-[48px] text-left touch-manipulation ${
@@ -446,6 +546,28 @@ export function QuoteBuilder({
                 )
               })}
             </div>
+            <button
+              type="button"
+              onClick={() => {
+                setHelpMeChoose(true)
+                setPackageId('')
+                setStyleId('')
+                clearStepError('package')
+                clearStepError('style')
+              }}
+              className={`card p-4 w-full text-left touch-manipulation ${
+                helpMeChoose ? 'ring-2 ring-accent/80 border-accent/50' : ''
+              }`}
+            >
+              <div className="flex items-start justify-between gap-2">
+                <span className="font-serif text-lg">Recommend one for me</span>
+                {helpMeChoose && <Check size={18} className="text-accent shrink-0" />}
+              </div>
+              <p className="text-xs text-text-secondary mt-1">
+                Not sure which package fits? We will recommend frames, stickers, or both based on
+                your event details.
+              </p>
+            </button>
           </section>
 
           {designLoadError ? (
@@ -479,11 +601,11 @@ export function QuoteBuilder({
             </section>
           ) : null}
 
-          {wantsFrames && (
+          {wantsFrames && !helpMeChoose && (
             <>
               <section ref={packageRef} className={stepVisible('package', activeStepId)}>
                 <h2 className="text-2xl font-serif mb-2">
-                  2. Choose a frame package <ReqStar />
+                  {stepHeading(steps, 'package', 'Choose a frame package')} <ReqStar />
                 </h2>
                 <SectionError message={sectionErrors.package} />
                 <p className="text-text-secondary text-sm mb-3">
@@ -517,6 +639,11 @@ export function QuoteBuilder({
                           <div className="text-accent font-semibold text-sm">{pkg.priceRange}</div>
                         )}
                         <div className="text-xs text-text-secondary mt-1">{pkg.frameSummary}</div>
+                        {retentionHintForPackage(pkg.slug) ? (
+                          <div className="text-[11px] text-text-secondary/90 mt-0.5">
+                            {retentionHintForPackage(pkg.slug)}
+                          </div>
+                        ) : null}
                       </button>
                     )
                   })}
@@ -526,7 +653,7 @@ export function QuoteBuilder({
               {!loadedDesign ? (
                 <section ref={styleRef} className={stepVisible('style', activeStepId)}>
                   <h2 className="text-2xl font-serif mb-2">
-                    3. Choose frame style <ReqStar />
+                    {stepHeading(steps, 'style', 'Choose frame style')} <ReqStar />
                   </h2>
                   <SectionError message={sectionErrors.style} />
                   <p className="text-text-secondary text-sm mb-4">
@@ -573,8 +700,73 @@ export function QuoteBuilder({
                 </section>
               ) : null}
 
+              <section ref={contactRef} className={stepVisible('contact', activeStepId)}>
+                <h2 className="text-2xl font-serif mb-2">
+                  {stepHeading(steps, 'contact', 'Your details')} <ReqStar />
+                </h2>
+                <SectionError message={sectionErrors.contact || state.error} />
+                <p className="text-text-secondary text-sm mb-6">
+                  We&apos;ll email your custom quote within 24 hours.
+                </p>
+                <div className="card p-6 md:p-8 space-y-5">
+                  <div className="grid sm:grid-cols-2 gap-5">
+                    <Field label="Full Name" name="name" required error={fieldErrors.name} />
+                    <Field
+                      key={prefillEmail || 'quote-email'}
+                      label="Email"
+                      name="email"
+                      type="email"
+                      required
+                      defaultValue={prefillEmail}
+                      error={fieldErrors.email}
+                    />
+                    <Field
+                      label="Phone (optional)"
+                      name="phone"
+                      type="tel"
+                      error={fieldErrors.phone}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-1.5" htmlFor="message">
+                      Custom names / message for frames
+                    </label>
+                    <textarea
+                      id="message"
+                      name="message"
+                      rows={4}
+                      className="field-input resize-y"
+                      placeholder="e.g. Anna & Stephen · With love — Mia"
+                    />
+                  </div>
+
+                  <label className="flex items-start gap-3 text-sm text-text-secondary cursor-pointer">
+                    <input
+                      type="checkbox"
+                      name="privacyConsent"
+                      value="1"
+                      required
+                      className="mt-1 h-4 w-4 rounded border-border accent-accent shrink-0"
+                    />
+                    <span>
+                      I agree to the{' '}
+                      <Link href="/privacy" className="text-accent hover:underline font-medium">
+                        Privacy Policy
+                      </Link>
+                      . <ReqStar />
+                    </span>
+                  </label>
+                  {fieldErrors.privacyConsent ? (
+                    <p className="text-xs text-red-600">{fieldErrors.privacyConsent}</p>
+                  ) : null}
+                </div>
+              </section>
+
               <section ref={addonsRef} className={stepVisible('addons', activeStepId)}>
-                <h2 className="text-2xl font-serif mb-2">4. Add-ons</h2>
+                <h2 className="text-2xl font-serif mb-2">
+                  {stepHeading(steps, 'addons', 'Add-ons')}
+                </h2>
                 <p className="text-text-secondary text-sm mb-6">Optional extras for your event.</p>
                 <div className="space-y-3">
                   {addons.map((addon) => {
@@ -623,143 +815,105 @@ export function QuoteBuilder({
                     )
                   })}
                 </div>
+                {isLastStep ? (
+                  <div className="mt-8 space-y-3">
+                    <button
+                      type="submit"
+                      className="btn-primary w-full justify-center"
+                      disabled={pending}
+                    >
+                      {pending ? 'Sending...' : 'Get my quote'}
+                      <Sparkles size={16} />
+                    </button>
+                    <p className="text-xs text-center text-text-secondary">
+                      Free quote by email — no payment required.
+                    </p>
+                  </div>
+                ) : null}
               </section>
             </>
           )}
 
-          {wantsStickers && !wantsFrames && (
-            <section className="card p-6">
-              <h2 className="text-xl font-serif mb-2">Sticker Studio</h2>
-              <p className="text-sm text-text-secondary leading-relaxed">
-                On-site print-and-cut stickers for your guests. Share your event details below.
+          {(!wantsFrames || helpMeChoose) && (
+            <section ref={contactRef} className={stepVisible('contact', activeStepId)}>
+              <h2 className="text-2xl font-serif mb-2">
+                {stepHeading(steps, 'contact', 'Your details')} <ReqStar />
+              </h2>
+              <SectionError message={sectionErrors.contact || state.error} />
+              <p className="text-text-secondary text-sm mb-6">
+                We&apos;ll email your custom quote within 24 hours.
               </p>
+              <div className="card p-6 md:p-8 space-y-5">
+                <div className="grid sm:grid-cols-2 gap-5">
+                  <Field label="Full Name" name="name" required error={fieldErrors.name} />
+                  <Field
+                    key={prefillEmail || 'quote-email-alt'}
+                    label="Email"
+                    name="email"
+                    type="email"
+                    required
+                    defaultValue={prefillEmail}
+                    error={fieldErrors.email}
+                  />
+                  <Field
+                    label="Phone (optional)"
+                    name="phone"
+                    type="tel"
+                    error={fieldErrors.phone}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-1.5" htmlFor="message-stickers">
+                    Notes for your quote
+                  </label>
+                  <textarea
+                    id="message-stickers"
+                    name="message"
+                    rows={4}
+                    className="field-input resize-y"
+                    placeholder="Tell us about sticker sizes, branding, or anything else we should know."
+                  />
+                </div>
+
+                <label className="flex items-start gap-3 text-sm text-text-secondary cursor-pointer">
+                  <input
+                    type="checkbox"
+                    name="privacyConsent"
+                    value="1"
+                    required
+                    className="mt-1 h-4 w-4 rounded border-border accent-accent shrink-0"
+                  />
+                  <span>
+                    I agree to the{' '}
+                    <Link href="/privacy" className="text-accent hover:underline font-medium">
+                      Privacy Policy
+                    </Link>
+                    . <ReqStar />
+                  </span>
+                </label>
+                {fieldErrors.privacyConsent ? (
+                  <p className="text-xs text-red-600">{fieldErrors.privacyConsent}</p>
+                ) : null}
+
+                {isLastStep ? (
+                  <>
+                    <button
+                      type="submit"
+                      className="btn-primary w-full justify-center"
+                      disabled={pending}
+                    >
+                      {pending ? 'Sending...' : 'Get my quote'}
+                      <Sparkles size={16} />
+                    </button>
+                    <p className="text-xs text-center text-text-secondary">
+                      Free quote by email — no payment required.
+                    </p>
+                  </>
+                ) : null}
+              </div>
             </section>
           )}
-
-          <section ref={contactRef} className={stepVisible('contact', activeStepId)}>
-            <h2 className="text-2xl font-serif mb-2">
-              {wantsFrames ? '5. Your details' : '2. Your details'}
-            </h2>
-            <SectionError message={sectionErrors.contact || state.error} />
-            <p className="text-text-secondary text-sm mb-6">
-              We&apos;ll email your custom quote within 24 hours.
-            </p>
-
-            <form ref={formRef} onSubmit={handleSubmit} className="card p-6 md:p-8 space-y-5 relative">
-              <input type="hidden" name="intent" value="quote" />
-              <input type="hidden" name="serviceType" value={serviceType} />
-              <input type="hidden" name="packageId" value={wantsFrames ? packageId : ''} />
-              <input type="hidden" name="frameStyleId" value={wantsFrames ? styleId : ''} />
-              <input
-                type="hidden"
-                name="frameFormat"
-                value={
-                  wantsFrames
-                    ? loadedDesign?.format === 'original'
-                      ? 'original'
-                      : '6x4'
-                    : ''
-                }
-              />
-              <input type="hidden" name="designToken" value={loadedDesign?.token || ''} />
-              <input
-                type="hidden"
-                name="selectedAddOns"
-                value={JSON.stringify(wantsFrames ? selectedList : [])}
-              />
-              <div className="absolute -left-[9999px] opacity-0" aria-hidden="true">
-                <label htmlFor="website">Website</label>
-                <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
-              </div>
-
-              <div className="grid sm:grid-cols-2 gap-5">
-                <Field label="Full Name" name="name" required error={fieldErrors.name} />
-                <Field
-                  key={prefillEmail || 'quote-email'}
-                  label="Email"
-                  name="email"
-                  type="email"
-                  required
-                  defaultValue={prefillEmail}
-                  error={fieldErrors.email}
-                />
-                <Field label="Phone" name="phone" type="tel" required error={fieldErrors.phone} />
-                <div>
-                  <label className="block text-sm font-medium mb-1.5" htmlFor="eventType">
-                    Event Type <ReqStar />
-                  </label>
-                  <select
-                    id="eventType"
-                    name="eventType"
-                    required
-                    defaultValue=""
-                    className={`field-input ${fieldErrors.eventType ? 'ring-1 ring-red-400' : ''}`}
-                  >
-                    <option value="" disabled>
-                      Select type...
-                    </option>
-                    {eventTypes.map((t) => (
-                      <option key={t} value={t}>
-                        {t}
-                      </option>
-                    ))}
-                  </select>
-                  {fieldErrors.eventType ? (
-                    <p className="text-xs text-red-600 mt-1">{fieldErrors.eventType}</p>
-                  ) : null}
-                </div>
-                <Field
-                  label="Event Date"
-                  name="eventDate"
-                  type="date"
-                  required
-                  error={fieldErrors.eventDate}
-                />
-                <Field label="Guest Count" name="guestCount" />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-1.5" htmlFor="message">
-                  Custom names / message for frames
-                </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  rows={4}
-                  className="field-input resize-y"
-                  placeholder="e.g. Anna & Stephen · With love — Mia"
-                />
-              </div>
-
-              <label className="flex items-start gap-3 text-sm text-text-secondary cursor-pointer">
-                <input
-                  type="checkbox"
-                  name="privacyConsent"
-                  value="1"
-                  required
-                  className="mt-1 h-4 w-4 rounded border-border accent-accent shrink-0"
-                />
-                <span>
-                  I agree to the{' '}
-                  <Link href="/privacy" className="text-accent hover:underline font-medium">
-                    Privacy Policy
-                  </Link>
-                  . <ReqStar />
-                </span>
-              </label>
-              {fieldErrors.privacyConsent ? (
-                <p className="text-xs text-red-600">{fieldErrors.privacyConsent}</p>
-              ) : null}
-
-              <button type="submit" className="btn-primary w-full justify-center lg:flex" disabled={pending}>
-                {pending ? 'Sending...' : 'Get my quote'}
-                <Sparkles size={16} />
-              </button>
-              <p className="text-xs text-center text-text-secondary">
-                Free quote by email — no payment required.
-              </p>
-            </form>
-          </section>
 
           <div className="lg:hidden sticky bottom-0 z-20 -mx-4 px-4 py-4 bg-bg-primary/95 backdrop-blur border-t border-border flex gap-3">
             {currentStepIndex > 0 ? (
@@ -775,7 +929,7 @@ export function QuoteBuilder({
               </button>
             ) : null}
           </div>
-        </div>
+        </form>
 
         <div className="hidden lg:block">
           <QuoteSummary
@@ -809,6 +963,7 @@ function Field({
   required,
   error,
   defaultValue,
+  placeholder,
 }: {
   label: string
   name: string
@@ -816,6 +971,7 @@ function Field({
   required?: boolean
   error?: string
   defaultValue?: string
+  placeholder?: string
 }) {
   return (
     <div>
@@ -834,6 +990,7 @@ function Field({
         type={type}
         required={required}
         defaultValue={defaultValue}
+        placeholder={placeholder}
         className={`field-input ${error ? 'ring-1 ring-red-400' : ''}`}
       />
       {error ? <p className="text-xs text-red-600 mt-1">{error}</p> : null}

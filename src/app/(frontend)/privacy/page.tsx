@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 
 import { Reveal } from '@/components/marketing/Reveal'
+import { RETENTION_LEGAL_PARAGRAPH } from '@/lib/retention-policy'
 import { brand } from '@/lib/brand'
 
 export const metadata: Metadata = {
@@ -83,13 +84,7 @@ export default function PrivacyPage() {
 
             <section>
               <h2 className="text-xl font-serif text-text-primary mb-3">4. Online photos & galleries</h2>
-              <p>
-                When we provide digital photos from your event, access is typically available for{' '}
-                <strong className="text-text-primary">three (3) months</strong> from the event date,
-                unless otherwise agreed in writing. After expiry, gallery links may be disabled and
-                files may be deleted from our systems. Please download any photos you wish to keep
-                before access expires.
-              </p>
+              <p>{RETENTION_LEGAL_PARAGRAPH}</p>
             </section>
 
             <section>

@@ -28,10 +28,8 @@ export type LocalPageConfig = {
   setupSteps: LocalSectionItem[]
   nearbyAreas: string[]
   faqs: LocalFaq[]
-  testimonial?: {
-    quote: string
-    attribution: string
-  }
+  /** City name for regional invitation block */
+  invitationCity: string
   relatedPages: { href: string; label: string }[]
   /** Schema.org locality */
   schemaCity: string

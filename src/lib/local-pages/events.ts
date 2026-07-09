@@ -42,7 +42,7 @@ export const weddingPage: LocalPageConfig = {
     {
       title: 'Premium for larger guest lists',
       description:
-        '120 guest frames, QR insert option, and online gallery access up to 1 year — ideal for 100+ guest weddings.',
+        '120 guest frames, QR insert option, and online gallery access for 12 months (Premium) — ideal for 100+ guest weddings.',
     },
   ],
   stickerOptions: [
@@ -130,11 +130,7 @@ export const weddingPage: LocalPageConfig = {
         'We coordinate timing with planners, DJs, and photographers regularly — provide contact details and we will align on the day-of schedule.',
     },
   ],
-  testimonial: {
-    quote:
-      'We skipped the usual favours — guests told us months later they still have their frame on the mantel. Worth every penny for our Kitchener-Waterloo wedding.',
-    attribution: 'Waterloo Region newlyweds',
-  },
+  invitationCity: 'Waterloo Region',
   relatedPages: [
     { href: '/photo-booth-kitchener', label: 'Kitchener' },
     { href: '/photo-booth-waterloo', label: 'Waterloo' },
@@ -173,7 +169,7 @@ export const birthdayPage: LocalPageConfig = {
       src: '/brand/product-birthday.png',
       alt: 'Birthday party display of guest keepsake frames',
       caption:
-        'Personalized photo keepsakes beat disposable party favours — every guest leaves with their photo in a custom frame. Email us your date.',
+        'Personalized photo keepsakes beat disposable party favours — guests receive their photo in a custom frame, up to your package frame quantity. Email us your date.',
     },
   ],
   frameOptions: [
@@ -278,11 +274,7 @@ export const birthdayPage: LocalPageConfig = {
         'Basic prop sets included; Premium adds themed accessories. Many hosts skip props and rely on the frame design itself.',
     },
   ],
-  testimonial: {
-    quote:
-      'My 50th in Kitchener — friends still text me photos of the frames on their shelves. Better than another wine glass with my name on it.',
-    attribution: 'Birthday host, Kitchener',
-  },
+  invitationCity: 'Kitchener-Waterloo',
   relatedPages: [
     { href: '/photo-booth-cambridge', label: 'Cambridge' },
     { href: '/photo-booth-kitchener', label: 'Kitchener' },
@@ -426,11 +418,7 @@ export const corporatePage: LocalPageConfig = {
         'Absolutely — some teams prefer elegant captions only. Premium package supports either approach.',
     },
   ],
-  testimonial: {
-    quote:
-      'Our Waterloo holiday party needed something employees would post — framed photos outperformed every swag item we have tried.',
-    attribution: 'HR lead, Waterloo Region tech company',
-  },
+  invitationCity: 'Waterloo Region',
   relatedPages: [
     { href: '/photo-booth-waterloo', label: 'Waterloo' },
     { href: '/live-sticker-station-kitchener-waterloo', label: 'Sticker station' },
@@ -584,11 +572,7 @@ export const stickerStationPage: LocalPageConfig = {
         'Colour palettes and branding align — we coordinate artwork so both experiences feel like one brand.',
     },
   ],
-  testimonial: {
-    quote:
-      'We added a live sticker station to our Waterloo corporate mixer — lines moved fast and people stuck them on laptops before they left the building.',
-    attribution: 'Event coordinator, Kitchener-Waterloo',
-  },
+  invitationCity: 'Kitchener-Waterloo',
   relatedPages: [
     { href: '/stickers', label: 'Sticker studio overview' },
     { href: '/corporate-event-photo-booth-waterloo-region', label: 'Corporate events' },

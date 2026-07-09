@@ -4,6 +4,7 @@ export const SiteSettings: GlobalConfig = {
   slug: 'site-settings',
   access: {
     read: () => true,
+    update: ({ req }) => Boolean(req.user),
   },
   fields: [
     {
@@ -43,7 +44,7 @@ export const SiteSettings: GlobalConfig = {
               name: 'heroSubtitle',
               type: 'textarea',
               defaultValue:
-                'Every guest receives their photo inside a personalized frame—or watches their custom sticker get printed and cut live at your event.',
+                'Guests receive their event photo inside a personalized keepsake frame, up to the frame quantity included in your package—or watch custom stickers print and cut live at your event.',
             },
             {
               name: 'trustBadges',

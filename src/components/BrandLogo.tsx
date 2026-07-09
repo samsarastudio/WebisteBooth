@@ -70,7 +70,7 @@ export function BrandLogoLink({
       href={href}
       onClick={onClick}
       className="flex items-center gap-2.5 shrink-0 group"
-      aria-label={`${brand.fullName} home`}
+      aria-label={`${brand.displayName} home`}
     >
       <span
         className={`${markClass} shrink-0 rounded-[0.85rem] overflow-hidden shadow-sm ring-1 ring-border/70`}
@@ -79,7 +79,10 @@ export function BrandLogoLink({
       </span>
       <span className={`font-serif ${titleClass} tracking-tight leading-tight group-hover:text-accent transition-colors`}>
         {brand.name}
-        <span className="block font-sans text-[0.58rem] md:text-[0.62rem] font-medium tracking-[0.08em] text-text-secondary mt-0.5">
+        <span className="block font-sans text-[0.58rem] md:text-[0.62rem] font-medium tracking-[0.06em] text-text-secondary mt-0.5">
+          Photo Booth &amp; Event Keepsakes
+        </span>
+        <span className="block font-sans text-[0.52rem] md:text-[0.55rem] font-medium tracking-[0.08em] text-text-secondary/90">
           by{' '}
           <span className="text-text-primary/80 tracking-normal font-semibold">{brand.parentName}</span>
         </span>

@@ -7,6 +7,7 @@ import { Loader2, ArrowRight } from 'lucide-react'
 
 import { DesignCanvas } from '@/components/design/DesignCanvas'
 import { DesignToolbar, type DesignPanel } from '@/components/design/DesignToolbar'
+import { DesignEmailGate } from '@/components/design/DesignEmailGate'
 import { ResetDesignDialog } from '@/components/design/ResetDesignDialog'
 import { PalettePanel } from '@/components/design/PalettePanel'
 import { TextPanel } from '@/components/design/TextPanel'
@@ -69,13 +70,15 @@ export function FrameConfigurator({
   initialDesignToken,
   initialDesign,
   designerEmail,
+  onAuthenticated,
 }: {
   ornaments: FrameOrnamentData[]
   stylePresets: FrameStylePreset[]
   initialStyleSlug?: string
   initialDesignToken?: string
   initialDesign?: FrameDesignState
-  designerEmail: string
+  designerEmail?: string | null
+  onAuthenticated?: (email: string, activeDesignToken?: string | null) => void | Promise<void>
 }) {
   const router = useRouter()
   const stageRef = useRef<Konva.Stage>(null)
@@ -105,6 +108,8 @@ export function FrameConfigurator({
   const [autosaveStatus, setAutosaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle')
   const [saveNotice, setSaveNotice] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [emailGateOpen, setEmailGateOpen] = useState(false)
+  const [pendingSaveAfterAuth, setPendingSaveAfterAuth] = useState(false)
 
   const activeBase = getBaseStructure(design.baseId)
   const activeLayout = getFrameLayout(
@@ -249,6 +254,32 @@ export function FrameConfigurator({
     setUploading(true)
     setError(null)
     try {
+      if (!designerEmail) {
+        const blobUrl = URL.createObjectURL(file)
+        const natural = await loadImageSize(blobUrl)
+        const layout = getFrameLayout(
+          design.format,
+          design.shapeVariant || 'classic',
+          activeBase.layoutProfile,
+        )
+        const transform = photoTransformForCover(
+          natural.width,
+          natural.height,
+          layout.photoSlot.width,
+          layout.photoSlot.height,
+        )
+
+        setState((prev) => ({
+          ...prev,
+          photoMediaId: undefined,
+          photoUrl: blobUrl,
+          photoNaturalSize: natural,
+          photoTransform: transform,
+        }))
+        setActivePanel('colors')
+        return
+      }
+
       const fd = new FormData()
       fd.append('photo', file)
       const res = await fetch('/api/design/upload', { method: 'POST', body: fd })
@@ -295,11 +326,43 @@ export function FrameConfigurator({
     }
   }
 
-  async function handleSaveAndQuote() {
+  async function ensurePhotoUploaded(state: FrameDesignState): Promise<FrameDesignState> {
+    if (state.photoMediaId || !state.photoUrl?.startsWith('blob:')) return state
+
+    try {
+      const blob = await fetch(state.photoUrl).then((r) => r.blob())
+      const fd = new FormData()
+      fd.append('photo', blob, 'photo.jpg')
+      const res = await fetch('/api/design/upload', { method: 'POST', body: fd })
+      const data = (await res.json()) as {
+        ok: boolean
+        mediaId?: number
+        url?: string
+        error?: string
+      }
+      if (!data.ok || !data.mediaId || !data.url) {
+        throw new Error(data.error || 'Upload failed')
+      }
+      return {
+        ...state,
+        photoMediaId: data.mediaId,
+        photoUrl: data.url,
+      }
+    } catch {
+      throw new Error('Could not upload your photo. Please try uploading again.')
+    }
+  }
+
+  async function persistDesignAndQuote(email: string) {
     setSaving(true)
     setError(null)
     setSaveNotice(null)
     try {
+      const designForSave = await ensurePhotoUploaded(design)
+      if (designForSave !== design) {
+        setState(designForSave)
+      }
+
       let previewDataUrl: string | undefined
       const stage = stageRef.current
       if (stage) {
@@ -311,9 +374,9 @@ export function FrameConfigurator({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           designToken: designToken || undefined,
-          state: design,
+          state: designForSave,
           previewDataUrl,
-          photoMediaId: design.photoMediaId,
+          photoMediaId: designForSave.photoMediaId,
         }),
       })
       const data = (await res.json()) as {
@@ -326,12 +389,30 @@ export function FrameConfigurator({
         return
       }
       setDesignToken(data.designToken)
-      setSaveNotice(`Snapshot saved — we emailed ${designerEmail} a link to recreate this design.`)
+      setSaveNotice(`Snapshot saved — we emailed ${email} a link to recreate this design.`)
       router.push(`/quote?design=${encodeURIComponent(data.designToken)}&service=frames`)
     } catch {
       setError('Could not save design.')
     } finally {
       setSaving(false)
+    }
+  }
+
+  async function handleSaveAndQuote() {
+    if (!designerEmail) {
+      setPendingSaveAfterAuth(true)
+      setEmailGateOpen(true)
+      return
+    }
+    await persistDesignAndQuote(designerEmail)
+  }
+
+  async function handleEmailGateSuccess(email: string) {
+    setEmailGateOpen(false)
+    await onAuthenticated?.(email)
+    if (pendingSaveAfterAuth) {
+      setPendingSaveAfterAuth(false)
+      await persistDesignAndQuote(email)
     }
   }
 
@@ -579,14 +660,22 @@ export function FrameConfigurator({
 
       <aside className="card p-4 md:p-5 order-3 space-y-4">
         <div className="space-y-1">
-          <p className="text-xs text-text-secondary">
-            Signed in as <span className="font-medium text-text-primary">{designerEmail}</span>
-          </p>
-          {autosaveStatus === 'saving' ? (
-            <p className="text-xs text-text-secondary">Saving draft…</p>
-          ) : autosaveStatus === 'saved' ? (
-            <p className="text-xs text-accent">Draft saved to your history</p>
-          ) : null}
+          {designerEmail ? (
+            <>
+              <p className="text-xs text-text-secondary">
+                Signed in as <span className="font-medium text-text-primary">{designerEmail}</span>
+              </p>
+              {autosaveStatus === 'saving' ? (
+                <p className="text-xs text-text-secondary">Saving draft…</p>
+              ) : autosaveStatus === 'saved' ? (
+                <p className="text-xs text-accent">Draft saved to your history</p>
+              ) : null}
+            </>
+          ) : (
+            <p className="text-xs text-text-secondary">
+              Try free — your edits stay on this device until you save or request a quote.
+            </p>
+          )}
         </div>
         <h3 className="font-serif text-lg capitalize">{activePanel}</h3>
 
@@ -669,6 +758,15 @@ export function FrameConfigurator({
         ) : null}
       </aside>
     </div>
+      <DesignEmailGate
+        open={emailGateOpen}
+        onClose={() => {
+          setEmailGateOpen(false)
+          setPendingSaveAfterAuth(false)
+        }}
+        purpose="quote"
+        onAuthenticated={handleEmailGateSuccess}
+      />
     </>
   )
 }

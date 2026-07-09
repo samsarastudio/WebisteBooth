@@ -1,15 +1,16 @@
 import { lexicalFromBlocks } from '@/lib/lexical-content'
+import {
+  ONLINE_PHOTOS_ESSENTIAL,
+  ONLINE_PHOTOS_PREMIUM,
+  ONLINE_PHOTOS_SIGNATURE,
+} from '@/lib/retention-policy'
 
 export const HOURS_LINE = '3 hours coverage (excluding setup time)'
 export const FRAMES_60 = '60 guest photo frames'
 export const FRAMES_120 = '120 guest photo frames'
 export const FRAMES_LINE = FRAMES_60
-export const ONLINE_PHOTOS_LINE =
-  'Online digital photos available for download — access expires after 3 months'
-export const ONLINE_PHOTOS_PREMIUM =
-  'Online digital photos available for download — access up to 1 year (Premium)'
-export const ONLINE_PHOTOS_SIGNATURE =
-  'Online gallery access tailored to your event — discuss options with us'
+export const ONLINE_PHOTOS_LINE = ONLINE_PHOTOS_ESSENTIAL
+export { ONLINE_PHOTOS_PREMIUM, ONLINE_PHOTOS_SIGNATURE }
 
 export const ATTENDANT_LINE =
   'On-site attendant included — we set up, run the booth, and tear down'
@@ -192,7 +193,7 @@ export const defaultFaqs = [
   {
     question: 'How long are online photos available?',
     answer:
-      'Essential includes 3 months of online gallery access. Premium includes up to 1 year of online gallery access. Signature packages are fully custom — we will tailor online access to your event when we plan together.',
+      'Essential includes 3 months of online gallery access. Premium includes 12 months of online gallery access. Signature packages use a custom retention period agreed in writing when we plan your event together.',
     active: true,
     sortOrder: 8,
   },
@@ -539,12 +540,12 @@ export const defaultSiteSettings = {
   heroEyebrow: 'FrameFlix by InMoment',
   heroTitle: 'A photo booth experience your guests take home',
   heroSubtitle:
-    'Every guest receives their photo inside a personalized frame—or watches their custom sticker get printed and cut live at your event.',
+    'Guests receive their event photo inside a personalized keepsake frame, up to the frame quantity included in your package—or watch custom stickers print and cut live at your event.',
   testimonials: [] as { text: string; author: string }[],
   trustBadges: [
     { icon: '⏱️', label: '3 hrs coverage' },
     { icon: '🙋', label: 'Attendant included' },
-    { icon: '☁️', label: 'Online gallery included' },
+    { icon: '☁️', label: 'Online gallery — 3 or 12 months' },
     { icon: '✨', label: 'Fully custom' },
   ],
   // Pages

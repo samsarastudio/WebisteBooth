@@ -38,7 +38,7 @@ export function DualHero({
             initial={reduce ? false : { opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            {brand.fullName}
+            {brand.displayName}
           </motion.span>
           <motion.h1
             className="text-[2.35rem] leading-[1.2] sm:text-5xl sm:leading-[1.18] md:text-6xl md:leading-[1.15] font-semibold mb-5 pb-1"

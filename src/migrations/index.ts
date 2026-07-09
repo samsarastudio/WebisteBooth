@@ -6,6 +6,8 @@ import * as migration_20260706_design_snapshot_fields from './20260706_design_sn
 import * as migration_20260706_designers from './20260706_designers';
 import * as migration_20260708_designers_locked_rel from './20260708_designers_locked_rel';
 import * as migration_20260708_content_trust_cleanup from './20260708_content_trust_cleanup';
+import * as migration_20260709_site_settings_event_organisers from './20260709_site_settings_event_organisers';
+import * as migration_20260709_lead_location_fields from './20260709_lead_location_fields';
 
 export const migrations = [
   {
@@ -47,5 +49,15 @@ export const migrations = [
     up: migration_20260708_content_trust_cleanup.up,
     down: migration_20260708_content_trust_cleanup.down,
     name: '20260708_content_trust_cleanup'
+  },
+  {
+    up: migration_20260709_site_settings_event_organisers.up,
+    down: migration_20260709_site_settings_event_organisers.down,
+    name: '20260709_site_settings_event_organisers'
+  },
+  {
+    up: migration_20260709_lead_location_fields.up,
+    down: migration_20260709_lead_location_fields.down,
+    name: '20260709_lead_location_fields'
   },
 ];

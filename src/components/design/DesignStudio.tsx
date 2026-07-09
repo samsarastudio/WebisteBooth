@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
 
-import { DesignEmailGate } from '@/components/design/DesignEmailGate'
 import type {
   FrameDesignState,
   FrameOrnamentData,
@@ -101,13 +100,9 @@ export function DesignStudio({
   if (checking || resumeLoading) {
     return (
       <div className="card p-12 text-center text-text-secondary">
-        {resumeLoading ? 'Restoring your saved design…' : 'Checking access…'}
+        {resumeLoading ? 'Restoring your saved design…' : 'Loading design studio…'}
       </div>
     )
-  }
-
-  if (!designerEmail) {
-    return <DesignEmailGate onAuthenticated={handleAuthenticated} />
   }
 
   const effectiveToken = initialDesignToken || resumedToken
@@ -121,6 +116,7 @@ export function DesignStudio({
       initialDesignToken={effectiveToken}
       initialDesign={effectiveDesign}
       designerEmail={designerEmail}
+      onAuthenticated={handleAuthenticated}
     />
   )
 }

@@ -10,7 +10,7 @@ import { guardPage } from '@/lib/page-guard'
 
 export const metadata: Metadata = {
   title: brand.ctaDesign,
-  description: `${brand.profileDescription} Upload a photo, customize colours, captions, and ornaments — your draft saves automatically.`,
+  description: `${brand.profileDescription} Try free — email only when you save or request a quote.`,
 }
 
 type Props = {
@@ -46,9 +46,8 @@ export default async function DesignPage({ searchParams }: Props) {
             </span>
             <h1 className="text-4xl md:text-5xl mb-4">Design your frame</h1>
             <p className="text-text-secondary text-lg leading-relaxed">
-              Sign in with your email, upload a sample photo, pick colors and decorations, and see a
-              live preview. When you&apos;re happy, we save a snapshot and email you a link to
-              recreate it anytime.
+              Upload a sample photo, pick colours and decorations, and see a live preview — try free
+              with no email required. We only ask for your email when you save or continue to a quote.
             </p>
           </Reveal>
         </div>

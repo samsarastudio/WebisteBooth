@@ -61,6 +61,43 @@ export default async function StickersPage() {
       <section className="section bg-bg-secondary/50">
         <div className="container-wide">
           <Reveal className="text-center mb-10 md:mb-12">
+            <h2 className="text-3xl md:text-4xl mb-3">Sticker packages</h2>
+            <p className="text-text-secondary max-w-2xl mx-auto">
+              On-site sticker experiences mirror our frame service — attendant included, three hours
+              of coverage (setup excluded), and capacity tailored to your guest count and sticker
+              size. Book standalone or bundle with a frame package.
+            </p>
+          </Reveal>
+          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+            <Reveal className="card p-6 space-y-3">
+              <h3 className="font-serif text-xl">What&apos;s included</h3>
+              <ul className="space-y-2 text-sm text-text-secondary">
+                <li>3 hours on-site coverage (setup and teardown excluded)</li>
+                <li>On-site attendant to run the station</li>
+                <li>Print-and-cut photo stickers, labels, or party favours</li>
+                <li>Capacity varies by guest count and sticker dimensions — we quote custom</li>
+                <li>Standalone or bundled with custom frame packages</li>
+              </ul>
+            </Reveal>
+            <Reveal delay={0.06} className="card p-6 space-y-3">
+              <h3 className="font-serif text-xl">Example configuration</h3>
+              <p className="text-sm text-text-secondary leading-relaxed">
+                100-guest wedding cocktail hour — 2×3″ photo stickers with attendant, sized for
+                quick lines and table favours. Final sticker counts and pricing are confirmed in your
+                written quote.
+              </p>
+              <p className="text-xs text-text-secondary">
+                Share your event date, city, and guest count in the quote form and we will recommend
+                a setup that fits.
+              </p>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="container-wide">
+          <Reveal className="text-center mb-10 md:mb-12">
             <h2 className="text-3xl md:text-4xl mb-3">Why guests love it</h2>
             <p className="text-text-secondary max-w-xl mx-auto">
               A playful favor that feels personal — stickers they can wear, share, and keep.

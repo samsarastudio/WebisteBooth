@@ -8,6 +8,9 @@ type LeadEmailPayload = {
   eventType: string
   eventDate: string
   guestCount?: string | null
+  eventCity?: string | null
+  postalCode?: string | null
+  packageRecommendationRequested?: boolean
   message?: string | null
   serviceLabel?: string | null
   packageName?: string | null
@@ -57,7 +60,9 @@ ${lines || '• None selected'}
 ${lead.hasFrameDesign ? '\nFrame design: Customer attached a configurator design (see admin for preview).\n' : ''}${lead.designPreviewUrl ? `Design preview: ${lead.designPreviewUrl}\n` : ''}
 Event: ${lead.eventType}
 Date: ${lead.eventDate}
+Location: ${lead.eventCity || '—'}${lead.postalCode ? ` (${lead.postalCode})` : ''}
 Guests: ${lead.guestCount || '—'}
+${lead.packageRecommendationRequested ? 'Package recommendation requested: Yes\n' : ''}
 
 Message:
 ${lead.message || '—'}

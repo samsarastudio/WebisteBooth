@@ -25,7 +25,7 @@ export const kitchenerPage: LocalPageConfig = {
       src: '/brand/product-wedding.png',
       alt: 'Collection of finished guest keepsake frames at a wedding',
       caption:
-        'Every guest leaves with a finished keepsake, not a strip. Request a quote for your Kitchener venue and guest count.',
+        'Guests receive their event photo inside a personalized keepsake frame, up to the frame quantity included in your package. Request a quote for your Kitchener venue and guest count.',
     },
   ],
   frameOptions: [
@@ -42,7 +42,7 @@ export const kitchenerPage: LocalPageConfig = {
     {
       title: 'Essential & Premium packages',
       description:
-        '3 hours of coverage (setup excluded), attendant included, 60 or 120 guest frames, and online gallery access — Essential 3 months, Premium up to 1 year.',
+        '3 hours of coverage (setup excluded), attendant included, 60 or 120 guest frames, and online gallery access — Essential 3 months, Premium 12 months.',
     },
   ],
   stickerOptions: [
@@ -98,7 +98,7 @@ export const kitchenerPage: LocalPageConfig = {
     {
       title: 'Online gallery after the event',
       description:
-        'Digital copies for sharing — Essential includes 3 months access, Premium up to 1 year.',
+        'Digital copies for sharing — Essential includes 3 months access, Premium 12 months.',
     },
   ],
   nearbyAreas: [
@@ -130,11 +130,7 @@ export const kitchenerPage: LocalPageConfig = {
         'Three hours of active booth time with an attendant. Setup and teardown happen outside that window so your booked time is fully for guests.',
     },
   ],
-  testimonial: {
-    quote:
-      'We wanted a favour guests would actually take home from our Kitchener reception — the personalized frames were the most commented-on detail of the night.',
-    attribution: 'Kitchener wedding host, Waterloo Region',
-  },
+  invitationCity: 'Kitchener',
   relatedPages: [
     { href: '/photo-booth-waterloo', label: 'Waterloo' },
     { href: '/wedding-photo-booth-waterloo-region', label: 'Wedding photo booth' },
@@ -173,7 +169,7 @@ export const waterlooPage: LocalPageConfig = {
       src: '/brand/product-corporate.png',
       alt: 'Finished keepsake frames ready for corporate event guests',
       caption:
-        'From Uptown Waterloo receptions to office holiday parties — every guest leaves with a personalized photo keepsake, not a paper strip.',
+        'From Uptown Waterloo receptions to office holiday parties — guests receive personalized photo keepsakes, up to the frame quantity in your package.',
     },
   ],
   frameOptions: [
@@ -278,11 +274,7 @@ export const waterlooPage: LocalPageConfig = {
         'Start with the free Design Studio or request a quote — we respond within 24 hours with package options and frame counts for your date.',
     },
   ],
-  testimonial: {
-    quote:
-      'Our Uptown Waterloo launch needed something shareable — guests walked out with framed photos that looked like branded product, not swag.',
-    attribution: 'Corporate event planner, Waterloo',
-  },
+  invitationCity: 'Waterloo',
   relatedPages: [
     { href: '/photo-booth-kitchener', label: 'Kitchener' },
     { href: '/corporate-event-photo-booth-waterloo-region', label: 'Corporate events' },
@@ -426,11 +418,7 @@ export const cambridgePage: LocalPageConfig = {
         'A standard 6-foot table, access to power, and roughly 8×8 feet for guests to step in front of the camera. We adapt for tighter rooms.',
     },
   ],
-  testimonial: {
-    quote:
-      'Our Galt anniversary dinner needed something classier than strips — guests loved picking up a finished frame with their photo already inside.',
-    attribution: 'Anniversary celebration host, Cambridge',
-  },
+  invitationCity: 'Cambridge',
   relatedPages: [
     { href: '/photo-booth-kitchener', label: 'Kitchener' },
     { href: '/birthday-photo-booth-kitchener-waterloo', label: 'Birthday parties' },
@@ -574,11 +562,7 @@ export const guelphPage: LocalPageConfig = {
         'Peak season fills 2–3 months out — last-minute dates sometimes available. Email your date and we will confirm within 24 hours.',
     },
   ],
-  testimonial: {
-    quote:
-      'Our barn wedding outside Guelph needed favours that matched the setting — the frames felt intentional, not like an afterthought.',
-    attribution: 'Wedding host, Wellington County',
-  },
+  invitationCity: 'Guelph',
   relatedPages: [
     { href: '/photo-booth-cambridge', label: 'Cambridge' },
     { href: '/wedding-photo-booth-waterloo-region', label: 'Waterloo Region weddings' },

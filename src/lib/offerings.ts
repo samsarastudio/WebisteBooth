@@ -13,7 +13,7 @@ export const frameOffering = {
     'Attendant included',
     '3 hours of coverage',
     '6×4 landscape keepsakes',
-    'Online photos — Essential: 3 months · Premium: up to 1 year',
+    'Online photos — Essential: 3 months · Premium: 12 months',
   ],
 }
 
@@ -28,9 +28,9 @@ export const stickerOffering = {
   quoteHref: '/quote?service=stickers',
   highlights: [
     'Print & cut in one step',
-    'Vivid color photos',
-    'Precision auto-cut edges',
-    'Waterproof & durable',
+    '3 hours on-site · attendant included',
+    'Capacity tailored to guest count & sticker size',
+    'Standalone or bundled with frame packages',
   ],
   features: [
     {

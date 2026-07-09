@@ -2,21 +2,13 @@ import Link from 'next/link'
 import { Check, Clock, Sparkles } from 'lucide-react'
 
 import type { PricedPackage } from '@/lib/pricing'
+import {
+  retentionFootnoteForPackage,
+  retentionHintForPackage,
+  RETENTION_TIER_SUMMARY,
+} from '@/lib/retention-policy'
 
 const HOURS_HINT = '3 hours coverage (excluding setup time)'
-
-function onlineHintForPackage(slug: string): string | null {
-  if (slug === 'premium') return 'Online photos — up to 1 year'
-  if (slug === 'signature' || slug === 'enterprise') return null
-  return 'Online photos — 3 months access'
-}
-
-function onlineFootnoteForPackage(slug: string): string | null {
-  if (slug === 'signature' || slug === 'enterprise') {
-    return 'Custom online access — contact us to plan your event'
-  }
-  return null
-}
 
 function hasHoursFeature(pkg: PricedPackage) {
   return pkg.features.some(
@@ -33,6 +25,10 @@ function isFrameQuantityLine(text: string) {
     /custom guest frame/i.test(text) ||
     /custom frame count/i.test(text)
   )
+}
+
+function isOnlineRetentionLine(text: string) {
+  return /online (digital )?photos|online gallery/i.test(text)
 }
 
 export function PackageCards({
@@ -56,13 +52,17 @@ export function PackageCards({
           pkg.slug === 'enterprise' ||
           (pkg.priceRange || '').toLowerCase().includes('custom')
 
-        const onlineHint = onlineHintForPackage(pkg.slug)
-        const onlineFootnote = onlineFootnoteForPackage(pkg.slug)
+        const onlineHint = retentionHintForPackage(pkg.slug)
+        const onlineFootnote = retentionFootnoteForPackage(pkg.slug)
 
         const features = (hasHoursFeature(pkg) || isCustomTier
           ? pkg.features
           : [{ item: HOURS_HINT }, ...pkg.features]
-        ).filter((f) => showFrameCounts || !isFrameQuantityLine(f.item))
+        ).filter(
+          (f) =>
+            (showFrameCounts || !isFrameQuantityLine(f.item)) &&
+            !isOnlineRetentionLine(f.item),
+        )
 
         return (
           <article
@@ -131,3 +131,5 @@ export function PackageCards({
     </div>
   )
 }
+
+export { RETENTION_TIER_SUMMARY }

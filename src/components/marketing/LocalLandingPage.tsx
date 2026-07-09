@@ -25,7 +25,7 @@ export function LocalLandingPage({
         <div className="container-wide max-w-3xl mx-auto text-center">
           <Reveal>
             <span className="inline-block px-4 py-1.5 rounded-full bg-accent-light text-accent-hover text-sm font-semibold mb-4 tracking-wide uppercase">
-              {brand.fullName}
+              {brand.displayName}
             </span>
             <h1 className="text-4xl md:text-5xl mb-5 leading-tight">{config.h1}</h1>
             <p className="text-text-secondary text-lg leading-relaxed mb-8">{config.intro}</p>
@@ -170,12 +170,12 @@ export function LocalLandingPage({
             </ul>
           </Reveal>
 
-          {config.testimonial ? (
+          {config.invitationCity ? (
             <Reveal delay={0.08} className="card p-8 bg-accent-light/30 border-accent/20">
-              <p className="text-text-secondary leading-relaxed italic mb-4">
-                &ldquo;{config.testimonial.quote}&rdquo;
+              <p className="text-text-secondary leading-relaxed">
+                Planning an event in {config.invitationCity}? We would love for yours to be one of
+                the first FrameFlix celebrations in the region.
               </p>
-              <p className="text-sm font-medium">— {config.testimonial.attribution}</p>
             </Reveal>
           ) : null}
         </div>

@@ -439,6 +439,18 @@ export interface Lead {
   eventType: string;
   eventDate: string;
   guestCount?: string | null;
+  /**
+   * City where the event will take place
+   */
+  eventCity?: string | null;
+  /**
+   * Postal code for travel and logistics
+   */
+  postalCode?: string | null;
+  /**
+   * Customer asked us to recommend a package
+   */
+  packageRecommendationRequested?: boolean | null;
   message?: string | null;
   package?: (number | null) | Package;
   /**
@@ -972,6 +984,9 @@ export interface LeadsSelect<T extends boolean = true> {
   eventType?: T;
   eventDate?: T;
   guestCount?: T;
+  eventCity?: T;
+  postalCode?: T;
+  packageRecommendationRequested?: T;
   message?: T;
   package?: T;
   packageName?: T;

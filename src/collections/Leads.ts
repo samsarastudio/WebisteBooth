@@ -69,7 +69,7 @@ export const Leads: CollectionConfig = {
       type: 'text',
       required: false,
       admin: {
-        description: 'Optional for contact messages. Required for quote requests on the public form.',
+        description: 'Optional — we follow up by email for quote requests.',
       },
     },
     {
@@ -90,6 +90,28 @@ export const Leads: CollectionConfig = {
     {
       name: 'guestCount',
       type: 'text',
+    },
+    {
+      name: 'eventCity',
+      type: 'text',
+      admin: {
+        description: 'City where the event will take place',
+      },
+    },
+    {
+      name: 'postalCode',
+      type: 'text',
+      admin: {
+        description: 'Postal code for travel and logistics',
+      },
+    },
+    {
+      name: 'packageRecommendationRequested',
+      type: 'checkbox',
+      defaultValue: false,
+      admin: {
+        description: 'Customer asked us to recommend a package',
+      },
     },
     {
       name: 'message',

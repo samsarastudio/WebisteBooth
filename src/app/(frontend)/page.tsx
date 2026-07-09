@@ -124,8 +124,7 @@ export default async function HomePage() {
             <Reveal delay={0.1} direction="right">
               <h2 className="text-3xl md:text-4xl mb-4">A gift your guests take home</h2>
               <p className="text-text-secondary leading-relaxed mb-6">
-                Every guest leaves with their photo in a personalized frame — a souvenir they&apos;ll
-                actually keep long after the party.
+                {brand.frameKeepsakeLine}
               </p>
               <ul className="space-y-3 text-sm">
                 {[
@@ -341,7 +340,7 @@ export default async function HomePage() {
                   continue to a quote when you&apos;re ready.
                 </p>
                 <p className="text-sm font-medium text-accent-hover mb-8">
-                  3 hours of coverage · Essential: 3 months online · Premium: up to 1 year
+                  3 hours of coverage · Essential: 3 months online · Premium: 12 months
                 </p>
                 <div className="flex flex-col sm:flex-row gap-3 justify-center">
                   {settings.showDesignPage ? (
