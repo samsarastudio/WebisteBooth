@@ -57,19 +57,30 @@ export function BrandLogoLink({
   href = '/',
   onClick,
   size = 'md',
+  compact = false,
 }: {
   href?: string
   onClick?: () => void
   size?: 'sm' | 'md'
+  /** Header use — single-line mark + wordmark */
+  compact?: boolean
 }) {
-  const markClass = size === 'sm' ? 'w-9 h-9' : 'w-10 h-10 md:w-11 md:h-11'
-  const titleClass = size === 'sm' ? 'text-[1.05rem]' : 'text-lg md:text-[1.2rem]'
+  const markClass = compact
+    ? 'w-9 h-9 lg:w-10 lg:h-10'
+    : size === 'sm'
+      ? 'w-9 h-9'
+      : 'w-10 h-10 md:w-11 md:h-11'
+  const titleClass = compact
+    ? 'text-base lg:text-lg'
+    : size === 'sm'
+      ? 'text-[1.05rem]'
+      : 'text-lg md:text-[1.2rem]'
 
   return (
     <Link
       href={href}
       onClick={onClick}
-      className="flex items-center gap-2.5 shrink-0 group"
+      className="flex items-center gap-2 shrink-0 group min-w-0"
       aria-label={`${brand.displayName} home`}
     >
       <span
@@ -77,15 +88,25 @@ export function BrandLogoLink({
       >
         <BrandMark className="w-full h-full block" />
       </span>
-      <span className={`font-serif ${titleClass} tracking-tight leading-tight group-hover:text-accent transition-colors`}>
+      <span
+        className={`font-serif ${titleClass} tracking-tight leading-none group-hover:text-accent transition-colors`}
+      >
         {brand.name}
-        <span className="block font-sans text-[0.58rem] md:text-[0.62rem] font-medium tracking-[0.06em] text-text-secondary mt-0.5">
-          Photo Booth &amp; Event Keepsakes
-        </span>
-        <span className="block font-sans text-[0.52rem] md:text-[0.55rem] font-medium tracking-[0.08em] text-text-secondary/90">
-          by{' '}
-          <span className="text-text-primary/80 tracking-normal font-semibold">{brand.parentName}</span>
-        </span>
+        {!compact ? (
+          <>
+            <span className="block font-sans text-[0.58rem] md:text-[0.62rem] font-medium tracking-[0.06em] text-text-secondary mt-0.5 leading-snug">
+              Photo Booth &amp; Event Keepsakes
+            </span>
+            <span className="block font-sans text-[0.52rem] md:text-[0.55rem] font-medium tracking-[0.08em] text-text-secondary/90 leading-snug">
+              by{' '}
+              <span className="text-text-primary/80 tracking-normal font-semibold">
+                {brand.parentName}
+              </span>
+            </span>
+          </>
+        ) : (
+          <span className="sr-only"> — {brand.displayName}</span>
+        )}
       </span>
     </Link>
   )

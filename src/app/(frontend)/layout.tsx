@@ -91,7 +91,7 @@ export default async function FrontendLayout({
           showQuote={settings.showQuotePage}
           showDesign={settings.showDesignPage}
         />
-        <main className="flex-1 pt-16 md:pt-[72px] pb-[calc(4.5rem+var(--safe-bottom))] md:pb-0">
+        <main className="flex-1 pt-16 lg:pt-[72px] pb-[calc(4.5rem+var(--safe-bottom))] lg:pb-0">
           {children}
         </main>
         <Footer
