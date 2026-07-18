@@ -535,8 +535,11 @@ export const defaultFrameOrnaments = [
 
 export const defaultSiteSettings = {
   phone: '',
-  email: 'frameflix@inmoment.com',
+  email: 'hello@inmomentservices.com',
   serviceArea: 'Kitchener, Cambridge, Waterloo, Guelph & beyond',
+  googleBusinessUrl: '',
+  instagramUrl: '',
+  facebookUrl: '',
   heroEyebrow: 'FrameFlix by InMoment',
   heroTitle: 'A photo booth experience your guests take home',
   heroSubtitle:

@@ -3,6 +3,7 @@ import type { LocalPageConfig } from '@/lib/local-pages/types'
 
 type SettingsSlice = {
   email: string
+  phone?: string
 }
 
 export function buildLocalBusinessJsonLd(config: LocalPageConfig, settings: SettingsSlice) {
@@ -17,6 +18,7 @@ export function buildLocalBusinessJsonLd(config: LocalPageConfig, settings: Sett
     description: config.metaDescription,
     url: pageUrl,
     email: settings.email || brand.email,
+    ...(settings.phone ? { telephone: settings.phone } : {}),
     image: `${brand.siteUrl}/brand/style-romance-photo.png`,
     logo: `${brand.siteUrl}/brand/logo.png`,
     areaServed: [
@@ -67,6 +69,7 @@ export function buildServiceJsonLd(config: LocalPageConfig, settings: SettingsSl
       '@type': 'LocalBusiness',
       name: brand.fullName,
       email: settings.email || brand.email,
+      ...(settings.phone ? { telephone: settings.phone } : {}),
       url: brand.siteUrl,
     },
     areaServed: {

@@ -24,6 +24,7 @@ const playfair = Playfair_Display({
 })
 
 const siteUrl = brand.siteUrl
+const googleSiteVerification = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION?.trim()
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -32,9 +33,13 @@ export const metadata: Metadata = {
     template: `%s | ${brand.name}`,
   },
   description: brand.profileDescription,
+  alternates: {
+    canonical: '/',
+  },
   openGraph: {
     type: 'website',
     locale: 'en_CA',
+    url: siteUrl,
     siteName: brand.displayName,
     title: pageTitle(),
     description: brand.profileDescription,
@@ -50,6 +55,9 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  ...(googleSiteVerification
+    ? { verification: { google: googleSiteVerification } }
+    : {}),
   icons: {
     icon: [{ url: '/brand/logo.png', type: 'image/png', sizes: '512x512' }],
     apple: [{ url: '/brand/logo.png', sizes: '180x180' }],
@@ -72,6 +80,8 @@ export default async function FrontendLayout({
     url: brand.siteUrl,
     logo: `${brand.siteUrl}/brand/logo.png`,
     email: settings.email || brand.email,
+    ...(settings.phone ? { telephone: settings.phone } : {}),
+    areaServed: settings.serviceArea,
     parentOrganization: {
       '@type': 'Organization',
       name: brand.parentName,
@@ -96,9 +106,13 @@ export default async function FrontendLayout({
         </main>
         <Footer
           email={settings.email}
+          phone={settings.phone}
           serviceArea={settings.serviceArea}
           links={links}
           showQuote={settings.showQuotePage}
+          googleBusinessUrl={settings.googleBusinessUrl}
+          instagramUrl={settings.instagramUrl}
+          facebookUrl={settings.facebookUrl}
         />
         {settings.showQuotePage || settings.showDesignPage ? (
           <StickyCta showDesign={settings.showDesignPage} />

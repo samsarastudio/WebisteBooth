@@ -23,12 +23,34 @@ export const SiteSettings: GlobalConfig = {
             {
               name: 'email',
               type: 'email',
-              defaultValue: 'frameflix@inmoment.com',
+              defaultValue: 'hello@inmomentservices.com',
             },
             {
               name: 'serviceArea',
               type: 'text',
               defaultValue: 'Kitchener, Cambridge, Waterloo, Guelph & beyond',
+            },
+            {
+              name: 'googleBusinessUrl',
+              type: 'text',
+              admin: {
+                description:
+                  'Optional Google Business Profile URL. Shown in the footer when set — critical for local discovery.',
+              },
+            },
+            {
+              name: 'instagramUrl',
+              type: 'text',
+              admin: {
+                description: 'Optional Instagram profile URL for the footer.',
+              },
+            },
+            {
+              name: 'facebookUrl',
+              type: 'text',
+              admin: {
+                description: 'Optional Facebook page URL for the footer.',
+              },
             },
             {
               name: 'heroEyebrow',

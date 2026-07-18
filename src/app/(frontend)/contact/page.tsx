@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { Clock, Mail, MapPin, Sparkles } from 'lucide-react'
+import { Clock, Mail, MapPin, Phone, Sparkles } from 'lucide-react'
 
 import { ContactForm } from '@/components/contact/ContactForm'
 import { Reveal } from '@/components/marketing/Reveal'
@@ -15,6 +15,7 @@ export const metadata: Metadata = {
 
 export default async function ContactPage() {
   const settings = await guardPage('contact')
+  const phone = settings.phone?.trim()
 
   return (
     <div>
@@ -54,6 +55,20 @@ export default async function ContactPage() {
                   </a>
                 </div>
               </div>
+              {phone ? (
+                <div className="flex gap-3 text-sm">
+                  <Phone size={18} className="text-accent shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-medium">Call or text</p>
+                    <a
+                      href={`tel:${phone.replace(/[^\d+]/g, '')}`}
+                      className="text-text-secondary hover:text-accent"
+                    >
+                      {phone}
+                    </a>
+                  </div>
+                </div>
+              ) : null}
               <div className="flex gap-3 text-sm">
                 <MapPin size={18} className="text-accent shrink-0 mt-0.5" />
                 <div>

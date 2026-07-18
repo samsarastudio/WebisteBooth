@@ -8,6 +8,7 @@ import * as migration_20260708_designers_locked_rel from './20260708_designers_l
 import * as migration_20260708_content_trust_cleanup from './20260708_content_trust_cleanup';
 import * as migration_20260709_site_settings_event_organisers from './20260709_site_settings_event_organisers';
 import * as migration_20260709_lead_location_fields from './20260709_lead_location_fields';
+import * as migration_20260718_seo_discovery_cleanup from './20260718_seo_discovery_cleanup';
 
 export const migrations = [
   {
@@ -59,5 +60,10 @@ export const migrations = [
     up: migration_20260709_lead_location_fields.up,
     down: migration_20260709_lead_location_fields.down,
     name: '20260709_lead_location_fields'
+  },
+  {
+    up: migration_20260718_seo_discovery_cleanup.up,
+    down: migration_20260718_seo_discovery_cleanup.down,
+    name: '20260718_seo_discovery_cleanup'
   },
 ];

@@ -72,6 +72,7 @@ DATABASE_URI=file:./data/frameflix.db
 NEXT_PUBLIC_SERVER_URL=https://inmomentservices.com
 PAYLOAD_PUBLIC_SERVER_URL=https://inmomentservices.com
 NEXT_PUBLIC_PARENT_URL=https://inmomentservices.com
+# NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION=your-gsc-token
 
 LEAD_NOTIFY_EMAIL=hello@inmomentservices.com
 RESEND_API_KEY=re_xxxxx          # optional — leads still save to /admin without it
@@ -394,3 +395,47 @@ Visitor → https://inmomentservices.com
 ```
 
 Everything runs on the Pi. Cloudflare only proxies traffic — no Workers, D1, or R2 required.
+
+---
+
+## 8. Search & local discovery (required for leads)
+
+Building SEO pages is not enough. As of the July 2026 audit, Google had **zero indexed pages** for this domain. Do these ops steps after every major launch:
+
+### 8a. Cloudflare DNS — `www`
+
+Add a DNS record so `www.inmomentservices.com` resolves (today it does not):
+
+| Type | Name | Content | Proxy |
+|------|------|---------|-------|
+| CNAME | `www` | `inmomentservices.com` | Proxied (orange cloud) |
+
+The app middleware redirects `www` → apex (`308`). Without the DNS record, the redirect never runs.
+
+Also confirm the Cloudflare Tunnel public hostname includes both apex and `www` (or only apex if you permanently redirect `www` at Cloudflare).
+
+### 8b. Google Search Console
+
+1. Open [Google Search Console](https://search.google.com/search-console) → add property `https://inmomentservices.com`
+2. Prefer **DNS TXT** verification on Cloudflare, or HTML tag verification:
+   - Copy the verification token into Pi `.env` as `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION=...`
+   - Redeploy / restart so the meta tag appears in `<head>`
+3. Submit sitemap: `https://inmomentservices.com/sitemap.xml`
+4. Use **URL Inspection → Request indexing** for `/`, `/quote`, and each local city page
+
+### 8c. Site Settings (admin)
+
+In **`/admin` → Site Settings**:
+
+- Set a real **phone** (shows on Contact + footer + LocalBusiness schema when present)
+- Confirm **email** matches the inbox you monitor (defaults to `hello@inmomentservices.com`)
+- Paste **Google Business**, Instagram, and Facebook URLs when those profiles exist (footer links)
+
+### 8d. Google Business Profile
+
+Create/claim a GBP for FrameFlix / InMoment in Waterloo Region, point the website to `https://inmomentservices.com`, and keep NAP consistent with Site Settings. Local “photo booth near me” queries usually convert via GBP before organic blog ranking.
+
+### 8e. Sanity-check traffic
+
+After consent, page views land in **Analytics → Page Views**. If views stay near zero after GSC submission, indexing/discovery is still the bottleneck — not the quote form.
+

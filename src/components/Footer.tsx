@@ -7,17 +7,31 @@ import { serviceAreas } from '@/lib/service-areas'
 
 export default function Footer({
   email = brand.email,
+  phone = '',
   serviceArea = 'Kitchener, Cambridge, Waterloo, Guelph & beyond',
   links = [],
   showQuote = true,
+  googleBusinessUrl = '',
+  instagramUrl = '',
+  facebookUrl = '',
 }: {
   email?: string
+  phone?: string
   serviceArea?: string
   links?: { href: string; label: string }[]
   showQuote?: boolean
+  googleBusinessUrl?: string
+  instagramUrl?: string
+  facebookUrl?: string
 }) {
   const pages = [{ href: '/', label: 'Home' }, ...links]
   if (showQuote) pages.push({ href: '/quote', label: 'Get a Quote' })
+  const phoneDisplay = phone.trim()
+  const socialLinks = [
+    { href: googleBusinessUrl, label: 'Google Business' },
+    { href: instagramUrl, label: 'Instagram' },
+    { href: facebookUrl, label: 'Facebook' },
+  ].filter((l) => l.href.trim())
 
   return (
     <footer className="border-t border-border bg-bg-secondary mt-auto">
@@ -53,7 +67,31 @@ export default function Footer({
           <a href={`mailto:${email}`} className="nav-link text-sm block mb-2">
             {email}
           </a>
+          {phoneDisplay ? (
+            <a
+              href={`tel:${phoneDisplay.replace(/[^\d+]/g, '')}`}
+              className="nav-link text-sm block mb-2"
+            >
+              {phoneDisplay}
+            </a>
+          ) : null}
           <p className="text-text-secondary text-sm">{serviceArea}</p>
+          {socialLinks.length > 0 ? (
+            <ul className="mt-3 space-y-1">
+              {socialLinks.map((link) => (
+                <li key={link.label}>
+                  <a
+                    href={link.href}
+                    className="nav-link text-sm"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          ) : null}
           <ul className="mt-3 space-y-1">
             {serviceAreas.map((area) => (
               <li key={area.href}>

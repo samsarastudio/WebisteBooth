@@ -1133,6 +1133,18 @@ export interface SiteSetting {
   phone?: string | null;
   email?: string | null;
   serviceArea?: string | null;
+  /**
+   * Optional Google Business Profile URL. Shown in the footer when set — critical for local discovery.
+   */
+  googleBusinessUrl?: string | null;
+  /**
+   * Optional Instagram profile URL for the footer.
+   */
+  instagramUrl?: string | null;
+  /**
+   * Optional Facebook page URL for the footer.
+   */
+  facebookUrl?: string | null;
   heroEyebrow?: string | null;
   heroTitle?: string | null;
   heroSubtitle?: string | null;
@@ -1200,6 +1212,9 @@ export interface SiteSettingsSelect<T extends boolean = true> {
   phone?: T;
   email?: T;
   serviceArea?: T;
+  googleBusinessUrl?: T;
+  instagramUrl?: T;
+  facebookUrl?: T;
   heroEyebrow?: T;
   heroTitle?: T;
   heroSubtitle?: T;
