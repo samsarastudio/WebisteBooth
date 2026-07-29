@@ -1,8 +1,10 @@
 'use client'
 
+import { Sparkles } from 'lucide-react'
+
 import { ProductImage } from '@/components/marketing/ProductImage'
 import type { FrameStyleData } from '@/lib/brand-images'
-import type { PricedAddOn, PricedPackage } from '@/lib/pricing'
+import type { PricedPackage } from '@/lib/pricing'
 import { retentionHintForPackage } from '@/lib/retention-policy'
 
 export function QuoteSummary({
@@ -15,6 +17,8 @@ export function QuoteSummary({
   showPricing,
   previewSrc,
   frameFormatLabel = '6×4 Landscape',
+  pending = false,
+  showSubmit = false,
 }: {
   compact?: boolean
   serviceType: 'frames' | 'stickers' | 'both'
@@ -25,6 +29,8 @@ export function QuoteSummary({
   showPricing: boolean
   previewSrc: string
   frameFormatLabel?: string
+  pending?: boolean
+  showSubmit?: boolean
 }) {
   const serviceLabel =
     serviceType === 'stickers'
@@ -64,6 +70,23 @@ export function QuoteSummary({
         <h3 className="font-serif text-xl mb-2">Your selection</h3>
         <p className="text-xs text-text-secondary">A quick summary of what you&apos;ve chosen so far.</p>
       </div>
+
+      {showSubmit ? (
+        <div className="space-y-2">
+          <button
+            type="submit"
+            form="quote-form"
+            className="btn-primary w-full justify-center"
+            disabled={pending}
+          >
+            {pending ? 'Sending...' : 'Get my quote'}
+            <Sparkles size={16} />
+          </button>
+          <p className="text-xs text-center text-text-secondary">
+            Free quote by email — submit anytime.
+          </p>
+        </div>
+      ) : null}
 
       <div className="relative aspect-[6/4] rounded-[var(--radius-md)] overflow-hidden bg-bg-secondary">
         <ProductImage src={previewSrc} alt="" fill className="object-cover" sizes="400px" />
@@ -122,9 +145,6 @@ export function QuoteSummary({
             </ul>
           </div>
         ) : null}
-        <div className="border-t border-border pt-3 text-sm text-text-secondary">
-          Send the form and we&apos;ll follow up within 24 hours.
-        </div>
       </div>
     </aside>
   )

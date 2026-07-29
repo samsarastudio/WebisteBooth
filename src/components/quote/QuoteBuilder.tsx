@@ -429,7 +429,13 @@ export function QuoteBuilder({
       </div>
 
       <div className="grid lg:grid-cols-[1fr_340px] gap-8 items-start">
-        <form ref={formRef} onSubmit={handleSubmit} className="space-y-10">
+        <form
+          id="quote-form"
+          ref={formRef}
+          onSubmit={handleSubmit}
+          noValidate
+          className="space-y-10 pb-40 lg:pb-0"
+        >
           <input type="hidden" name="intent" value="quote" />
           <input type="hidden" name="serviceType" value={serviceType} />
           <input type="hidden" name="packageId" value={wantsFrames && !helpMeChoose ? packageId : ''} />
@@ -815,21 +821,6 @@ export function QuoteBuilder({
                     )
                   })}
                 </div>
-                {isLastStep ? (
-                  <div className="mt-8 space-y-3">
-                    <button
-                      type="submit"
-                      className="btn-primary w-full justify-center"
-                      disabled={pending}
-                    >
-                      {pending ? 'Sending...' : 'Get my quote'}
-                      <Sparkles size={16} />
-                    </button>
-                    <p className="text-xs text-center text-text-secondary">
-                      Free quote by email — no payment required.
-                    </p>
-                  </div>
-                ) : null}
               </section>
             </>
           )}
@@ -895,39 +886,34 @@ export function QuoteBuilder({
                 {fieldErrors.privacyConsent ? (
                   <p className="text-xs text-red-600">{fieldErrors.privacyConsent}</p>
                 ) : null}
-
-                {isLastStep ? (
-                  <>
-                    <button
-                      type="submit"
-                      className="btn-primary w-full justify-center"
-                      disabled={pending}
-                    >
-                      {pending ? 'Sending...' : 'Get my quote'}
-                      <Sparkles size={16} />
-                    </button>
-                    <p className="text-xs text-center text-text-secondary">
-                      Free quote by email — no payment required.
-                    </p>
-                  </>
-                ) : null}
               </div>
             </section>
           )}
 
-          <div className="lg:hidden sticky bottom-0 z-20 -mx-4 px-4 py-4 bg-bg-primary/95 backdrop-blur border-t border-border flex gap-3">
-            {currentStepIndex > 0 ? (
-              <button type="button" className="btn-secondary flex-1 justify-center" onClick={goBack}>
-                Back
-              </button>
-            ) : (
-              <div className="flex-1" />
-            )}
-            {!isLastStep ? (
-              <button type="button" className="btn-primary flex-1 justify-center" onClick={goNext}>
-                Continue
-              </button>
-            ) : null}
+          <div className="lg:hidden fixed bottom-0 inset-x-0 z-20 px-4 py-4 bg-bg-primary/95 backdrop-blur border-t border-border space-y-3">
+            <div className="container-wide max-w-lg mx-auto space-y-3">
+              <SubmitQuoteButton pending={pending} />
+              <div className="flex gap-3">
+                {currentStepIndex > 0 ? (
+                  <button
+                    type="button"
+                    className="btn-secondary flex-1 justify-center"
+                    onClick={goBack}
+                  >
+                    Back
+                  </button>
+                ) : null}
+                {!isLastStep ? (
+                  <button
+                    type="button"
+                    className="btn-secondary flex-1 justify-center"
+                    onClick={goNext}
+                  >
+                    Continue
+                  </button>
+                ) : null}
+              </div>
+            </div>
           </div>
         </form>
 
@@ -941,9 +927,25 @@ export function QuoteBuilder({
             showPricing={showPricing}
             previewSrc={previewSrc}
             frameFormatLabel={frameFormatLabel}
+            pending={pending}
+            showSubmit
           />
         </div>
       </div>
+    </div>
+  )
+}
+
+function SubmitQuoteButton({ pending }: { pending: boolean }) {
+  return (
+    <div className="space-y-2">
+      <button type="submit" className="btn-primary w-full justify-center" disabled={pending}>
+        {pending ? 'Sending...' : 'Get my quote'}
+        <Sparkles size={16} />
+      </button>
+      <p className="text-xs text-center text-text-secondary">
+        Free quote by email — no payment required. You can submit from any step.
+      </p>
     </div>
   )
 }

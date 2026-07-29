@@ -53,7 +53,7 @@ export function buildQuoteSteps(
 
   steps.push({ id: 'contact', label: 'Your details' })
 
-  if (wantsFrames) {
+  if (wantsFrames && !helpMeChoose) {
     steps.push({ id: 'addons', label: 'Add-ons' })
   }
 
