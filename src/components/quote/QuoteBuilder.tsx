@@ -917,7 +917,7 @@ export function QuoteBuilder({
           </div>
         </form>
 
-        <div className="hidden lg:block">
+        <div className="hidden lg:block lg:sticky lg:top-24">
           <QuoteSummary
             serviceType={serviceType}
             wantsFrames={wantsFrames}

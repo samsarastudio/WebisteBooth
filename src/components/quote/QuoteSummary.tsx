@@ -65,7 +65,7 @@ export function QuoteSummary({
   }
 
   return (
-    <aside className="lg:sticky lg:top-24 card p-6 space-y-4">
+    <aside className="card p-6 space-y-4 lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto">
       <div>
         <h3 className="font-serif text-xl mb-2">Your selection</h3>
         <p className="text-xs text-text-secondary">A quick summary of what you&apos;ve chosen so far.</p>
