@@ -237,34 +237,15 @@ async function syncFrameStyles(payload: Payload) {
     depth: 0,
   })
 
-  // Migrate Hand Painted → Stickered & Painted
-  const handPainted = existing.docs.find((d) => d.slug === 'hand-painted')
-  const stickeredDef = defaultFrameStyles.find((d) => d.slug === 'stickered-painted')
-  if (handPainted && stickeredDef) {
-    const already = existing.docs.find((d) => d.slug === 'stickered-painted')
-    if (!already) {
+  const keepSlugs = new Set(defaultFrameStyles.map((s) => s.slug))
+  for (const doc of existing.docs) {
+    if (!keepSlugs.has(doc.slug) && doc.active) {
       await payload.update({
         collection: 'frame-styles',
-        id: handPainted.id,
-        data: {
-          name: stickeredDef.name,
-          slug: stickeredDef.slug,
-          tagline: stickeredDef.tagline,
-          description: stickeredDef.description,
-          sampleMessage: stickeredDef.sampleMessage,
-          imagePath: stickeredDef.imagePath,
-          plaColors: stickeredDef.plaColors,
-          sortOrder: stickeredDef.sortOrder,
-          active: true,
-        },
-      })
-      payload.logger.info('Renamed Hand Painted to Stickered & Painted')
-    } else {
-      await payload.update({
-        collection: 'frame-styles',
-        id: handPainted.id,
+        id: doc.id,
         data: { active: false },
       })
+      payload.logger.info(`Deactivated legacy frame style: ${doc.slug}`)
     }
   }
 
@@ -277,8 +258,6 @@ async function syncFrameStyles(payload: Payload) {
   for (const style of defaultFrameStyles) {
     const found = refreshedStyles.docs.find((d) => d.slug === style.slug)
     if (!found) {
-      const activeCount = refreshedStyles.docs.filter((d) => d.active).length
-      if (activeCount >= 5) break
       await payload.create({ collection: 'frame-styles', data: style })
       payload.logger.info(`Added frame style: ${style.name}`)
     } else {
@@ -397,6 +376,8 @@ async function syncFaqs(payload: Payload) {
     'How long are online photos available?',
     'Where do you host events?',
     'Do you provide an attendant at the event?',
+    'Can I customize the frame design?',
+    'Can I see examples of actual frames before booking?',
   ]) {
     const found = await payload.find({
       collection: 'faqs',

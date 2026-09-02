@@ -19,7 +19,7 @@ export type QuoteValidationResult = {
 
 export const QUOTE_ERRORS = {
   package: 'Please choose a package or select “Recommend one for me”.',
-  style: 'Please choose a frame style or complete the design studio.',
+  style: 'Please choose a magnet colour.',
   name: 'Name is required.',
   email: 'Please provide a valid email address.',
   eventType: 'Please select an event type.',
@@ -48,7 +48,7 @@ export function buildQuoteSteps(
 
   if (wantsFrames && !helpMeChoose) {
     steps.push({ id: 'package', label: 'Package' })
-    if (!hasDesign) steps.push({ id: 'style', label: 'Frame style' })
+    if (!hasDesign) steps.push({ id: 'style', label: 'Magnet colour' })
   }
 
   steps.push({ id: 'contact', label: 'Your details' })
@@ -180,7 +180,11 @@ export function validateQuoteAll(input: QuoteValidationInput): QuoteValidationRe
 export function mapServerQuoteError(error: string): QuoteValidationResult {
   const sectionErrors: Partial<Record<QuoteStepId, string>> = {}
   if (error.includes('package')) sectionErrors.package = error
-  else if (error.includes('frame style') || error.includes('design studio'))
+  else if (
+    error.includes('frame style') ||
+    error.includes('magnet colour') ||
+    error.includes('design studio')
+  )
     sectionErrors.style = error
   else if (error.includes('event type') || error.includes('event date') || error.includes('City'))
     sectionErrors.event = error

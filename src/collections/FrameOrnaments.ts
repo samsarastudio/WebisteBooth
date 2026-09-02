@@ -44,7 +44,7 @@ export const FrameOrnaments: CollectionConfig = {
       required: true,
       defaultValue: 'raised3d',
       options: [
-        { label: 'Raised 3D (single PLA color)', value: 'raised3d' },
+        { label: 'Raised accent (single colour)', value: 'raised3d' },
         { label: 'Sticker (colorful PNG)', value: 'sticker' },
       ],
     },

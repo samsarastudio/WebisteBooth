@@ -72,7 +72,7 @@ export default async function BlogPostPage({ params }: Props) {
       logo: { '@type': 'ImageObject', url: `${brand.siteUrl}/brand/logo.png` },
     },
     mainEntityOfPage: `${brand.siteUrl}/blog/${post.slug}`,
-    image: post.featuredImageUrl || `${brand.siteUrl}/brand/style-romance-photo.png`,
+    image: post.featuredImageUrl || `${brand.siteUrl}/brand/magnet-hero-pink.png`,
   }
 
   return (
@@ -161,7 +161,7 @@ export default async function BlogPostPage({ params }: Props) {
           <Reveal className="card p-8 md:p-10 text-center">
             <h2 className="text-2xl mb-3">Want this at your event?</h2>
             <p className="text-text-secondary mb-6">
-              Custom frames, sticker studio, or both — we will send a proposal within 24 hours.
+              Custom fridge magnets, sticker studio, or both. We will send a proposal within 24 hours.
             </p>
             <Link href="/quote" className="btn-primary">
               Get a Quote

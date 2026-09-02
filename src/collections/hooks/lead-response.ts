@@ -20,7 +20,12 @@ export const leadResponseAfterChange: CollectionAfterChangeHook = async ({
     name: doc.name,
     email: doc.email,
     message,
-    intent: doc.intent === 'quote' ? 'quote' : 'contact',
+    intent:
+      doc.intent === 'quote'
+        ? 'quote'
+        : doc.intent === 'custom-frame'
+          ? 'custom-frame'
+          : 'contact',
   })
 
   const now = new Date().toISOString()

@@ -7,10 +7,17 @@ import { getDesignCatalog } from '@/lib/frame-design/catalog'
 import { getFrameDesignByToken } from '@/lib/frame-design/save-design'
 import type { FrameDesignState } from '@/lib/frame-design/types'
 import { guardPage } from '@/lib/page-guard'
+import { requirePage } from '@/lib/visibility'
 
-export const metadata: Metadata = {
-  title: brand.ctaDesign,
-  description: `${brand.profileDescription} Try free — email only when you save or request a quote.`,
+export async function generateMetadata(): Promise<Metadata> {
+  const { enabled } = await requirePage('design')
+  if (!enabled) {
+    return { title: 'Not found', robots: { index: false, follow: false } }
+  }
+  return {
+    title: brand.ctaDesign,
+    description: `${brand.profileDescription} Try free. We only ask for email when you save or request a quote.`,
+  }
 }
 
 type Props = {
@@ -46,8 +53,8 @@ export default async function DesignPage({ searchParams }: Props) {
             </span>
             <h1 className="text-4xl md:text-5xl mb-4">Design your frame</h1>
             <p className="text-text-secondary text-lg leading-relaxed">
-              Upload a sample photo, pick colours and decorations, and see a live preview — try free
-              with no email required. We only ask for your email when you save or continue to a quote.
+              Upload a sample photo, pick colours and decorations, and see a live preview. Try it
+              free with no email required. We only ask for your email when you save or continue to a quote.
             </p>
           </Reveal>
         </div>

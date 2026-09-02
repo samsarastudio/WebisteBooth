@@ -52,13 +52,9 @@ export function DesignStudioIllustration() {
               <stop offset="0%" stopColor="#d8d2c8" />
               <stop offset="100%" stopColor="#b8b0a4" />
             </linearGradient>
-            <filter id="ds-glow" x="-20%" y="-20%" width="140%" height="140%">
-              <feGaussianBlur stdDeviation="3" result="blur" />
-              <feMerge>
-                <feMergeNode in="blur" />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
+            <clipPath id="ds-nameplate-clip">
+              <rect x="214" y="316" width="152" height="30" rx="10" />
+            </clipPath>
           </defs>
 
           {/* App window */}
@@ -139,10 +135,17 @@ export function DesignStudioIllustration() {
             Your photo
           </text>
 
-          {/* Caption */}
-          <text x="290" y="332" textAnchor="middle" fill="url(#ds-gold)" fontSize="14" fontFamily="Georgia,serif" fontStyle="italic" filter="url(#ds-glow)">
-            Anna &amp; Stephen
-          </text>
+          {/* Name plate sticker (photo of the printed label, not gold caption text) */}
+          <rect x="214" y="316" width="152" height="30" rx="10" fill="#e8e0d4" />
+          <image
+            href="/brand/studio-nameplate-sticker.png"
+            x="214"
+            y="316"
+            width="152"
+            height="30"
+            preserveAspectRatio="xMidYMid slice"
+            clipPath="url(#ds-nameplate-clip)"
+          />
 
           {/* Floating decor - tulip */}
           <motion.g {...float(0, 5)}>

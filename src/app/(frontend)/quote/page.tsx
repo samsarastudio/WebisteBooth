@@ -8,7 +8,7 @@ import { guardPage } from '@/lib/page-guard'
 export const metadata: Metadata = {
   title: 'Get a Quote',
   description:
-    'Build a custom FrameFlix quote — pick a package, choose one of 4 frame styles, add-ons, and get a proposal within 24 hours.',
+    'Build a FrameFlix quote. Book the photo booth with custom fridge magnets, add-ons, and a proposal within 24 hours.',
 }
 
 type Props = {
@@ -40,7 +40,7 @@ export default async function QuotePage({ searchParams }: Props) {
             <p className="text-text-secondary text-lg leading-relaxed">
               {service === 'stickers'
                 ? "Tell us about your event and sticker ideas. We'll send a personal quote within 24 hours."
-                : "Choose frames, stickers, or both — then share your event details. We'll send a personal quote within 24 hours."}
+                : 'Book the photo booth with custom fridge magnets, then share your event details. We’ll send a personal quote within 24 hours.'}
             </p>
           </Reveal>
         </div>

@@ -7,7 +7,7 @@ import { brand } from '@/lib/brand'
 
 export const metadata: Metadata = {
   title: 'Disclaimer',
-  description: `Disclaimer for ${brand.fullName} — estimates, materials, online photos, and service limitations.`,
+  description: `Disclaimer for ${brand.fullName}. Estimates, materials, online photos, and service limitations.`,
 }
 
 export default function DisclaimerPage() {
@@ -50,20 +50,17 @@ export default function DisclaimerPage() {
             </section>
 
             <section>
-              <h2 className="text-xl font-serif text-text-primary mb-3">3. Materials (PLA)</h2>
+              <h2 className="text-xl font-serif text-text-primary mb-3">3. Custom magnets</h2>
               <p>
-                FrameFlix custom frames are produced using{' '}
-                <strong className="text-text-primary">PLA (polylactic acid)</strong> 3D-printing
-                material for the frame body and decorative elements, with dye-sublimation printed
-                photo inserts. PLA is a widely used thermoplastic for additive manufacturing.
+                FrameFlix fridge magnets are <strong className="text-text-primary">custom made</strong>{' '}
+                for your event, with dye-sublimation photo inserts.
               </p>
               <p className="mt-3">
-                While we design frames to be durable keepsakes under normal indoor display
-                conditions, PLA and printed components may be affected by heat, prolonged direct
-                sunlight, moisture, impact, or improper storage. Colors, finish, and fine details
-                may vary slightly between production batches and on-screen previews. FrameFlix is
-                not liable for damage caused by misuse, extreme environments, or modifications made
-                by third parties.
+                While we design them as keepsakes under normal indoor display conditions, they may
+                be affected by heat, prolonged direct sunlight, moisture, impact, or improper
+                storage. Colours, finish, and fine details may vary slightly between production
+                batches and on-screen previews. FrameFlix is not liable for damage caused by misuse,
+                extreme environments, or modifications made by third parties.
               </p>
             </section>
 

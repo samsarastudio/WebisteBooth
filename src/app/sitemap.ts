@@ -9,6 +9,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const routes = [
     '',
     '/about',
+    '/fridge-magnet-frames',
     '/packages',
     '/stickers',
     '/gallery',
@@ -16,7 +17,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/faq',
     '/contact',
     '/quote',
-    '/design',
     '/privacy',
     '/disclaimer',
     ...allLocalPagePaths.map((path) => `/${path}`),
@@ -26,7 +26,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     url: `${siteUrl}${route}`,
     lastModified: new Date(),
     changeFrequency:
-      route === '' || route === '/quote' || route === '/design' || route === '/blog'
+      route === '' || route === '/quote' || route === '/blog'
         ? 'weekly'
         : 'monthly',
     priority:
@@ -34,8 +34,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         ? 1
         : route.startsWith('/photo-booth-') ||
             route === '/quote' ||
-            route === '/design' ||
-            route === '/packages'
+            route === '/packages' ||
+            route === '/fridge-magnet-frames'
           ? 0.9
           : 0.75,
   }))

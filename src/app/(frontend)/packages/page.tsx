@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Clock, Sparkles } from 'lucide-react'
 
-import { brandImages } from '@/lib/brand-images'
+import { magnetImages } from '@/lib/magnet'
 import { getActiveAddOns, getActivePackages } from '@/lib/payload'
 import { PackageCards } from '@/components/marketing/PackageCards'
 import { EventOrganisersSection } from '@/components/marketing/EventOrganisersSection'
@@ -11,9 +11,9 @@ import { Reveal, Stagger, StaggerItem } from '@/components/marketing/Reveal'
 import { guardPage } from '@/lib/page-guard'
 
 export const metadata: Metadata = {
-  title: 'Packages & Pricing',
+  title: 'Event Packages',
   description:
-    'FrameFlix packages with 3 hours coverage (excluding setup). Custom 3D-printed frames for weddings, corporate events, and parties.',
+    'Book the FrameFlix photo booth with custom fridge magnets and a name plate for your event. Attendant included. Packages are quoted.',
 }
 
 export default async function PackagesPage() {
@@ -27,13 +27,12 @@ export default async function PackagesPage() {
         <div className="container-wide text-center max-w-3xl mx-auto relative z-10">
           <Reveal>
             <span className="inline-block px-4 py-1.5 rounded-full bg-accent-light text-accent-hover text-sm font-semibold mb-4 tracking-wide uppercase">
-              Pricing
+              Event packages
             </span>
-            <h1 className="text-4xl md:text-5xl mb-4">Choose Your Experience</h1>
+            <h1 className="text-4xl md:text-5xl mb-4">Book the booth</h1>
             <p className="text-text-secondary text-lg leading-relaxed mb-5">
-              From intimate gatherings to large celebrations — every package includes an attendant
-              and keepsakes your guests will love. Request a quote and we&apos;ll tailor everything
-              to your event.
+              Guests leave with a fridge magnet, your name plate, and an instant print from our booth.
+              We quote packages with an attendant and coverage.
             </p>
             <div className="flex flex-wrap gap-2 justify-center">
               <span className="hours-badge">
@@ -66,8 +65,8 @@ export default async function PackagesPage() {
           <Reveal direction="left">
             <div className="relative aspect-[4/3] rounded-[var(--radius-xl)] overflow-hidden shadow-[var(--shadow-lg)]">
               <Image
-                src={brandImages.modern.src}
-                alt={brandImages.modern.alt}
+                src={magnetImages.setup.src}
+                alt={magnetImages.setup.alt}
                 fill
                 className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 50vw"
@@ -78,7 +77,7 @@ export default async function PackagesPage() {
             <h2 className="text-3xl md:text-4xl mb-4">What “3 hours excluding setup” means</h2>
             <p className="text-text-secondary leading-relaxed mb-4">
               Your guests get a full <strong className="text-text-primary">3 hours of booth time</strong>.
-              Arrival, setup, and teardown are outside that window — so you never lose coverage to
+              Arrival, setup, and teardown sit outside that window, so you never lose coverage to
               logistics.
             </p>
             <p className="text-text-secondary leading-relaxed">

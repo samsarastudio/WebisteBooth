@@ -10,7 +10,7 @@ import { getPublishedPosts } from '@/lib/payload'
 
 export const metadata: Metadata = {
   title: 'Blog',
-  description: `Tips, guides, and ideas for weddings and events — from ${brand.fullName}.`,
+  description: `Tips, guides, and ideas for weddings and events from ${brand.fullName}.`,
 }
 
 export default async function BlogPage() {
@@ -81,7 +81,7 @@ export default async function BlogPage() {
           <Reveal className="card p-10 text-center">
             <h2 className="text-2xl md:text-3xl mb-3">Ready to plan your event?</h2>
             <p className="text-text-secondary mb-6 max-w-lg mx-auto">
-              Put these ideas into action — get a custom proposal for frames, stickers, or both.
+              Put these ideas into action. Get a custom proposal for magnets, stickers, or both.
             </p>
             <Link href="/quote" className="btn-primary">
               Get a Quote

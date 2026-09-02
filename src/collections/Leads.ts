@@ -36,6 +36,7 @@ export const Leads: CollectionConfig = {
       options: [
         { label: 'Quote request', value: 'quote' },
         { label: 'Contact message', value: 'contact' },
+        { label: 'Custom magnet / name plate', value: 'custom-frame' },
       ],
       admin: {
         position: 'sidebar',
@@ -75,12 +76,12 @@ export const Leads: CollectionConfig = {
     {
       name: 'eventType',
       type: 'text',
-      required: true,
+      required: false,
     },
     {
       name: 'eventDate',
       type: 'date',
-      required: true,
+      required: false,
       admin: {
         date: {
           pickerAppearance: 'dayOnly',
@@ -90,6 +91,28 @@ export const Leads: CollectionConfig = {
     {
       name: 'guestCount',
       type: 'text',
+    },
+    {
+      name: 'namePlateCopy',
+      type: 'textarea',
+      admin: {
+        description: 'Requested custom name-plate text or notes',
+      },
+    },
+    {
+      name: 'magnetColor',
+      type: 'text',
+      admin: {
+        description: 'Preferred magnet colour',
+      },
+    },
+    {
+      name: 'bookPhotobooth',
+      type: 'checkbox',
+      defaultValue: false,
+      admin: {
+        description: 'Customer also wants to book the photobooth',
+      },
     },
     {
       name: 'eventCity',

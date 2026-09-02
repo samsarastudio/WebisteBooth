@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { Clock, Mail, MapPin, Phone, Sparkles } from 'lucide-react'
 
 import { ContactForm } from '@/components/contact/ContactForm'
+import { MagnetEnquiryForm } from '@/components/contact/MagnetEnquiryForm'
 import { Reveal } from '@/components/marketing/Reveal'
 import { brand } from '@/lib/brand'
 import { guardPage } from '@/lib/page-guard'
@@ -13,9 +14,15 @@ export const metadata: Metadata = {
   description: `Contact ${brand.fullName} for custom photobooth proposals in Kitchener, Cambridge, Waterloo, Guelph, and beyond.`,
 }
 
-export default async function ContactPage() {
+export default async function ContactPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ intent?: string }>
+}) {
   const settings = await guardPage('contact')
   const phone = settings.phone?.trim()
+  const params = await searchParams
+  const customFrame = params.intent === 'custom-frame'
 
   return (
     <div>
@@ -25,13 +32,34 @@ export default async function ContactPage() {
             <span className="inline-block px-4 py-1.5 rounded-full bg-accent/10 text-accent text-sm font-medium mb-4 tracking-wide uppercase">
               Get In Touch
             </span>
-            <h1 className="text-4xl md:text-5xl mb-4">Let&apos;s Plan Your Event</h1>
+            <h1 className="text-4xl md:text-5xl mb-4">
+              {customFrame ? 'Custom name plate' : "Let's plan your event"}
+            </h1>
             <p className="text-text-secondary text-lg leading-relaxed">
-                Want a full package quote?{' '}
-              <Link href="/quote" className="text-accent underline-offset-2 hover:underline">
-                Start here
-              </Link>
-              , or send us a quick message below.
+              {customFrame ? (
+                <>
+                  Tell us the plate copy and quantity. Event packages are{' '}
+                  <Link href="/quote" className="text-accent underline-offset-2 hover:underline">
+                    quoted here
+                  </Link>
+                  .
+                </>
+              ) : (
+                <>
+                  Want a full package quote?{' '}
+                  <Link href="/quote" className="text-accent underline-offset-2 hover:underline">
+                    Start here
+                  </Link>
+                  , or send a message below. Custom name plates:{' '}
+                  <Link
+                    href="/fridge-magnet-frames#enquire"
+                    className="text-accent underline-offset-2 hover:underline"
+                  >
+                    enquire on the magnet page
+                  </Link>
+                  .
+                </>
+              )}
             </p>
           </Reveal>
         </div>
@@ -40,7 +68,7 @@ export default async function ContactPage() {
       <section className="pb-20">
         <div className="container-wide grid lg:grid-cols-[1fr_340px] gap-8 items-start">
           <Reveal>
-            <ContactForm />
+            {customFrame ? <MagnetEnquiryForm /> : <ContactForm />}
           </Reveal>
 
           <Reveal delay={0.1} className="space-y-4">
@@ -78,7 +106,7 @@ export default async function ContactPage() {
                     {serviceAreas.map((area) => (
                       <li key={area.href}>
                         <Link href={area.href} className="text-text-secondary hover:text-accent">
-                          Photo booth — {area.name}
+                          Photo booth in {area.name}
                         </Link>
                       </li>
                     ))}
@@ -101,7 +129,7 @@ export default async function ContactPage() {
             <div className="card p-6 bg-accent-light border-accent/20">
               <p className="text-sm leading-relaxed">
                 <strong>Pro Tip:</strong> Book 2–3 months ahead for weddings and peak season. We love
-                last-minute requests too — email us your date and we&apos;ll see what we can do.
+                last-minute requests too. Email us your date and we&apos;ll see what we can do.
               </p>
             </div>
 

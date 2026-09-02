@@ -1,26 +1,27 @@
 import { defaultFrameStyles } from '@/seed/defaults'
+import { magnetImages } from '@/lib/magnet'
 
-/** Primary style images (with guest photos in-frame). */
+/** Marketing photos — this camera-body magnet only. */
 export const brandImages = {
   romance: {
-    src: '/brand/style-romance-photo.png',
-    alt: 'Guest keepsake frame',
+    src: magnetImages.hero.src,
+    alt: magnetImages.hero.alt,
   },
   celebration: {
-    src: '/brand/style-celebration-photo.png',
-    alt: 'Guest keepsake frame',
+    src: '/brand/magnet-mint.png',
+    alt: 'Mint fridge magnet photo frame',
   },
   modern: {
-    src: '/brand/style-modern-photo.png',
-    alt: 'Guest keepsake frame',
+    src: '/brand/magnet-cream.png',
+    alt: 'Cream fridge magnet photo frame',
   },
   garden: {
-    src: '/brand/style-garden-photo.png',
-    alt: 'Guest keepsake frame',
+    src: '/brand/magnet-blue.png',
+    alt: 'Baby-blue fridge magnet photo frame',
   },
   stickered: {
-    src: '/brand/stickered-wedding-1.png',
-    alt: 'Stickered and painted guest keepsake frame',
+    src: magnetImages.lineup.src,
+    alt: magnetImages.lineup.alt,
   },
 } as const
 
@@ -29,58 +30,63 @@ export type GallerySample = {
   eventType: 'wedding' | 'corporate' | 'birthday' | 'graduation' | 'anniversary' | 'other'
 }
 
-/**
- * Curated gallery samples for production.
- * Decorations stay inside the frame.
- */
+/** Curated gallery — landscape camera-body magnet only. */
 export const gallerySamples: GallerySample[] = [
-  // 3D raised styles
-  { src: '/brand/style-romance-photo.png', eventType: 'wedding' },
-  { src: '/brand/style-romance-v2.png', eventType: 'wedding' },
-  { src: '/brand/style-celebration-photo.png', eventType: 'birthday' },
-  { src: '/brand/style-celebration-v2.png', eventType: 'birthday' },
-  { src: '/brand/style-modern-photo.png', eventType: 'corporate' },
-  { src: '/brand/style-garden-photo.png', eventType: 'anniversary' },
-  { src: '/brand/frame-4x6-sample.png', eventType: 'other' },
-  // Stickered & painted
-  { src: '/brand/stickered-wedding-1.png', eventType: 'wedding' },
-  { src: '/brand/stickered-wedding-2.png', eventType: 'wedding' },
-  { src: '/brand/stickered-birthday-1.png', eventType: 'birthday' },
-  { src: '/brand/stickered-anniversary-1.png', eventType: 'anniversary' },
-  { src: '/brand/stickered-event-1.png', eventType: 'corporate' },
+  { src: magnetImages.hero.src, eventType: 'wedding' },
+  { src: magnetImages.inHand.src, eventType: 'wedding' },
+  { src: magnetImages.nameplate.src, eventType: 'anniversary' },
+  { src: magnetImages.fridge.src, eventType: 'other' },
+  { src: magnetImages.lineup.src, eventType: 'birthday' },
+  { src: '/brand/magnet-cream.png', eventType: 'anniversary' },
+  { src: '/brand/magnet-mint.png', eventType: 'birthday' },
+  { src: '/brand/magnet-blue.png', eventType: 'corporate' },
+  { src: magnetImages.setup.src, eventType: 'corporate' },
+  { src: magnetImages.magnetBooth.src, eventType: 'graduation' },
+  { src: magnetImages.instantPrint.src, eventType: 'other' },
 ]
 
 /** @deprecated use gallerySamples */
 export const galleryFallbacks = gallerySamples.map((s) => ({
   src: s.src,
-  alt: 'Guest keepsake frame',
+  alt: 'Fridge magnet photo frame',
 }))
 
-/** Per-style slider variations. */
+const magnetShots = [
+  { src: magnetImages.hero.src, caption: 'Blush pink magnet' },
+  { src: '/brand/magnet-cream.png', caption: 'Cream magnet' },
+  { src: '/brand/magnet-mint.png', caption: 'Mint magnet' },
+  { src: '/brand/magnet-blue.png', caption: 'Baby blue magnet' },
+  { src: magnetImages.lineup.src, caption: 'Pastel colour lineup' },
+  { src: magnetImages.inHand.src, caption: 'Ready to take home' },
+  { src: magnetImages.fridge.src, caption: 'On the fridge' },
+]
+
+/** Per-style slider variations — one mold, colour variants. */
 export const styleVariations: Record<string, { src: string; caption: string }[]> = {
-  romance: [
-    { src: '/brand/style-romance-photo.png', caption: 'Anna & Stephen' },
-    { src: '/brand/style-romance-v2.png', caption: 'With love — Anna & Stephen' },
+  'magnet-pink': [
+    { src: magnetImages.hero.src, caption: 'Blush pink' },
+    { src: magnetImages.inHand.src, caption: 'In hand' },
+    { src: magnetImages.fridge.src, caption: 'On the fridge' },
   ],
-  celebration: [
-    { src: '/brand/style-celebration-photo.png', caption: 'With love — Mia' },
-    { src: '/brand/style-celebration-v2.png', caption: 'With love — Leo' },
+  'magnet-cream': [
+    { src: '/brand/magnet-cream.png', caption: 'Cream' },
+    { src: magnetImages.lineup.src, caption: 'With the pastel set' },
   ],
-  modern: [{ src: '/brand/style-modern-photo.png', caption: 'Anna & Stephen' }],
-  garden: [{ src: '/brand/style-garden-photo.png', caption: 'With love — Anna & Stephen' }],
-  'stickered-painted': [
-    { src: '/brand/stickered-wedding-1.png', caption: 'With love — Anna & Stephen' },
-    { src: '/brand/stickered-wedding-2.png', caption: 'Anna & Stephen' },
-    { src: '/brand/stickered-birthday-1.png', caption: 'With love — Mia' },
-    { src: '/brand/stickered-anniversary-1.png', caption: 'With love — Anna & Stephen' },
-    { src: '/brand/stickered-event-1.png', caption: 'Anna & Stephen' },
+  'magnet-mint': [
+    { src: '/brand/magnet-mint.png', caption: 'Mint' },
+    { src: magnetImages.nameplate.src, caption: 'Custom name plate' },
   ],
-  // legacy slug support
-  'hand-painted': [
-    { src: '/brand/stickered-wedding-1.png', caption: 'With love — Anna & Stephen' },
-    { src: '/brand/stickered-wedding-2.png', caption: 'Anna & Stephen' },
-    { src: '/brand/stickered-birthday-1.png', caption: 'With love — Mia' },
+  'magnet-blue': [
+    { src: '/brand/magnet-blue.png', caption: 'Baby blue' },
+    { src: magnetImages.magnetBooth.src, caption: 'With the booth' },
   ],
+  // legacy slugs remap to this magnet
+  romance: magnetShots,
+  celebration: magnetShots,
+  modern: magnetShots,
+  garden: magnetShots,
+  'stickered-painted': magnetShots,
+  'hand-painted': magnetShots,
 }
 
 export type FrameStyleData = {

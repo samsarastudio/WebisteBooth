@@ -420,6 +420,47 @@ export interface FrameDesign {
   photoMedia?: (number | null) | Media;
   status?: ('draft' | 'submitted') | null;
   lead?: (number | null) | Lead;
+  /**
+   * Owner Print 3D (Comfy Cloud) job status.
+   */
+  printModelStatus?: ('idle' | 'queued' | 'running' | 'ready' | 'error') | null;
+  /**
+   * Comfy Cloud prompt / job id.
+   */
+  printComfyPromptId?: string | null;
+  /**
+   * Last print generation error message.
+   */
+  printModelError?: string | null;
+  /**
+   * Relative path under media/ (e.g. print-models/token.glb).
+   */
+  printGlbPath?: string | null;
+  /**
+   * Relative path under media/ (e.g. print-models/token.stl).
+   */
+  printStlPath?: string | null;
+  printGeneratedAt?: string | null;
+  /**
+   * modular = production parts; tripo = optional AI preview only.
+   */
+  printMode?: ('modular' | 'tripo') | null;
+  /**
+   * media/print-models/…-front.stl
+   */
+  printFrontStlPath?: string | null;
+  /**
+   * media/print-models/…-back.stl (size-common magnet+QR)
+   */
+  printBackStlPath?: string | null;
+  /**
+   * media/print-models/…-spacer.stl
+   */
+  printSpacerStlPath?: string | null;
+  /**
+   * Assembly + boolean-op manifest JSON
+   */
+  printManifestPath?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -431,14 +472,29 @@ export interface FrameDesign {
  */
 export interface Lead {
   id: number;
-  intent?: ('quote' | 'contact') | null;
+  intent?: ('quote' | 'contact' | 'custom-frame') | null;
   serviceType?: ('frames' | 'stickers' | 'both') | null;
   name: string;
   email: string;
-  phone: string;
-  eventType: string;
-  eventDate: string;
+  /**
+   * Optional — we follow up by email for quote requests.
+   */
+  phone?: string | null;
+  eventType?: string | null;
+  eventDate?: string | null;
   guestCount?: string | null;
+  /**
+   * Requested custom name-plate text or notes
+   */
+  namePlateCopy?: string | null;
+  /**
+   * Preferred magnet colour
+   */
+  magnetColor?: string | null;
+  /**
+   * Customer also wants to book the photobooth
+   */
+  bookPhotobooth?: boolean | null;
   /**
    * City where the event will take place
    */
@@ -957,6 +1013,17 @@ export interface FrameDesignsSelect<T extends boolean = true> {
   photoMedia?: T;
   status?: T;
   lead?: T;
+  printModelStatus?: T;
+  printComfyPromptId?: T;
+  printModelError?: T;
+  printGlbPath?: T;
+  printStlPath?: T;
+  printGeneratedAt?: T;
+  printMode?: T;
+  printFrontStlPath?: T;
+  printBackStlPath?: T;
+  printSpacerStlPath?: T;
+  printManifestPath?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -984,6 +1051,9 @@ export interface LeadsSelect<T extends boolean = true> {
   eventType?: T;
   eventDate?: T;
   guestCount?: T;
+  namePlateCopy?: T;
+  magnetColor?: T;
+  bookPhotobooth?: T;
   eventCity?: T;
   postalCode?: T;
   packageRecommendationRequested?: T;
@@ -1130,6 +1200,9 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  */
 export interface SiteSetting {
   id: number;
+  /**
+   * Optional. Leave blank to hide phone on the contact page (email-only enquiries).
+   */
   phone?: string | null;
   email?: string | null;
   serviceArea?: string | null;

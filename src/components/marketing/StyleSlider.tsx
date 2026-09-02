@@ -49,7 +49,7 @@ export function StyleSlider({
     <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-8 lg:gap-12 items-center">
       <div className="relative">
         <div className="frame-shell p-2 sm:p-3 max-w-md mx-auto lg:max-w-none">
-          <div className="relative aspect-[4/5] overflow-hidden rounded-[1rem] bg-[#f3efe6]">
+          <div className="relative aspect-[4/3] overflow-hidden rounded-[1rem] bg-white">
             <AnimatePresence mode="wait">
               <motion.div
                 key={`${style.slug}-${current.src}`}
@@ -61,7 +61,7 @@ export function StyleSlider({
               >
                 <ProductImage
                   src={current.src}
-                  alt={`${style.name} — ${current.caption}`}
+                  alt={`${style.name}, ${current.caption}`}
                   fill
                   className="object-cover"
                   sizes="(max-width: 1024px) 90vw, 520px"
@@ -124,11 +124,6 @@ export function StyleSlider({
         <p className="text-text-secondary mb-2 max-w-md mx-auto lg:mx-0">
           {style.description}
         </p>
-        {(style.slug === 'stickered-painted' || style.slug === 'hand-painted') && (
-          <p className="text-xs text-text-secondary mb-3 max-w-md mx-auto lg:mx-0">
-            Not raised 3D print — a painted or sticker finish on the frame surface.
-          </p>
-        )}
         <p className="text-lg font-medium mb-5">&ldquo;{style.sampleMessage}&rdquo;</p>
 
         <div className="flex flex-wrap gap-2 justify-center lg:justify-start mb-6">

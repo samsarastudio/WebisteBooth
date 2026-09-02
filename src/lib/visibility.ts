@@ -26,7 +26,7 @@ export function isPageEnabled(settings: SiteSettingsData, page: PageKey): boolea
     case 'quote':
       return settings.showQuotePage
     case 'design':
-      return settings.showDesignPage
+      return false
     case 'stickers':
       return settings.showStickersPage
     case 'blog':
@@ -42,13 +42,14 @@ export async function requirePage(page: PageKey) {
 }
 
 export function navLinks(settings: SiteSettingsData) {
-  const links: { href: string; label: string }[] = []
+  const links: { href: string; label: string }[] = [
+    { href: '/fridge-magnet-frames', label: 'Magnets' },
+  ]
   if (settings.showAboutPage) links.push({ href: '/about', label: 'About' })
-  if (settings.showPackagesPage) links.push({ href: '/packages', label: 'Frames' })
+  if (settings.showPackagesPage) links.push({ href: '/packages', label: 'Events' })
   if (settings.showStickersPage) links.push({ href: '/stickers', label: 'Stickers' })
   if (settings.showGalleryPage) links.push({ href: '/gallery', label: 'Gallery' })
   if (settings.showBlogPage) links.push({ href: '/blog', label: 'Blog' })
-  if (settings.showDesignPage) links.push({ href: '/design', label: 'Design Studio' })
   if (settings.showFaqPage) links.push({ href: '/faq', label: 'FAQ' })
   if (settings.showContactPage) links.push({ href: '/contact', label: 'Contact' })
   return links

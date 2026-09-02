@@ -7,19 +7,24 @@ import { ProductImage } from '@/components/marketing/ProductImage'
 
 const cards = [
   {
-    src: '/brand/style-romance-photo.png',
-    alt: 'Guest keepsake — Anna & Stephen',
-    label: 'Romance',
+    src: '/brand/magnet-hero-pink.png',
+    alt: 'Blush pink fridge magnet photo frame',
+    label: 'Blush pink',
   },
   {
-    src: '/brand/style-celebration-photo.png',
-    alt: 'Guest keepsake — With love — Mia',
-    label: 'Celebration',
+    src: '/brand/magnet-cream.png',
+    alt: 'Cream fridge magnet photo frame',
+    label: 'Cream',
   },
   {
-    src: '/brand/style-garden-photo.png',
-    alt: 'Guest keepsake — With love — Anna & Stephen',
-    label: 'Garden',
+    src: '/brand/magnet-mint.png',
+    alt: 'Mint fridge magnet photo frame',
+    label: 'Mint',
+  },
+  {
+    src: '/brand/magnet-blue.png',
+    alt: 'Baby-blue fridge magnet photo frame',
+    label: 'Baby blue',
   },
 ]
 
@@ -37,7 +42,7 @@ export function HeroCards() {
 
   return (
     <div className="relative mx-auto w-full max-w-[360px] sm:max-w-[420px] lg:max-w-[460px]">
-      <div className="relative aspect-[4/5] w-full [perspective:1200px]">
+      <div className="relative aspect-[4/3] w-full [perspective:1200px]">
         {cards.map((card, i) => {
           const offset = (i - active + cards.length) % cards.length
           const isFront = offset === 0
@@ -57,7 +62,7 @@ export function HeroCards() {
               style={{ zIndex: z }}
               animate={{ x, y, rotate, scale, opacity }}
               transition={{ type: 'spring', stiffness: 280, damping: 28 }}
-              aria-label={`Show ${card.label} frame`}
+              aria-label={`Show ${card.label} magnet`}
               aria-pressed={isFront}
             >
               <div
@@ -65,7 +70,7 @@ export function HeroCards() {
                   isFront ? 'ring-1 ring-black/5' : ''
                 }`}
               >
-                <div className="relative h-full w-full overflow-hidden rounded-[0.95rem] bg-[#f3efe6]">
+                <div className="relative h-full w-full overflow-hidden rounded-[0.95rem] bg-white">
                   <ProductImage
                     src={card.src}
                     alt={card.alt}

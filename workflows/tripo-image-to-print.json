@@ -1,0 +1,70 @@
+{
+  "3": {
+    "inputs": {
+      "filename_prefix": "3d/Tripo3.1_i2m",
+      "image": "",
+      "mesh": ["11", 2]
+    },
+    "class_type": "SaveGLB",
+    "_meta": {
+      "title": "Save 3D Model"
+    }
+  },
+  "10": {
+    "inputs": {
+      "image": "preview.png"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "Load Image"
+    }
+  },
+  "11": {
+    "inputs": {
+      "model_version": "v3.1-20260211",
+      "style": "sculpture",
+      "texture": false,
+      "pbr": false,
+      "model_seed": 42,
+      "orientation": "default",
+      "texture_seed": 42,
+      "texture_quality": "standard",
+      "texture_alignment": "original_image",
+      "face_limit": 40000,
+      "quad": false,
+      "geometry_quality": "standard",
+      "image": ["10", 0]
+    },
+    "class_type": "TripoImageToModelNode",
+    "_meta": {
+      "title": "Tripo: Image to Model"
+    }
+  },
+  "12": {
+    "inputs": {
+      "original_model_task_id": ["11", 1],
+      "format": "STL",
+      "quad": false,
+      "face_limit": 40000,
+      "texture_size": 1024,
+      "texture_format": "JPEG",
+      "force_symmetry": false,
+      "flatten_bottom": true,
+      "flatten_bottom_threshold": 0.01,
+      "pivot_to_center_bottom": true,
+      "scale_factor": 1,
+      "with_animation": false,
+      "pack_uv": false,
+      "bake": false,
+      "part_names": "",
+      "fbx_preset": "blender",
+      "export_vertex_colors": false,
+      "export_orientation": "default",
+      "animate_in_place": false
+    },
+    "class_type": "TripoConversionNode",
+    "_meta": {
+      "title": "Tripo: Convert to Print STL"
+    }
+  }
+}

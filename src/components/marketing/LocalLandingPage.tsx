@@ -112,7 +112,7 @@ export function LocalLandingPage({
           <Reveal className="text-center mb-10">
             <h2 className="text-3xl md:text-4xl mb-3">Events we serve</h2>
             <p className="text-text-secondary max-w-xl mx-auto">
-              Founder-led planning for celebrations across the Region — tell us your date and venue.
+              Founder-led planning across the Region. Tell us your date and venue.
             </p>
           </Reveal>
           <div className="grid sm:grid-cols-2 gap-5">
@@ -132,7 +132,7 @@ export function LocalLandingPage({
           <Reveal className="mb-10">
             <h2 className="text-3xl md:text-4xl mb-3">How setup & delivery work</h2>
             <p className="text-text-secondary max-w-2xl">
-              Every booking includes an on-site attendant — setup and teardown sit outside your 3
+              Every booking includes an on-site attendant. Setup and teardown sit outside your 3
               hours of active booth coverage.
             </p>
           </Reveal>
@@ -205,7 +205,7 @@ export function LocalLandingPage({
             <Reveal className="card p-10 md:p-14 text-center">
               <h2 className="text-3xl mb-3">Preview your frame before you book</h2>
               <p className="text-text-secondary mb-8 max-w-xl mx-auto">
-                Colours, captions, ornaments, and saved drafts — free in our Design Studio. No
+                Colours, captions, ornaments, and saved drafts. Free in our Design Studio. No
                 commitment until you request a quote.
               </p>
               <Link href={designHref} className="btn-primary">
@@ -224,15 +224,14 @@ export function LocalLandingPage({
             <Reveal>
               <h2 className="text-2xl md:text-3xl mb-2">Request a quote</h2>
               <p className="text-text-secondary mb-6">
-                Email us your date, venue, and guest count — we respond within 24 hours.
+                Email us your date, venue, and guest count. We respond within 24 hours.
               </p>
               <ContactForm />
             </Reveal>
             <Reveal delay={0.1} className="card p-6 space-y-4 text-sm">
               <h3 className="font-serif text-lg">Prefer the full quote builder?</h3>
               <p className="text-text-secondary leading-relaxed">
-                Choose a package, frame style, and add-ons step-by-step — or start in the Design
-                Studio and bring your saved draft.
+                Choose a package, magnet colour, and add-ons step by step, or enquire about a custom name plate.
               </p>
               {settings.showQuotePage ? (
                 <Link href={quoteHref} className="btn-secondary w-full justify-center">

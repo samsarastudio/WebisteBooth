@@ -82,7 +82,7 @@ export function DualHero({
             title={frameOffering.headline}
             summary={frameOffering.summary}
             highlights={frameOffering.highlights}
-            image="/brand/style-romance-photo.png"
+            image="/brand/magnet-hero-pink.png"
             primaryHref={showDesign ? designHref : quoteFramesHref}
             secondaryHref="/packages"
             primaryLabel={showDesign ? brand.ctaDesign : 'Get a Quote'}

@@ -10,7 +10,7 @@ import { guardPage } from '@/lib/page-guard'
 
 export const metadata: Metadata = {
   title: 'Gallery',
-  description: `Guest keepsake frames and styles from ${brand.fullName}.`,
+  description: `Custom fridge magnets in blush, cream, mint, and blue, with a name plate for your event. ${brand.fullName}.`,
 }
 
 export default async function GalleryPage() {
@@ -28,8 +28,8 @@ export default async function GalleryPage() {
             </span>
             <h1 className="text-4xl md:text-5xl mb-4">Guest keepsakes</h1>
             <p className="text-text-secondary text-lg leading-relaxed mb-4">
-              Real frame styles, printed results, and finishes — the keepsakes your guests take
-              home from weddings, birthdays, and corporate events across Ontario.
+              Pastel fridge magnets with a name plate for your event. Instant print from our booth.
+              The keepsake guests put on the fridge.
             </p>
           </Reveal>
         </div>
@@ -44,7 +44,7 @@ export default async function GalleryPage() {
       <section className="section pt-0">
         <div className="container-wide">
           <Reveal className="card p-10 text-center">
-            <h2 className="text-2xl md:text-3xl mb-3">Want frames like these at your event?</h2>
+            <h2 className="text-2xl md:text-3xl mb-3">Want this magnet at your event?</h2>
             <p className="text-text-secondary mb-6">Request a quote in under two minutes.</p>
             <Link href={quoteHref} className="btn-primary">
               Get a Quote

@@ -9,7 +9,7 @@ const STEPS = [
   {
     icon: Upload,
     title: 'Drop in a sample photo',
-    desc: 'See your frame with a real image — not a generic placeholder.',
+    desc: 'See your frame with a real image, not a generic placeholder.',
   },
   {
     icon: Palette,
@@ -52,18 +52,18 @@ export function DesignStudioSection({
                 <span className="text-gradient italic">before</span> you book
               </h2>
               <p className="text-text-secondary leading-relaxed mb-6 max-w-lg">
-                Play with layouts, colors, and captions in our live studio — the same preview we use
-                for your event. No commitment until you&apos;re ready for a quote.
+                Play with layouts, colours, and captions in our live studio. Same preview we use
+                for your event. No commitment until you are ready for a quote.
               </p>
             </Reveal>
 
             <Reveal delay={0.08}>
               <ul className="space-y-2.5 mb-8">
                 {[
-                  'Original keepsake or 6×4 landscape — switch anytime',
-                  'Raised 3D florals, doves, and celebration ornaments',
-                  'Caption locked print-safe — your names, perfectly placed',
-                  'Sign in once — we save your draft and email you a link',
+                  'Original keepsake or 6×4 landscape. Switch anytime',
+                  'Raised florals, doves, and celebration ornaments',
+                  'Caption locked print-safe. Your names, placed cleanly',
+                  'Sign in once. We save your draft and email you a link',
                 ].map((line) => (
                   <li key={line} className="flex gap-2.5 items-start text-sm">
                     <Check size={16} className="text-accent mt-0.5 shrink-0" strokeWidth={2.5} />

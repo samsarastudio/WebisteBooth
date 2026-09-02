@@ -389,7 +389,7 @@ export function FrameConfigurator({
         return
       }
       setDesignToken(data.designToken)
-      setSaveNotice(`Snapshot saved — we emailed ${email} a link to recreate this design.`)
+      setSaveNotice(`Snapshot saved. We emailed ${email} a link to recreate this design.`)
       router.push(`/quote?design=${encodeURIComponent(data.designToken)}&service=frames`)
     } catch {
       setError('Could not save design.')
@@ -623,7 +623,7 @@ export function FrameConfigurator({
             stageRef={stageRef}
           />
           <p className="text-xs text-text-secondary text-center mt-4">
-            Preview — {formatLabel.toLowerCase()}. Add your photo, text, and decor on border areas
+            Preview. {formatLabel.toLowerCase()}. Add your photo, text, and decor on border areas
             only. Final colors may vary slightly.
           </p>
         </div>
@@ -673,7 +673,7 @@ export function FrameConfigurator({
             </>
           ) : (
             <p className="text-xs text-text-secondary">
-              Try free — your edits stay on this device until you save or request a quote.
+              Try free. Your edits stay on this device until you save or request a quote.
             </p>
           )}
         </div>
@@ -682,7 +682,7 @@ export function FrameConfigurator({
         {activePanel === 'photo' ? (
           <div className="space-y-4">
             <p className="text-sm text-text-secondary">
-              Upload your photo — it fills the window inside your custom frame.
+              Upload your photo. It fills the window inside your custom frame.
             </p>
             <label className="btn-secondary w-full justify-center cursor-pointer">
               {uploading ? (
@@ -705,7 +705,7 @@ export function FrameConfigurator({
               />
             </label>
             {design.photoUrl ? (
-              <p className="text-xs text-accent font-medium">Photo added — drag text & decor on the canvas.</p>
+              <p className="text-xs text-accent font-medium">Photo added. Drag text and decor on the canvas.</p>
             ) : null}
           </div>
         ) : null}

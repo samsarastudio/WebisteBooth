@@ -18,7 +18,7 @@ export const FRAME_THEMES: Record<FrameThemeId, FrameTheme> = {
   keepsake: {
     id: 'keepsake',
     name: 'Classic keepsake',
-    blurb: 'Gallery-style white PLA, gold caption rail',
+    blurb: 'Gallery-style white frame, gold caption rail',
     colors: {
       base: '#F6F4EF',
       accent: '#D4AF37',
@@ -81,7 +81,7 @@ export const FRAME_THEMES: Record<FrameThemeId, FrameTheme> = {
     },
     captionMaxLength: 28,
     secondaryMaxLength: 18,
-    defaultText: 'With love — Mia',
+    defaultText: 'With love, Mia',
     defaultFont: 'Playfair Display',
     defaultTextSize: 28,
     photoRadius: 4,

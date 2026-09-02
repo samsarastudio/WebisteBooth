@@ -41,7 +41,7 @@ export const RAISED_ORNAMENT_TEMPLATES: OrnamentTemplate[] = [
   {
     id: 'raised-romance-mail',
     name: 'Doves & letters',
-    description: 'Birds, envelopes, and tulips — romance gallery style.',
+    description: 'Birds, envelopes, and tulips. Romance gallery style.',
     finish: 'raised3d',
   },
   {

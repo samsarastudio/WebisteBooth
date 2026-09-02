@@ -30,7 +30,7 @@ export function TextPanel({
     <div className="space-y-4">
       <div className="flex items-center justify-between gap-2">
         <p className="text-sm text-text-secondary">
-          Caption stays centered and inside the print-safe rail — longer lines wrap automatically.
+          Caption stays centered and inside the print-safe rail. Longer lines wrap automatically.
         </p>
         {layers.length < 3 ? (
           <button type="button" onClick={onAdd} className="btn-secondary !py-1.5 !px-3 text-xs shrink-0">

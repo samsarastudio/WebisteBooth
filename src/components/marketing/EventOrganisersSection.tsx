@@ -3,16 +3,17 @@ import { ArrowRight, Check } from 'lucide-react'
 
 import { ProductImage } from '@/components/marketing/ProductImage'
 import { Reveal } from '@/components/marketing/Reveal'
+import { magnetImages } from '@/lib/magnet'
 
 const DEFAULT_BULLETS = [
-  'On-site attendant — we handle setup, crowd flow, and teardown',
+  'On-site attendant. We handle setup, crowd flow, and teardown',
   'Custom branding and frame design for your client',
   'Multi-venue and multi-day options for larger programs',
 ]
 
 export function EventOrganisersSection({
   title = 'We would love to be part of your success stories',
-  body = 'Partner with FrameFlix for weddings, corporate activations, and milestone events — branded keepsakes your guests share long after the night ends.',
+  body = 'Partner with FrameFlix for weddings, corporate nights, and milestone events. Branded fridge magnets guests still have on the fridge months later.',
   contactHref = '/contact',
   quoteHref = '/quote?service=both',
 }: {
@@ -52,8 +53,8 @@ export function EventOrganisersSection({
           <div className="relative aspect-[4/3] rounded-[var(--radius-xl)] overflow-hidden shadow-[var(--shadow-lg)] frame-shell p-2">
             <div className="relative w-full h-full rounded-[1rem] overflow-hidden">
               <ProductImage
-                src="/brand/stickered-event-1.png"
-                alt="Corporate event keepsake frames"
+              src={magnetImages.setup.src}
+              alt="Photobooth with fridge magnet frames for event guests"
                 fill
                 className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 520px"

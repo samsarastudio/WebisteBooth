@@ -81,7 +81,7 @@ export async function getDesignCatalog() {
   noStore()
   try {
     const payload = await getPayloadClient()
-    const [templatesRes, ornamentsRes, stylesRes] = await Promise.all([
+    const [templatesRes, ornamentsRes] = await Promise.all([
       payload.find({
         collection: 'frame-templates',
         where: { active: { equals: true } },
@@ -95,13 +95,6 @@ export async function getDesignCatalog() {
         sort: 'sortOrder',
         limit: 50,
         depth: 1,
-      }),
-      payload.find({
-        collection: 'frame-styles',
-        where: { active: { equals: true } },
-        sort: 'sortOrder',
-        limit: 10,
-        depth: 0,
       }),
     ])
 
@@ -136,7 +129,7 @@ export async function getDesignCatalog() {
     return {
       templates: templatesRes.docs.map(mapTemplate),
       ornaments: ornamentsRes.docs.map(mapOrnament),
-      stylePresets: stylesRes.docs.map(mapStylePreset),
+      stylePresets: defaultFrameStyles.map((s, i) => mapStylePreset({ ...s, id: `fb-${i}` })),
     }
   } catch {
     return {

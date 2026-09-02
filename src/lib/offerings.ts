@@ -1,19 +1,19 @@
-/** Two main service branches — frames & sticker experiences. */
+/** Two main service branches: fridge magnets and sticker experiences. */
 
 export const frameOffering = {
   id: 'frames',
-  name: 'Custom Frames',
-  eyebrow: 'Guest keepsakes',
-  headline: 'Personalized photo frames',
+  name: 'Fridge Magnet Frames',
+  eyebrow: 'Guest favours',
+  headline: 'Custom fridge magnets',
   summary:
-    'Translucent 6×4 landscape frames with your guests’ photos — raised 3D or stickered & painted finishes.',
-  href: '/packages',
+    'Instant prints from our photo booth, loaded into a fridge magnet with your name plate. Pastel colours. Event packages are quoted.',
+  href: '/fridge-magnet-frames',
   quoteHref: '/quote?service=frames',
   highlights: [
-    'Attendant included',
-    '3 hours of coverage',
-    '6×4 landscape keepsakes',
-    'Online photos — Essential: 3 months · Premium: 12 months',
+    'Custom name plate',
+    'Instant prints',
+    'DSLR booth and attendant',
+    'QR share and online gallery',
   ],
 }
 
@@ -21,21 +21,21 @@ export const stickerOffering = {
   id: 'stickers',
   name: 'Sticker Studio',
   eyebrow: 'On-site stickers',
-  headline: 'Print & cut custom stickers',
+  headline: 'Print and cut custom stickers',
   summary:
-    'Live sticker experiences for events — vibrant photo stickers, labels, and keepsakes made on the spot.',
+    'Live sticker stations for events. Photo stickers, labels, and favours made on the spot.',
   href: '/stickers',
   quoteHref: '/quote?service=stickers',
   highlights: [
-    'Print & cut in one step',
-    '3 hours on-site · attendant included',
-    'Capacity tailored to guest count & sticker size',
-    'Standalone or bundled with frame packages',
+    'Print and cut in one step',
+    '3 hours on site, attendant included',
+    'Sized to your guest count',
+    'On its own or with magnet packages',
   ],
   features: [
     {
       title: 'Print and cut together',
-      desc: 'Create finished stickers in minutes — no juggling separate printers and cutters.',
+      desc: 'Finished stickers in minutes. No juggling a printer and a cutter.',
     },
     {
       title: 'Vivid, true-to-life color',
@@ -43,19 +43,19 @@ export const stickerOffering = {
     },
     {
       title: 'Smart subject cutouts',
-      desc: 'Automatically isolate people or objects from photos, then cut cleanly along every edge.',
+      desc: 'We isolate people or objects from photos, then cut cleanly along every edge.',
     },
     {
       title: 'Built to last',
-      desc: 'Laminated stickers that are waterproof and scratch-resistant — perfect as event favors.',
+      desc: 'Laminated stickers that are waterproof and scratch-resistant. Great as event favours.',
     },
     {
       title: 'Endless custom options',
-      desc: 'Photo stickers, name tags, labels, phone skins, branding, and party favors — designed for your event.',
+      desc: 'Photo stickers, name tags, labels, phone skins, branding, and party favours.',
     },
     {
       title: 'Guest-ready fun',
-      desc: 'Guests leave with something playful and personal they can stick, share, and keep.',
+      desc: 'Guests leave with something playful they can stick, share, and keep.',
     },
   ],
 }

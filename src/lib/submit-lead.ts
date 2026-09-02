@@ -50,10 +50,19 @@ export async function submitLeadFromFormData(
     frameFormat === 'original' ? 'Original keepsake frame' : '6×4 landscape frame'
   const selectedRaw = String(formData.get('selectedAddOns') || '[]')
 
+  const namePlateCopy = String(formData.get('namePlateCopy') || '').trim()
+  const magnetColor = String(formData.get('magnetColor') || '').trim()
+  const bookPhotobooth = String(formData.get('bookPhotobooth') || '').trim() === '1'
   const intent = String(formData.get('intent') || 'contact')
-  const intentValue = intent === 'quote' ? 'quote' : 'contact'
+  const intentValue =
+    intent === 'quote' ? 'quote' : intent === 'custom-frame' ? 'custom-frame' : 'contact'
+  const isCustomFrame = intentValue === 'custom-frame'
 
-  if (!name || !email || !eventType || !eventDate || !eventCity || !postalCode) {
+  if (isCustomFrame) {
+    if (!name || !email) {
+      return { ok: false, error: 'Name and email are required.' }
+    }
+  } else if (!name || !email || !eventType || !eventDate || !eventCity || !postalCode) {
     return {
       ok: false,
       error: 'Name, email, event type, date, city, and postal code are required.',
@@ -70,7 +79,7 @@ export async function submitLeadFromFormData(
       return { ok: false, error: 'Please choose a package.' }
     }
     if (!frameStyleId && !designToken) {
-      return { ok: false, error: 'Please choose a frame style or complete the design studio.' }
+      return { ok: false, error: 'Please choose a magnet colour.' }
     }
   }
 
@@ -184,14 +193,17 @@ export async function submitLeadFromFormData(
         serviceType,
         name,
         email,
-        phone: phone || '—',
-        eventType,
-        eventDate,
+        phone: phone || (isCustomFrame ? undefined : '—'),
+        eventType: eventType || (isCustomFrame ? 'Custom fridge magnet' : eventType),
+        eventDate: eventDate || undefined,
         guestCount: guestCount || undefined,
         eventCity: eventCity || undefined,
         postalCode: postalCode || undefined,
         packageRecommendationRequested,
         message: message || undefined,
+        namePlateCopy: namePlateCopy || undefined,
+        magnetColor: magnetColor || undefined,
+        bookPhotobooth,
         package: pkg?.id ?? undefined,
         packageName: pkg?.name,
         packagePrice: pkg?.basePrice ?? 0,
@@ -227,8 +239,9 @@ export async function submitLeadFromFormData(
         ? previewMedia.url
         : undefined
 
-    const serviceLabel =
-      serviceType === 'stickers'
+    const serviceLabel = isCustomFrame
+      ? 'Fridge magnet / name plate'
+      : serviceType === 'stickers'
         ? 'Sticker Studio'
         : serviceType === 'both'
           ? 'Frames + Stickers'
@@ -237,16 +250,20 @@ export async function submitLeadFromFormData(
     try {
       await sendLeadEmails({
         inquiryId,
+        intent: intentValue,
         name,
         email,
         phone: phone || '—',
-        eventType,
-        eventDate,
+        eventType: eventType || (isCustomFrame ? 'Custom fridge magnet' : eventType),
+        eventDate: eventDate || '—',
         guestCount,
         eventCity,
         postalCode,
         packageRecommendationRequested,
         message,
+        namePlateCopy,
+        magnetColor,
+        bookPhotobooth,
         serviceLabel,
         packageName: pkg?.name,
         priceRange: pkg?.priceRange || (wantsFrames ? 'Custom quote' : undefined),

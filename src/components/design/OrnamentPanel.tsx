@@ -38,7 +38,7 @@ export function OrnamentPanel({
               : 'bg-bg-secondary text-text-secondary hover:text-text-primary'
           }`}
         >
-          Raised 3D
+          Raised
         </button>
         <button
           type="button"
@@ -80,11 +80,11 @@ export function OrnamentPanel({
       <div className="border-t border-border pt-3">
         {activeTab === 'raised3d' ? (
           <p className="text-xs text-text-secondary mb-3">
-            Single raised accents — uses your accent print color.
+            Single raised accents. Uses your accent print colour.
           </p>
         ) : (
           <p className="text-xs text-text-secondary mb-3">
-            Individual sticker overlays — border and caption areas only.
+            Individual sticker overlays. Border and caption areas only.
           </p>
         )}
 

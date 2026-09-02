@@ -3,7 +3,7 @@ import type { TextLayer } from './types'
 /** Default raised caption size tuned for print legibility */
 export const CAPTION_TEXT_SIZE = 28
 
-/** Inset from caption rail edges — text stays inside for 3D print */
+/** Inset from caption rail edges so text stays inside the print-safe area */
 export const CAPTION_TEXT_PADDING = 14
 
 export const CAPTION_LINE_HEIGHT = 1.35

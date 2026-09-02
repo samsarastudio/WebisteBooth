@@ -19,7 +19,7 @@ export function buildLocalBusinessJsonLd(config: LocalPageConfig, settings: Sett
     url: pageUrl,
     email: settings.email || brand.email,
     ...(settings.phone ? { telephone: settings.phone } : {}),
-    image: `${brand.siteUrl}/brand/style-romance-photo.png`,
+    image: `${brand.siteUrl}/brand/magnet-hero-pink.png`,
     logo: `${brand.siteUrl}/brand/logo.png`,
     areaServed: [
       {

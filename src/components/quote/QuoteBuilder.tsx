@@ -158,7 +158,7 @@ export function QuoteBuilder({
         }) => {
           if (!data.ok || !data.design) {
             setDesignLoadError(
-              'We could not load your saved design. Please complete the design studio again.',
+              'We could not load your saved design. Choose a magnet colour below or send an enquiry.',
             )
             return
           }
@@ -178,7 +178,7 @@ export function QuoteBuilder({
       )
       .catch(() => {
         setDesignLoadError(
-          'We could not load your saved design. Please complete the design studio again.',
+          'We could not load your saved design. Choose a magnet colour below or send an enquiry.',
         )
       })
   }, [initialDesignToken])
@@ -330,7 +330,7 @@ export function QuoteBuilder({
 
   const previewSrc = !wantsFrames
     ? '/brand/stickers-hero.png'
-    : selectedStyle?.imagePath || '/brand/style-romance-photo.png'
+    : selectedStyle?.imagePath || '/brand/magnet-hero-pink.png'
 
   const activeStepId = steps[currentStepIndex]?.id ?? 'event'
   const isLastStep = currentStepIndex >= steps.length - 1
@@ -578,10 +578,7 @@ export function QuoteBuilder({
 
           {designLoadError ? (
             <section className="card p-5 border-red-300 bg-red-50 dark:bg-red-950/20">
-              <p className="text-sm text-red-700 dark:text-red-300 mb-3">{designLoadError}</p>
-              <Link href="/design" className="btn-secondary text-sm">
-                Open design studio
-              </Link>
+              <p className="text-sm text-red-700 dark:text-red-300">{designLoadError}</p>
             </section>
           ) : null}
 
@@ -589,7 +586,7 @@ export function QuoteBuilder({
             <section className="card p-5 border-accent/30 bg-accent-light/20">
               <h2 className="text-xl font-serif mb-2">Your frame design</h2>
               <p className="text-sm text-text-secondary mb-4">
-                We&apos;ll use the design you saved in the studio.
+                We&apos;ll use the design you saved.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 items-start">
                 {loadedDesign.previewUrl ? (
@@ -600,9 +597,6 @@ export function QuoteBuilder({
                     className="w-32 rounded-lg border border-border shadow-sm"
                   />
                 ) : null}
-                <Link href={`/design?design=${loadedDesign.token}`} className="btn-secondary text-sm">
-                  Edit design
-                </Link>
               </div>
             </section>
           ) : null}
@@ -659,12 +653,12 @@ export function QuoteBuilder({
               {!loadedDesign ? (
                 <section ref={styleRef} className={stepVisible('style', activeStepId)}>
                   <h2 className="text-2xl font-serif mb-2">
-                    {stepHeading(steps, 'style', 'Choose frame style')} <ReqStar />
+                    {stepHeading(steps, 'style', 'Choose magnet colour')} <ReqStar />
                   </h2>
                   <SectionError message={sectionErrors.style} />
                   <p className="text-text-secondary text-sm mb-4">
-                    Choose Original or 6×4 landscape in the design studio. Raised 3D-printed
-                    accents, or Stickered &amp; Painted for a softer look.
+                    One fridge magnet design. Pick a pastel colour. The name plate is quoted with
+                    your event.
                   </p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {frameStyles.slice(0, 5).map((style) => {
@@ -743,7 +737,7 @@ export function QuoteBuilder({
                       name="message"
                       rows={4}
                       className="field-input resize-y"
-                      placeholder="e.g. Anna & Stephen · With love — Mia"
+                      placeholder="e.g. Anna & Stephen · With love, Mia"
                     />
                   </div>
 
@@ -944,7 +938,7 @@ function SubmitQuoteButton({ pending }: { pending: boolean }) {
         <Sparkles size={16} />
       </button>
       <p className="text-xs text-center text-text-secondary">
-        Free quote by email — no payment required. You can submit from any step.
+        Free quote by email. No payment required. You can submit from any step.
       </p>
     </div>
   )

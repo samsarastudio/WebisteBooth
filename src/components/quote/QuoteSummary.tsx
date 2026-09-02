@@ -83,7 +83,7 @@ export function QuoteSummary({
             <Sparkles size={16} />
           </button>
           <p className="text-xs text-center text-text-secondary">
-            Free quote by email — submit anytime.
+            Free quote by email. Submit anytime.
           </p>
         </div>
       ) : null}

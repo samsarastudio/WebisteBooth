@@ -26,6 +26,7 @@
     "@payloadcms/ui": "^3.85.2",
     "konva": "^10.3.0",
     "lucide-react": "^1.23.0",
+    "manifold-3d": "^3.5.1",
     "motion": "^12.42.2",
     "next": "16.2.10",
     "payload": "^3.85.2",

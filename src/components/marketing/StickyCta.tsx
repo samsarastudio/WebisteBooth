@@ -2,13 +2,13 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Sparkles } from 'lucide-react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { useEffect, useState } from 'react'
 
 import { brand } from '@/lib/brand'
+import { MAGNET_BOOK_HREF, MAGNET_ENQUIRE_HREF } from '@/lib/magnet'
 
-export function StickyCta({ showDesign = true }: { showDesign?: boolean }) {
+export function StickyCta({ showQuote = true }: { showQuote?: boolean; showDesign?: boolean }) {
   const pathname = usePathname()
   const [visible, setVisible] = useState(false)
   const reduce = useReducedMotion()
@@ -22,9 +22,6 @@ export function StickyCta({ showDesign = true }: { showDesign?: boolean }) {
 
   if (pathname === '/quote' || pathname === '/design') return null
 
-  const href = showDesign ? '/design' : '/quote'
-  const label = showDesign ? brand.ctaDesign : 'Get Your Quote'
-
   return (
     <AnimatePresence>
       {visible && (
@@ -36,13 +33,16 @@ export function StickyCta({ showDesign = true }: { showDesign?: boolean }) {
           exit={{ y: 80, opacity: 0 }}
           transition={{ type: 'spring', stiffness: 320, damping: 28 }}
         >
-          <Link
-            href={href}
-            className="btn-primary w-full justify-center shadow-lg pointer-events-auto"
-          >
-            {label}
-            <Sparkles size={16} />
-          </Link>
+          <div className="flex gap-2 pointer-events-auto">
+            <Link href={MAGNET_ENQUIRE_HREF} className="btn-primary flex-1 justify-center !py-3 !min-h-0 text-sm">
+              {brand.ctaEnquire}
+            </Link>
+            {showQuote ? (
+              <Link href={MAGNET_BOOK_HREF} className="btn-secondary flex-1 justify-center !py-3 !min-h-0 text-sm">
+                {brand.ctaBook}
+              </Link>
+            ) : null}
+          </div>
         </motion.div>
       )}
     </AnimatePresence>

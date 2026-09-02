@@ -6,7 +6,6 @@ import type { PricedAddOn, PricedPackage, PricingUnit } from './pricing'
 import {
   defaultAddOns,
   defaultFaqs,
-  defaultFrameStyles,
   defaultPackages,
   defaultPosts,
   defaultSiteSettings,
@@ -158,79 +157,14 @@ export async function getActiveAddOns(): Promise<PricedAddOn[]> {
 
 export async function getActiveFrameStyles(): Promise<FrameStyleData[]> {
   noStore()
-  try {
-    const payload = await getPayloadClient()
-    const result = await payload.find({
-      collection: 'frame-styles',
-      where: { active: { equals: true } },
-      sort: 'sortOrder',
-      limit: 5,
-      depth: 0,
-    })
-    if (result.docs.length === 0) return fallbackFrameStyles()
-
-    const stickeredDef = defaultFrameStyles.find((s) => s.slug === 'stickered-painted')
-
-    return result.docs.slice(0, 5).map((doc) => {
-      const isLegacyHandPainted =
-        doc.slug === 'hand-painted' || doc.name === 'Hand Painted'
-      if (isLegacyHandPainted && stickeredDef) {
-        return {
-          id: doc.id,
-          name: stickeredDef.name,
-          slug: stickeredDef.slug,
-          tagline: stickeredDef.tagline,
-          description: stickeredDef.description,
-          sampleMessage: stickeredDef.sampleMessage,
-          imagePath: stickeredDef.imagePath,
-          plaColors: stickeredDef.plaColors.map((c) => ({
-            name: c.name,
-            hex: c.hex,
-            role: c.role,
-          })),
-        }
-      }
-      return {
-        id: doc.id,
-        name: doc.name,
-        slug: doc.slug,
-        tagline: doc.tagline,
-        description: doc.description,
-        sampleMessage: doc.sampleMessage,
-        imagePath: doc.imagePath,
-        plaColors: (doc.plaColors || []).slice(0, 4).map((c) => ({
-          name: c.name,
-          hex: c.hex,
-          role: c.role,
-        })),
-      }
-    })
-  } catch {
-    return fallbackFrameStyles()
-  }
+  // Public site always shows this fridge magnet in pastel colours.
+  // never CMS leftovers (Romance, Garden, stickered frames).
+  return fallbackFrameStyles()
 }
 
 export async function getActiveFaqs(): Promise<{ question: string; answer: string }[]> {
   noStore()
-  try {
-    const payload = await getPayloadClient()
-    const result = await payload.find({
-      collection: 'faqs',
-      where: { active: { equals: true } },
-      sort: 'sortOrder',
-      limit: 50,
-      depth: 0,
-    })
-    if (result.docs.length === 0) {
-      return defaultFaqs.map((f) => ({ question: f.question, answer: f.answer }))
-    }
-    return result.docs.map((f) => ({
-      question: f.question,
-      answer: f.answer,
-    }))
-  } catch {
-    return defaultFaqs.map((f) => ({ question: f.question, answer: f.answer }))
-  }
+  return defaultFaqs.map((f) => ({ question: f.question, answer: f.answer }))
 }
 
 export type SiteSettingsData = typeof defaultSiteSettings & {
@@ -256,7 +190,10 @@ export async function getSiteSettings(): Promise<SiteSettingsData> {
       facebookUrl: settings.facebookUrl || '',
       heroEyebrow: settings.heroEyebrow || defaultSiteSettings.heroEyebrow,
       heroTitle: settings.heroTitle || defaultSiteSettings.heroTitle,
-      heroSubtitle: settings.heroSubtitle || defaultSiteSettings.heroSubtitle,
+      heroSubtitle:
+        settings.heroSubtitle && !settings.heroSubtitle.includes('14.99')
+          ? settings.heroSubtitle
+          : defaultSiteSettings.heroSubtitle,
       testimonials: settings.testimonials?.length
         ? settings.testimonials.map((t) => ({ text: t.text, author: t.author }))
         : [],
@@ -271,7 +208,7 @@ export async function getSiteSettings(): Promise<SiteSettingsData> {
       showFaqPage: bool(settings.showFaqPage, defaultSiteSettings.showFaqPage),
       showContactPage: bool(settings.showContactPage, defaultSiteSettings.showContactPage),
       showQuotePage: bool(settings.showQuotePage, defaultSiteSettings.showQuotePage),
-      showDesignPage: bool(settings.showDesignPage, defaultSiteSettings.showDesignPage),
+      showDesignPage: false,
       showTrustBar: bool(settings.showTrustBar, defaultSiteSettings.showTrustBar),
       showStylesSection: bool(settings.showStylesSection, defaultSiteSettings.showStylesSection),
       showProductStory: bool(settings.showProductStory, defaultSiteSettings.showProductStory),

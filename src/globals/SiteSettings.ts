@@ -60,13 +60,13 @@ export const SiteSettings: GlobalConfig = {
             {
               name: 'heroTitle',
               type: 'text',
-              defaultValue: 'A photo booth experience your guests take home',
+              defaultValue: 'They don’t toss this. They put it on the fridge.',
             },
             {
               name: 'heroSubtitle',
               type: 'textarea',
               defaultValue:
-                'Guests receive their event photo inside a personalized keepsake frame, up to the frame quantity included in your package—or watch custom stickers print and cut live at your event.',
+                'Pose at our booth. Instant print. Custom name plate. A fridge magnet guests actually keep. Events are quoted.',
             },
             {
               name: 'trustBadges',
@@ -146,7 +146,7 @@ export const SiteSettings: GlobalConfig = {
             {
               name: 'showDesignPage',
               type: 'checkbox',
-              defaultValue: true,
+              defaultValue: false,
               label: 'Show Design Studio page',
             },
           ],
@@ -202,7 +202,7 @@ export const SiteSettings: GlobalConfig = {
               name: 'eventOrganisersBody',
               type: 'textarea',
               defaultValue:
-                'Partner with FrameFlix for weddings, corporate activations, and milestone events — branded keepsakes your guests share long after the night ends.',
+                'Partner with FrameFlix for weddings, corporate nights, and milestone events. Branded fridge magnets guests still have on the fridge months later.',
               admin: {
                 condition: (_, siblingData) => siblingData?.showEventOrganisersSection,
               },

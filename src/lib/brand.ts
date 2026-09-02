@@ -1,19 +1,21 @@
-/** Central brand constants — FrameFlix runs as a subdomain of InMoment. */
+/** Central brand constants. FrameFlix runs as a subdomain of InMoment. */
 export const brand = {
   name: 'FrameFlix',
-  displayName: 'FrameFlix Photo Booth & Event Keepsakes',
+  displayName: 'FrameFlix Photo Booth & Fridge Magnets',
   parentName: 'InMoment',
   fullName: 'FrameFlix by InMoment',
-  tagline: 'Custom Photobooth Souvenirs',
-  defaultPageTitle: 'FrameFlix Photo Booth Kitchener-Waterloo | Custom Frames & Stickers',
+  tagline: 'The magnet they put on the fridge',
+  defaultPageTitle: 'FrameFlix Photo Booth Kitchener-Waterloo | Fridge Magnet Frames',
   profileDescription:
-    'Personalized photo-frame keepsakes and live sticker experiences for weddings, birthdays, corporate events and celebrations across Kitchener, Waterloo, Cambridge, Guelph and surrounding areas.',
-  heroHeadline: 'A photo booth experience your guests take home',
+    'Photo booth rental in Kitchener, Waterloo, Cambridge, and Guelph. Guests leave with a custom fridge magnet, a name plate for your event, and an online gallery.',
+  heroHeadline: "They don't toss this. They put it on the fridge.",
   heroSupporting:
-    'Guests receive their event photo inside a personalized keepsake frame, up to the frame quantity included in your package—or watch custom stickers print and cut live at your event.',
+    'Guests pose at our booth, get a print in minutes, and take home a fridge magnet with your name plate. We quote event packages.',
   frameKeepsakeLine:
-    'Guests receive their event photo inside a personalized keepsake frame, up to the frame quantity included in your selected package.',
-  ctaDesign: 'Design Your Frame Free',
+    'Every guest photo goes into a custom fridge magnet, ready for the fridge that night.',
+  ctaDesign: 'Design a similar frame',
+  ctaEnquire: 'Enquire',
+  ctaBook: 'Book the booth',
   email: process.env.LEAD_NOTIFY_EMAIL || 'hello@inmomentservices.com',
   siteUrl: process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000',
   parentUrl: process.env.NEXT_PUBLIC_PARENT_URL || 'https://inmomentservices.com',

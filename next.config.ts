@@ -12,6 +12,7 @@ const NEXT_PUBLIC_SERVER_URL =
 const nextConfig: NextConfig = {
   output: 'standalone',
   reactStrictMode: true,
+  allowedDevOrigins: ['10.0.0.139', 'localhost', '127.0.0.1'],
   outputFileTracingIncludes: {
     '/**/*': [
       './node_modules/@payloadcms/richtext-lexical/**/*',

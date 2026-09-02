@@ -62,7 +62,7 @@ export default async function FaqPage() {
           <Reveal className="card p-10 text-center">
             <h2 className="text-2xl md:text-3xl mb-3">Still Have Questions?</h2>
             <p className="text-text-secondary mb-6">
-              We&apos;re happy to chat. Reach out anytime — no pressure, no commitment.
+              We&apos;re happy to chat. Reach out anytime. No pressure, no commitment.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/contact" className="btn-secondary">

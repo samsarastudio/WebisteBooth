@@ -19,7 +19,7 @@ export function ColorPanel({
   return (
     <div className="space-y-4">
       <p className="text-sm text-text-secondary">
-        Pick PLA-inspired colors for your frame. Final print colors may vary slightly.
+        Pick colours for your frame. Final colours may vary slightly.
       </p>
       {(Object.keys(ROLE_LABELS) as PlaColorRole[]).map((role) => (
         <div key={role} className="flex items-center gap-3">

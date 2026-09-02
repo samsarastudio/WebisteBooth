@@ -7,7 +7,7 @@ import { brand } from '@/lib/brand'
 
 export const metadata: Metadata = {
   title: 'Privacy Policy',
-  description: `Privacy Policy for ${brand.fullName} — how we collect, use, and protect your information.`,
+  description: `Privacy Policy for ${brand.fullName}. How we collect, use, and protect your information.`,
 }
 
 export default function PrivacyPage() {
@@ -29,7 +29,7 @@ export default function PrivacyPage() {
               <p>
                 {brand.fullName} (“{brand.name},” “we,” “us,” or “our”) is a photobooth service
                 operated by {brand.parentName}. We provide custom photobooth experiences and
-                3D-printed keepsake frames for events. This Privacy Policy explains how we collect,
+                custom fridge magnets for events. This Privacy Policy explains how we collect,
                 use, disclose, and safeguard information when you visit our website, submit a quote
                 request, or communicate with us.
               </p>
@@ -46,19 +46,19 @@ export default function PrivacyPage() {
               <p className="mb-3">We may collect:</p>
               <ul className="list-disc pl-5 space-y-2">
                 <li>
-                  <strong className="text-text-primary">Contact details</strong> — name, email
+                  <strong className="text-text-primary">Contact details:</strong> name, email
                   address, phone number
                 </li>
                 <li>
-                  <strong className="text-text-primary">Event details</strong> — event type, date,
+                  <strong className="text-text-primary">Event details:</strong> event type, date,
                   guest count, venue notes, and messages you provide
                 </li>
                 <li>
-                  <strong className="text-text-primary">Quote preferences</strong> — selected package,
+                  <strong className="text-text-primary">Quote preferences:</strong> selected package,
                   frame style, add-ons, and estimated totals
                 </li>
                 <li>
-                  <strong className="text-text-primary">Technical data</strong> — IP address, browser
+                  <strong className="text-text-primary">Technical data:</strong> IP address, browser
                   type, and basic usage data needed to operate and secure the site
                 </li>
               </ul>
@@ -148,12 +148,10 @@ export default function PrivacyPage() {
             <section>
               <h2 className="text-xl font-serif text-text-primary mb-3">9. Materials & product information</h2>
               <p>
-                For transparency regarding our physical products: {brand.name} custom frames are
-                manufactured using <strong className="text-text-primary">PLA (polylactic acid)</strong>
-                , a commonly used 3D-printing material, together with dye-sublimation printed photo
-                inserts. Material details are provided here for disclosure purposes and may also
-                appear in our Disclaimer. Product appearance and durability can vary with use,
-                storage, and environmental conditions.
+                For transparency regarding our physical products: {brand.name} fridge magnets are
+                custom made for your event, with dye-sublimation photo inserts. Material details are
+                provided here for disclosure purposes and may also appear in our Disclaimer. Product
+                appearance and durability can vary with use, storage, and environmental conditions.
               </p>
             </section>
 

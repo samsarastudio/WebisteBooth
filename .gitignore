@@ -48,5 +48,7 @@ next-env.d.ts
 !/data/.gitkeep
 /media/*
 !/media/.gitkeep
+!/media/print-models/
+!/media/print-models/.gitkeep
 *.db
 

@@ -5,11 +5,12 @@ import { Heart, Lightbulb, Sparkles, Target } from 'lucide-react'
 
 import { Reveal } from '@/components/marketing/Reveal'
 import { brand } from '@/lib/brand'
+import { magnetImages } from '@/lib/magnet'
 import { guardPage } from '@/lib/page-guard'
 
 export const metadata: Metadata = {
   title: 'About',
-  description: `${brand.fullName} — custom photobooth keepsake frames and on-site stickers for your guests.`,
+  description: `${brand.fullName}. Custom fridge magnets, a name plate for your event, and a photo booth guests actually remember.`,
 }
 
 const values = [
@@ -21,17 +22,17 @@ const values = [
   {
     icon: Target,
     title: 'Founder-led from day one',
-    desc: 'FrameFlix is personally managed — you work directly with us on design, details, and delivery. No hand-offs, no call-center runaround.',
+    desc: 'You work with us on the name plate, the colours, and the night itself. No hand-offs. No call-center runaround.',
   },
   {
     icon: Heart,
     title: 'Craft over hype',
-    desc: 'Translucent 3D-printed frames, raised custom details, and dye-sublimation prints. We care about the finish as much as the fun.',
+    desc: 'Custom fridge magnets, a name plate for your event, and prints that still look good years later. We care about the finish as much as the fun.',
   },
   {
     icon: Sparkles,
     title: 'Locally operated',
-    desc: 'Based in the Waterloo Region and serving Kitchener, Waterloo, Cambridge, Guelph, and beyond — with a team invested in every celebration we host.',
+    desc: 'Based in the Waterloo Region. We host in Kitchener, Waterloo, Cambridge, Guelph, and nearby towns, and we treat every booking like it is ours.',
   },
 ]
 
@@ -49,9 +50,8 @@ export default async function AboutPage() {
             </span>
             <h1 className="text-4xl md:text-5xl mb-4">Souvenirs for your guests</h1>
             <p className="text-text-secondary text-lg leading-relaxed">
-              FrameFlix is a locally operated studio helping hosts give every guest a keepsake — their
-              photo, in a personalized frame they&apos;ll actually keep. We bring an attendant to every
-              event so you can enjoy the party.
+              FrameFlix is a local studio that sends guests home with a fridge magnet they will
+              actually keep. Your photo. Your name plate. Our attendant, so you can enjoy the party.
             </p>
           </Reveal>
         </div>
@@ -63,8 +63,8 @@ export default async function AboutPage() {
             <div className="relative aspect-[4/3] rounded-[var(--radius-lg)] overflow-hidden shadow-[var(--shadow-lg)] frame-shell p-2">
               <div className="relative w-full h-full rounded-[1rem] overflow-hidden">
                 <Image
-                  src="/brand/stickered-wedding-1.png"
-                  alt="Custom FrameFlix guest keepsake frame at a wedding"
+                  src={magnetImages.inHand.src}
+                  alt="Fridge magnet photo frame guests take home"
                   fill
                   className="object-cover"
                   sizes="(max-width: 1024px) 100vw, 50vw"
@@ -81,13 +81,13 @@ export default async function AboutPage() {
               </p>
               <p>
                 Traditional photobooth strips fade, get crumpled, or disappear into a camera roll.
-                We wanted something different: a translucent, personalized frame with a premium
-                print — designed for your theme, ready for your guests.
+                We wanted something different: a fridge magnet with a custom name plate and a print
+                guests put up that night.
               </p>
               <p>
                 FrameFlix is founder-led and personally managed. Every booking gets close
                 collaboration, careful design, and a team that treats your celebration like it
-                matters — because it does.
+                matters, because it does.
               </p>
             </div>
           </Reveal>

@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 import { brand } from '@/lib/brand'
 
-/** FrameFlix mark — polaroid frame with moment ring accent. */
+/** InMoment mark — polaroid moment with sparkle. */
 export function BrandMark({ className = 'w-10 h-10' }: { className?: string }) {
   return (
     <svg
@@ -13,42 +13,52 @@ export function BrandMark({ className = 'w-10 h-10' }: { className?: string }) {
       aria-hidden
     >
       <defs>
-        <linearGradient id="ff-gold" x1="8" y1="8" x2="56" y2="56" gradientUnits="userSpaceOnUse">
+        <linearGradient id="im-gold" x1="10" y1="8" x2="54" y2="56" gradientUnits="userSpaceOnUse">
           <stop stopColor="#E8D078" />
           <stop offset="0.5" stopColor="#D4B84A" />
           <stop offset="1" stopColor="#B89830" />
         </linearGradient>
-        <linearGradient id="ff-cream" x1="12" y1="10" x2="52" y2="54" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#FFFEFB" />
-          <stop offset="1" stopColor="#F3EDE0" />
+        <linearGradient id="im-window" x1="20" y1="14" x2="44" y2="40" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#FFFDF8" />
+          <stop offset="1" stopColor="#F3E8CC" />
         </linearGradient>
       </defs>
       <rect width="64" height="64" rx="16" fill="#F7F2E8" />
-      <circle cx="32" cy="32" r="26" stroke="url(#ff-gold)" strokeWidth="1.5" opacity="0.35" />
-      <circle cx="32" cy="32" r="20" stroke="url(#ff-gold)" strokeWidth="1" opacity="0.2" />
+      <circle cx="32" cy="32" r="26" stroke="url(#im-gold)" strokeWidth="1.25" opacity="0.28" />
+      <circle cx="32" cy="32" r="20" stroke="url(#im-gold)" strokeWidth="1" opacity="0.16" />
       <rect
-        x="14"
-        y="12"
-        width="36"
-        height="42"
-        rx="5"
-        fill="url(#ff-cream)"
-        stroke="url(#ff-gold)"
-        strokeWidth="2.5"
+        x="17"
+        y="11"
+        width="30"
+        height="40"
+        rx="6"
+        fill="#FBF7EE"
+        stroke="url(#im-gold)"
+        strokeWidth="2.75"
       />
-      <rect x="18" y="16" width="28" height="24" rx="2.5" fill="#EBE4D4" stroke="url(#ff-gold)" strokeWidth="1.5" />
-      <circle cx="26" cy="26" r="3.5" fill="url(#ff-gold)" opacity="0.85" />
-      <circle cx="38" cy="26" r="3.5" fill="url(#ff-gold)" opacity="0.85" />
+      <rect
+        x="21"
+        y="15"
+        width="22"
+        height="22"
+        rx="3.5"
+        fill="url(#im-window)"
+        stroke="url(#im-gold)"
+        strokeWidth="1.75"
+      />
+      <circle cx="27.5" cy="24.5" r="2.15" fill="url(#im-gold)" />
+      <circle cx="36.5" cy="24.5" r="2.15" fill="url(#im-gold)" />
       <path
-        d="M24 32c2.5 3 4.5 4 8 4s5.5-1 8-4"
-        stroke="url(#ff-gold)"
-        strokeWidth="2"
+        d="M25.5 30.2c2.1 2.6 4.2 3.6 6.5 3.6s4.4-1 6.5-3.6"
+        stroke="url(#im-gold)"
+        strokeWidth="2.1"
         strokeLinecap="round"
-        fill="none"
       />
-      <rect x="22" y="44" width="20" height="2.5" rx="1.25" fill="url(#ff-gold)" opacity="0.7" />
-      <circle cx="48" cy="16" r="4" fill="url(#ff-gold)" />
-      <circle cx="48" cy="16" r="1.5" fill="#F7F2E8" />
+      <rect x="24" y="43.5" width="16" height="2.2" rx="1.1" fill="url(#im-gold)" opacity="0.75" />
+      <path
+        d="M50 11.5l1.15 3.15 3.35 1.15-3.35 1.15L50 20.1l-1.15-3.15-3.35-1.15 3.35-1.15L50 11.5z"
+        fill="url(#im-gold)"
+      />
     </svg>
   )
 }
@@ -62,7 +72,7 @@ export function BrandLogoLink({
   href?: string
   onClick?: () => void
   size?: 'sm' | 'md'
-  /** Header use — single-line mark + wordmark */
+  /** Header use — mark + InMoment wordmark */
   compact?: boolean
 }) {
   const markClass = compact
@@ -81,31 +91,32 @@ export function BrandLogoLink({
       href={href}
       onClick={onClick}
       className="flex items-center gap-2 shrink-0 group min-w-0"
-      aria-label={`${brand.displayName} home`}
+      aria-label={`${brand.parentName} home`}
     >
       <span
         className={`${markClass} shrink-0 rounded-[0.85rem] overflow-hidden shadow-sm ring-1 ring-border/70`}
       >
         <BrandMark className="w-full h-full block" />
       </span>
-      <span
-        className={`font-serif ${titleClass} tracking-tight leading-none group-hover:text-accent transition-colors`}
-      >
-        {brand.name}
-        {!compact ? (
+      <span className={`leading-none ${compact ? '' : 'min-w-0'}`}>
+        <span
+          className={`font-serif ${titleClass} tracking-tight leading-none group-hover:text-accent transition-colors block`}
+        >
+          {brand.parentName}
+        </span>
+        {compact ? (
+          <span className="block font-sans text-[0.58rem] lg:text-[0.62rem] font-medium tracking-[0.16em] uppercase text-accent-hover/90 mt-0.5 leading-none">
+            {brand.name}
+          </span>
+        ) : (
           <>
-            <span className="block font-sans text-[0.58rem] md:text-[0.62rem] font-medium tracking-[0.06em] text-text-secondary mt-0.5 leading-snug">
+            <span className="block font-sans text-[0.62rem] md:text-[0.68rem] font-medium tracking-[0.18em] uppercase text-accent-hover/90 mt-1 leading-none">
+              {brand.name}
+            </span>
+            <span className="block font-sans text-[0.52rem] md:text-[0.55rem] font-medium tracking-[0.06em] text-text-secondary mt-1 leading-snug">
               Photo Booth &amp; Event Keepsakes
             </span>
-            <span className="block font-sans text-[0.52rem] md:text-[0.55rem] font-medium tracking-[0.08em] text-text-secondary/90 leading-snug">
-              by{' '}
-              <span className="text-text-primary/80 tracking-normal font-semibold">
-                {brand.parentName}
-              </span>
-            </span>
           </>
-        ) : (
-          <span className="sr-only"> — {brand.displayName}</span>
         )}
       </span>
     </Link>

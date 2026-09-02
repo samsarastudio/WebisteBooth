@@ -96,7 +96,7 @@ export default function Footer({
             {serviceAreas.map((area) => (
               <li key={area.href}>
                 <Link href={area.href} className="nav-link text-sm">
-                  Photo booth — {area.name}
+                  Photo booth in {area.name}
                 </Link>
               </li>
             ))}

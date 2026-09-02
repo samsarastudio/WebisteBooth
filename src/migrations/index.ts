@@ -9,6 +9,9 @@ import * as migration_20260708_content_trust_cleanup from './20260708_content_tr
 import * as migration_20260709_site_settings_event_organisers from './20260709_site_settings_event_organisers';
 import * as migration_20260709_lead_location_fields from './20260709_lead_location_fields';
 import * as migration_20260718_seo_discovery_cleanup from './20260718_seo_discovery_cleanup';
+import * as migration_20260718_print_model_fields from './20260718_print_model_fields';
+import * as migration_20260718_modular_print_parts from './20260718_modular_print_parts';
+import * as migration_20260902_custom_frame_leads from './20260902_custom_frame_leads';
 
 export const migrations = [
   {
@@ -65,5 +68,20 @@ export const migrations = [
     up: migration_20260718_seo_discovery_cleanup.up,
     down: migration_20260718_seo_discovery_cleanup.down,
     name: '20260718_seo_discovery_cleanup'
+  },
+  {
+    up: migration_20260718_print_model_fields.up,
+    down: migration_20260718_print_model_fields.down,
+    name: '20260718_print_model_fields'
+  },
+  {
+    up: migration_20260718_modular_print_parts.up,
+    down: migration_20260718_modular_print_parts.down,
+    name: '20260718_modular_print_parts'
+  },
+  {
+    up: migration_20260902_custom_frame_leads.up,
+    down: migration_20260902_custom_frame_leads.down,
+    name: '20260902_custom_frame_leads'
   },
 ];

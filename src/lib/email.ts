@@ -2,6 +2,7 @@ import { Resend } from 'resend'
 
 type LeadEmailPayload = {
   inquiryId: string
+  intent?: 'quote' | 'contact' | 'custom-frame'
   name: string
   email: string
   phone?: string | null
@@ -12,6 +13,9 @@ type LeadEmailPayload = {
   postalCode?: string | null
   packageRecommendationRequested?: boolean
   message?: string | null
+  namePlateCopy?: string | null
+  magnetColor?: string | null
+  bookPhotobooth?: boolean
   serviceLabel?: string | null
   packageName?: string | null
   priceRange?: string | null
@@ -62,7 +66,7 @@ Event: ${lead.eventType}
 Date: ${lead.eventDate}
 Location: ${lead.eventCity || '—'}${lead.postalCode ? ` (${lead.postalCode})` : ''}
 Guests: ${lead.guestCount || '—'}
-${lead.packageRecommendationRequested ? 'Package recommendation requested: Yes\n' : ''}
+${lead.namePlateCopy ? `Name plate: ${lead.namePlateCopy}\n` : ''}${lead.magnetColor ? `Magnet colour: ${lead.magnetColor}\n` : ''}${lead.bookPhotobooth ? 'Also book the photobooth: Yes\n' : ''}${lead.packageRecommendationRequested ? 'Package recommendation requested: Yes\n' : ''}
 
 Message:
 ${lead.message || '—'}
@@ -81,6 +85,9 @@ export async function sendLeadEmails(lead: LeadEmailPayload) {
   const prefsInternal = preferencesBlock(lead, true)
   const prefsCustomer = preferencesBlock(lead, false)
 
+  const isCustom = lead.intent === 'custom-frame'
+  const leadKind = isCustom ? 'custom magnet enquiry' : 'quote request'
+
   // Notify the business (lead)
   await resend.emails.send({
     from: fromAddress,
@@ -88,7 +95,7 @@ export async function sendLeadEmails(lead: LeadEmailPayload) {
     replyTo: lead.email,
     subject: `New lead: ${lead.name} — ${lead.eventType} (${lead.inquiryId})`,
     text: `
-New ${brand.fullName} quote request (lead)
+New ${brand.fullName} ${leadKind}
 
 Inquiry ID: ${lead.inquiryId}
 Name: ${lead.name}
@@ -106,13 +113,13 @@ Reply to this email to reach the lead directly.
     from: fromAddress,
     to: lead.email,
     replyTo: studioEmail,
-    subject: `We received your ${brand.name} quote request (${lead.inquiryId})`,
+    subject: `We received your ${brand.name} ${isCustom ? 'enquiry' : 'quote request'} (${lead.inquiryId})`,
     text: `
 Hi ${lead.name},
 
-Thanks for requesting a quote from ${brand.fullName}.
+Thanks for reaching out to ${brand.fullName}.
 
-We received your request and will email your custom quote within 24 hours.
+We received your ${isCustom ? 'custom magnet enquiry' : 'quote request'} and will reply within 24 hours.
 
 Reference: ${lead.inquiryId}
 
@@ -137,7 +144,7 @@ export async function sendLeadResponseEmail(input: {
   name: string
   email: string
   message: string
-  intent: 'quote' | 'contact'
+  intent: 'quote' | 'contact' | 'custom-frame'
 }) {
   const apiKey = process.env.RESEND_API_KEY
 
@@ -148,7 +155,11 @@ export async function sendLeadResponseEmail(input: {
 
   const resend = new Resend(apiKey)
   const subjectPrefix =
-    input.intent === 'quote' ? 'Your FrameFlix quote' : 'Re: your FrameFlix inquiry'
+    input.intent === 'quote'
+      ? 'Your FrameFlix quote'
+      : input.intent === 'custom-frame'
+        ? 'Re: your FrameFlix magnet enquiry'
+        : 'Re: your FrameFlix inquiry'
 
   await resend.emails.send({
     from: fromAddress,

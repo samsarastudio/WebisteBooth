@@ -27,26 +27,11 @@ function samplesToItems(samples: GallerySample[]): GalleryItem[] {
   }))
 }
 
-export function GalleryGrid({ items }: { items: GalleryItem[] }) {
+export function GalleryGrid({ items: _items }: { items: GalleryItem[] }) {
   const [filter, setFilter] = useState('all')
   const [active, setActive] = useState<GalleryItem | null>(null)
 
-  const displayItems: GalleryItem[] = useMemo(() => {
-    const cmsItems = items
-      .filter((item) => item.imageUrl)
-      .map((item) => ({
-        ...item,
-        caption: null,
-        alt: '',
-      }))
-
-    // Always show curated samples so the gallery never looks empty
-    const samples = samplesToItems(gallerySamples)
-    const cmsUrls = new Set(cmsItems.map((i) => i.imageUrl))
-    const uniqueSamples = samples.filter((s) => !cmsUrls.has(s.imageUrl))
-
-    return [...cmsItems, ...uniqueSamples]
-  }, [items])
+  const displayItems: GalleryItem[] = useMemo(() => samplesToItems(gallerySamples), [])
 
   const filtered =
     filter === 'all'
@@ -86,7 +71,7 @@ export function GalleryGrid({ items }: { items: GalleryItem[] }) {
               onClick={() => setActive(item)}
               aria-label="View keepsake frame"
             >
-              <div className="relative aspect-[4/5] bg-bg-secondary overflow-hidden rounded-[var(--radius-md)]">
+              <div className="relative aspect-[4/3] bg-bg-secondary overflow-hidden rounded-[var(--radius-md)]">
                 {item.imageUrl ? (
                   <ProductImage
                     src={item.imageUrl}

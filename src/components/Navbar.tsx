@@ -1,17 +1,18 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Menu, X } from 'lucide-react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 
 import { BrandLogoLink } from '@/components/BrandLogo'
 import { brand } from '@/lib/brand'
+import { MAGNET_BOOK_HREF, MAGNET_ENQUIRE_HREF } from '@/lib/magnet'
 
 export default function Navbar({
   links,
   showQuote = true,
-  showDesign = true,
+  showDesign: _showDesign = true,
 }: {
   links: { href: string; label: string }[]
   showQuote?: boolean
@@ -21,10 +22,7 @@ export default function Navbar({
   const [scrolled, setScrolled] = useState(false)
   const reduce = useReducedMotion()
 
-  const desktopLinks = useMemo(
-    () => (showDesign ? links.filter((l) => l.href !== '/design') : links),
-    [links, showDesign],
-  )
+  const desktopLinks = links
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8)
@@ -58,21 +56,14 @@ export default function Navbar({
             ))}
           </div>
           <div className="flex items-center gap-2 xl:gap-3 shrink-0">
-            {showDesign ? (
-              <Link
-                href="/design"
-                className="btn-primary !py-2 !px-4 xl:!px-5 !min-h-0 text-sm whitespace-nowrap"
-              >
-                <span className="hidden xl:inline">{brand.ctaDesign}</span>
-                <span className="xl:hidden">Design free</span>
-              </Link>
-            ) : showQuote ? (
-              <Link href="/quote" className="btn-primary !py-2 !px-4 !min-h-0 text-sm whitespace-nowrap">
-                Get a Quote
-              </Link>
-            ) : null}
+            <Link
+              href={MAGNET_ENQUIRE_HREF}
+              className="btn-primary !py-2 !px-4 xl:!px-5 !min-h-0 text-sm whitespace-nowrap"
+            >
+              {brand.ctaEnquire}
+            </Link>
             {showQuote ? (
-              <Link href="/quote" className="nav-link text-sm font-medium whitespace-nowrap">
+              <Link href={MAGNET_BOOK_HREF} className="nav-link text-sm font-medium whitespace-nowrap">
                 Quote
               </Link>
             ) : null}
@@ -116,30 +107,20 @@ export default function Navbar({
                   </Link>
                 </motion.div>
               ))}
-              {showDesign ? (
+              <Link
+                href={MAGNET_ENQUIRE_HREF}
+                className="btn-primary justify-center mt-2"
+                onClick={() => setOpen(false)}
+              >
+                {brand.ctaEnquire}
+              </Link>
+              {showQuote ? (
                 <Link
-                  href="/design"
-                  className="btn-primary justify-center mt-2"
-                  onClick={() => setOpen(false)}
-                >
-                  {brand.ctaDesign}
-                </Link>
-              ) : showQuote ? (
-                <Link
-                  href="/quote"
-                  className="btn-primary justify-center mt-2"
-                  onClick={() => setOpen(false)}
-                >
-                  Get a Quote
-                </Link>
-              ) : null}
-              {showDesign && showQuote ? (
-                <Link
-                  href="/quote"
+                  href={MAGNET_BOOK_HREF}
                   className="btn-secondary justify-center mt-2"
                   onClick={() => setOpen(false)}
                 >
-                  Get a Quote
+                  {brand.ctaBook}
                 </Link>
               ) : null}
             </div>
