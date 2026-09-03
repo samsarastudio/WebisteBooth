@@ -20,14 +20,12 @@ import { FrameDesigns } from './collections/FrameDesigns'
 import { Designers } from './collections/Designers'
 import { SiteSettings } from './globals/SiteSettings'
 import { seedIfEmpty } from './seed'
+import { PRODUCTION_SITE_ORIGINS, resolvePublicServerUrl } from './lib/public-url'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
-export const payloadServerURL =
-  process.env.NEXT_PUBLIC_SERVER_URL ||
-  process.env.PAYLOAD_PUBLIC_SERVER_URL ||
-  'http://localhost:3000'
+export const payloadServerURL = resolvePublicServerUrl()
 
 type SharedPayloadOptions = {
   db: Config['db']
@@ -52,7 +50,7 @@ export function buildSharedPayloadConfig({
         baseDir: path.resolve(dirname),
       },
       meta: {
-        titleSuffix: '— FrameFlix Admin',
+        titleSuffix: ' | FrameFlix Admin',
       },
     },
     collections: [Users, Media, Packages, AddOns, FrameStyles, FrameTemplates, FrameOrnaments, FrameDesigns, Designers, Leads, Gallery, FAQs, Posts, PageViews],
@@ -66,8 +64,8 @@ export function buildSharedPayloadConfig({
     plugins,
     sharp,
     serverURL: payloadServerURL,
-    cors: [payloadServerURL].filter(Boolean),
-    csrf: [payloadServerURL].filter(Boolean),
+    cors: [...new Set([payloadServerURL, ...PRODUCTION_SITE_ORIGINS])].filter(Boolean),
+    csrf: [...new Set([payloadServerURL, ...PRODUCTION_SITE_ORIGINS])].filter(Boolean),
     onInit: onInit ?? (async (payload) => seedIfEmpty(payload)),
   })
 }

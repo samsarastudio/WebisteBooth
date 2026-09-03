@@ -10,6 +10,17 @@ const databaseUri = `file:${dbPath}`
 mkdirSync(path.join(root, 'data'), { recursive: true })
 mkdirSync(path.join(root, 'media'), { recursive: true })
 
+function publicSiteUrl() {
+  const candidates = [process.env.PAYLOAD_PUBLIC_SERVER_URL, process.env.NEXT_PUBLIC_SERVER_URL]
+  for (const raw of candidates) {
+    const url = typeof raw === 'string' ? raw.trim().replace(/\/$/, '') : ''
+    if (url && !/localhost|127\.0\.0\.1/i.test(url)) return url
+  }
+  return 'https://inmomentservices.com'
+}
+
+const siteUrl = publicSiteUrl()
+
 const env = {
   ...process.env,
   NODE_ENV: 'production',
@@ -18,10 +29,13 @@ const env = {
   PORT: process.env.PORT || '3000',
   FRAMEFLIX_ROOT: root,
   DATABASE_URI: databaseUri,
+  PAYLOAD_PUBLIC_SERVER_URL: siteUrl,
+  NEXT_PUBLIC_SERVER_URL: siteUrl,
 }
 
 console.log('[start-production] Project root:', root)
 console.log('[start-production] DATABASE_URI:', databaseUri)
+console.log('[start-production] Public URL:', siteUrl)
 
 console.log('[start-production] Running database migrations...')
 const migrate = spawnSync('npm', ['run', 'migrate:prod'], {

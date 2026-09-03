@@ -352,7 +352,7 @@ The Cloudflare Tunnel keeps running — no tunnel restart needed unless you chan
 | **522 / tunnel error** | App not running — check `pm2 status` and `curl http://127.0.0.1:3000` |
 | **502 Bad Gateway** | Tunnel URL must be `localhost:3000` (not `127.0.0.1:3000` in some setups — try both) |
 | Site loads but images broken | Set both URL env vars to `https://inmomentservices.com` and `pm2 restart frameflix` |
-| `/admin` login fails | Confirm `PAYLOAD_SECRET` is set; URLs must match the public domain |
+| `/admin` login fails | Confirm `PAYLOAD_SECRET` is set. If login shows "This page could not load", rebuild so Payload uses `https://inmomentservices.com` instead of localhost: `npm run build:standalone && pm2 restart frameflix`. |
 | **`/admin` shows server error after update** | Run `npm run generate:importmap && npm run migrate:prod && pm2 restart frameflix` |
 | **`/admin` 500 after blog update** | Production DB missing `posts` table — run `npm run migrate:prod` on the Pi (or restart PM2; startup now auto-migrates) |
 | **SQLite `frameflix.db: 14` (can't open)** | Run `mkdir -p data media`, then `pm2 delete frameflix && pm2 start ecosystem.config.cjs`. Ensure `data/` is writable. |
