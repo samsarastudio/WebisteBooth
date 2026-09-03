@@ -10,7 +10,7 @@ import { MAGNET_BOOK_HREF, magnetColors } from '@/lib/magnet'
 const initialState: LeadFormState = { ok: false }
 
 async function postLeadForm(form: HTMLFormElement): Promise<LeadFormState> {
-  const res = await fetch('/api/leads', { method: 'POST', body: new FormData(form) })
+  const res = await fetch('/api/submit-lead', { method: 'POST', body: new FormData(form) })
   return res.json() as Promise<LeadFormState>
 }
 

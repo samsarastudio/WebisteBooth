@@ -18,7 +18,7 @@ const eventTypes = [
 ]
 
 async function postLeadForm(form: HTMLFormElement): Promise<LeadFormState> {
-  const res = await fetch('/api/leads', { method: 'POST', body: new FormData(form) })
+  const res = await fetch('/api/submit-lead', { method: 'POST', body: new FormData(form) })
   return res.json() as Promise<LeadFormState>
 }
 

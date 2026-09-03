@@ -36,7 +36,7 @@ const initialState: LeadFormState = { ok: false }
 
 async function postLeadForm(form: HTMLFormElement): Promise<LeadFormState> {
   try {
-    const res = await fetch('/api/leads', { method: 'POST', body: new FormData(form) })
+    const res = await fetch('/api/submit-lead', { method: 'POST', body: new FormData(form) })
     const data = (await res.json()) as LeadFormState
     if (!res.ok && data.error) return data
     if (!res.ok) return { ok: false, error: QUOTE_ERRORS.network }
