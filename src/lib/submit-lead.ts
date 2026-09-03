@@ -1,3 +1,4 @@
+import { sql } from 'drizzle-orm'
 import type { LeadFormState } from '@/lib/lead-form'
 import { getPayloadClient } from '@/lib/payload'
 import { calculateEstimate, type PricingUnit } from '@/lib/pricing'
@@ -104,6 +105,7 @@ export async function submitLeadFromFormData(
 
   try {
     const payload = await getPayloadClient()
+    await ensureLeadSqliteColumns(payload)
 
     const savedDesign = designToken ? await getFrameDesignByToken(designToken) : null
     const designState = savedDesign?.state as FrameDesignState | undefined
@@ -186,48 +188,45 @@ export async function submitLeadFromFormData(
         ? savedDesign.previewImage
         : null
 
-    const createdLead = await payload.create({
-      collection: 'leads',
-      data: {
-        intent: intentValue,
-        serviceType,
-        name,
-        email,
-        phone: phone || (isCustomFrame ? undefined : '—'),
-        eventType: eventType || (isCustomFrame ? 'Custom fridge magnet' : eventType),
-        eventDate: eventDate || undefined,
-        guestCount: guestCount || undefined,
-        eventCity: eventCity || undefined,
-        postalCode: postalCode || undefined,
-        packageRecommendationRequested,
-        message: message || undefined,
-        namePlateCopy: namePlateCopy || undefined,
-        magnetColor: magnetColor || undefined,
-        bookPhotobooth,
-        package: pkg?.id ?? undefined,
-        packageName: pkg?.name,
-        packagePrice: pkg?.basePrice ?? 0,
-        frameStyle: style?.id ?? undefined,
-        frameStyleName: style?.name,
-        frameStyleColors: styleColors,
-        frameFormat: resolvedFrameFormat as '6x4' | 'original',
-        frameFormatLabel: resolvedFrameFormatLabel,
-        frameDesign: savedDesign?.id ?? undefined,
-        frameConfig: designState ?? undefined,
-        designPreview: previewMedia?.id ?? undefined,
-        selectedAddOns: estimate.addOnLines.map((line) => ({
-          addonId: String(line.id),
-          name: line.name,
-          price: line.price,
-          pricingUnit: line.pricingUnit,
-          quantity: line.quantity,
-          lineTotal: line.lineTotal,
-        })),
-        estimatedTotal: estimate.total,
-        status: 'new',
-        inquiryId,
-        privacyConsentAt: new Date().toISOString(),
-      },
+    const createdLead = await createLeadDoc(payload, {
+      intent: intentValue,
+      serviceType,
+      name,
+      email,
+      phone: phone || '—',
+      eventType: eventType || (isCustomFrame ? 'Custom fridge magnet' : eventType),
+      eventDate: eventDate || undefined,
+      guestCount: guestCount || undefined,
+      eventCity: eventCity || undefined,
+      postalCode: postalCode || undefined,
+      packageRecommendationRequested,
+      message: message || undefined,
+      namePlateCopy: namePlateCopy || undefined,
+      magnetColor: magnetColor || undefined,
+      bookPhotobooth,
+      package: pkg?.id ?? undefined,
+      packageName: pkg?.name,
+      packagePrice: pkg?.basePrice ?? 0,
+      frameStyle: style?.id ?? undefined,
+      frameStyleName: style?.name,
+      frameStyleColors: styleColors,
+      frameFormat: resolvedFrameFormat as '6x4' | 'original',
+      frameFormatLabel: resolvedFrameFormatLabel,
+      frameDesign: savedDesign?.id ?? undefined,
+      frameConfig: designState ?? undefined,
+      designPreview: previewMedia?.id ?? undefined,
+      selectedAddOns: estimate.addOnLines.map((line) => ({
+        addonId: String(line.id),
+        name: line.name,
+        price: line.price,
+        pricingUnit: line.pricingUnit,
+        quantity: line.quantity,
+        lineTotal: line.lineTotal,
+      })),
+      estimatedTotal: estimate.total,
+      status: 'new',
+      inquiryId,
+      privacyConsentAt: new Date().toISOString(),
     })
 
     if (designToken && createdLead.id) {
@@ -285,7 +284,150 @@ export async function submitLeadFromFormData(
 
     return { ok: true, inquiryId }
   } catch (err) {
-    console.error('Lead submit failed:', err)
+    console.error('Lead submit failed:', inspectLeadError(err))
     return { ok: false, error: 'Something went wrong. Please try again.' }
   }
+}
+
+let leadColumnsReady = false
+
+async function ensureLeadSqliteColumns(
+  payload: Awaited<ReturnType<typeof getPayloadClient>>,
+) {
+  if (leadColumnsReady) return
+
+  try {
+    const drizzle = (
+      payload.db as {
+        drizzle?: {
+          all: (query: unknown) => Promise<unknown>
+          run: (query: unknown) => Promise<unknown>
+        }
+      }
+    ).drizzle
+
+    if (!drizzle?.all || !drizzle?.run) return
+
+    const pragma = await drizzle.all(sql.raw(`PRAGMA table_info('leads')`))
+    const names = new Set(readPragmaNames(pragma))
+
+    const additions: [string, string][] = [
+      ['name_plate_copy', 'text'],
+      ['magnet_color', 'text'],
+      ['book_photobooth', 'integer DEFAULT 0'],
+    ]
+
+    for (const [column, definition] of additions) {
+      if (names.has(column)) continue
+      await drizzle.run(sql.raw(`ALTER TABLE leads ADD COLUMN ${column} ${definition}`))
+    }
+
+    leadColumnsReady = true
+  } catch (err) {
+    console.error('Could not ensure lead columns:', inspectLeadError(err))
+  }
+}
+
+function readPragmaNames(result: unknown): string[] {
+  const rows = Array.isArray(result)
+    ? result
+    : result && typeof result === 'object' && 'rows' in result
+      ? (result as { rows: unknown[] }).rows
+      : []
+
+  return rows
+    .map((row) => {
+      if (Array.isArray(row)) return String(row[1] ?? '')
+      if (row && typeof row === 'object' && 'name' in row) {
+        return String((row as { name: unknown }).name ?? '')
+      }
+      return ''
+    })
+    .filter(Boolean)
+}
+
+async function createLeadDoc(
+  payload: Awaited<ReturnType<typeof getPayloadClient>>,
+  data: Record<string, unknown>,
+) {
+  try {
+    return await payload.create({
+      collection: 'leads',
+      overrideAccess: true,
+      data: data as never,
+    })
+  } catch (err) {
+    const detail = inspectLeadError(err)
+    console.warn('Lead create failed, retrying with legacy-safe fields:', detail)
+    try {
+      return await payload.create({
+        collection: 'leads',
+        overrideAccess: true,
+        data: legacySafeLead(data, detail) as never,
+      })
+    } catch (retryErr) {
+      console.error('Lead create retry failed:', inspectLeadError(retryErr))
+      throw err
+    }
+  }
+}
+
+function legacySafeLead(data: Record<string, unknown>, detail: string) {
+  const next: Record<string, unknown> = { ...data }
+  next.phone = next.phone || '—'
+  next.eventType = next.eventType || 'Custom fridge magnet'
+  if (!next.eventDate) {
+    next.eventDate = '1970-01-01'
+    const note = 'Event date not specified.'
+    next.message = next.message ? `${next.message}\n${note}` : note
+  }
+
+  if (/no such column/i.test(detail)) {
+    const extras = [
+      next.namePlateCopy ? `Name plate: ${next.namePlateCopy}` : '',
+      next.magnetColor ? `Magnet colour: ${next.magnetColor}` : '',
+      next.bookPhotobooth ? 'Also book the photobooth: Yes' : '',
+    ].filter(Boolean)
+    delete next.namePlateCopy
+    delete next.magnetColor
+    delete next.bookPhotobooth
+    if (extras.length) {
+      next.message = [next.message, ...extras].filter(Boolean).join('\n')
+    }
+  }
+
+  if (/invalid|enum|option/i.test(detail) && /intent|custom-frame/i.test(detail)) {
+    next.intent = 'contact'
+  }
+
+  return next
+}
+
+function inspectLeadError(err: unknown): string {
+  const chunks: string[] = []
+  const seen = new Set<unknown>()
+
+  const walk = (value: unknown) => {
+    if (!value || seen.has(value)) return
+    seen.add(value)
+    if (typeof value === 'string') {
+      chunks.push(value)
+      return
+    }
+    if (value instanceof Error) {
+      chunks.push(value.message)
+      walk((value as { cause?: unknown }).cause)
+      walk((value as { data?: unknown }).data)
+      return
+    }
+    if (typeof value === 'object') {
+      const obj = value as Record<string, unknown>
+      if (typeof obj.message === 'string') chunks.push(obj.message)
+      if (typeof obj.code === 'string') chunks.push(obj.code)
+      walk(obj.cause)
+    }
+  }
+
+  walk(err)
+  return chunks.join(' | ') || 'unknown error'
 }

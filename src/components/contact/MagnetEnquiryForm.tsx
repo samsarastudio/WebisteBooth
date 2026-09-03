@@ -4,15 +4,10 @@ import Link from 'next/link'
 import { useState, type FormEvent } from 'react'
 import { CheckCircle2 } from 'lucide-react'
 
-import type { LeadFormState } from '@/lib/lead-form'
+import { postLeadForm, type LeadFormState } from '@/lib/lead-form'
 import { MAGNET_BOOK_HREF, magnetColors } from '@/lib/magnet'
 
 const initialState: LeadFormState = { ok: false }
-
-async function postLeadForm(form: HTMLFormElement): Promise<LeadFormState> {
-  const res = await fetch('/api/submit-lead', { method: 'POST', body: new FormData(form) })
-  return res.json() as Promise<LeadFormState>
-}
 
 function ReqStar() {
   return (

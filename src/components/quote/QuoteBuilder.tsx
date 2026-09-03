@@ -17,7 +17,7 @@ import { QuoteStepper } from '@/components/quote/QuoteStepper'
 import { QuoteSummary } from '@/components/quote/QuoteSummary'
 import { SectionError } from '@/components/quote/SectionError'
 
-import type { LeadFormState } from '@/lib/lead-form'
+import { postLeadForm, type LeadFormState } from '@/lib/lead-form'
 import { formatDisplayLabel } from '@/lib/frame-design/layouts'
 import type { FrameStyleData } from '@/lib/brand-images'
 import { brand } from '@/lib/brand'
@@ -33,18 +33,6 @@ import {
 } from '@/lib/quote-validation'
 
 const initialState: LeadFormState = { ok: false }
-
-async function postLeadForm(form: HTMLFormElement): Promise<LeadFormState> {
-  try {
-    const res = await fetch('/api/submit-lead', { method: 'POST', body: new FormData(form) })
-    const data = (await res.json()) as LeadFormState
-    if (!res.ok && data.error) return data
-    if (!res.ok) return { ok: false, error: QUOTE_ERRORS.network }
-    return data
-  } catch {
-    return { ok: false, error: QUOTE_ERRORS.network }
-  }
-}
 
 const eventTypes = [
   'Wedding',
