@@ -125,6 +125,7 @@ export function MagnetEnquiryForm({ id = 'enquire' }: { id?: string }) {
           type="checkbox"
           name="privacyConsent"
           value="1"
+          required
           className="mt-1 h-4 w-4 rounded border-border accent-accent shrink-0"
         />
         <span>
@@ -132,7 +133,10 @@ export function MagnetEnquiryForm({ id = 'enquire' }: { id?: string }) {
           <Link href="/privacy" className="text-accent hover:underline font-medium">
             Privacy Policy
           </Link>{' '}
-          and consent to being contacted.
+          and consent to being contacted.{' '}
+          <span className="text-accent font-semibold" aria-hidden="true">
+            *
+          </span>
         </span>
       </label>
 

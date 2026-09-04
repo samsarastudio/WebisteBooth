@@ -106,6 +106,7 @@ export function ContactForm() {
           type="checkbox"
           name="privacyConsent"
           value="1"
+          required
           className="mt-1 h-4 w-4 rounded border-border accent-accent shrink-0"
         />
         <span>
@@ -113,7 +114,10 @@ export function ContactForm() {
           <Link href="/privacy" className="text-accent hover:underline font-medium">
             Privacy Policy
           </Link>{' '}
-          and consent to being contacted about my inquiry.
+          and consent to being contacted about my inquiry.{' '}
+          <span className="text-accent font-semibold" aria-hidden="true">
+            *
+          </span>
         </span>
       </label>
 

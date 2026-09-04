@@ -58,37 +58,18 @@ export async function submitLeadFromFormData(
   const intentValue =
     intent === 'quote' ? 'quote' : intent === 'custom-frame' ? 'custom-frame' : 'contact'
   const isCustomFrame = intentValue === 'custom-frame'
-  const isQuote = intentValue === 'quote'
-
-  if (isQuote) {
-    if (!name || !email || !eventType || !eventDate || !eventCity || !postalCode) {
-      return {
-        ok: false,
-        error: 'Name, email, event type, date, city, and postal code are required.',
-      }
-    }
-  }
 
   const serviceTypeRaw = String(formData.get('serviceType') || 'frames').trim()
   const serviceType =
     serviceTypeRaw === 'stickers' || serviceTypeRaw === 'both' ? serviceTypeRaw : 'frames'
   const wantsFrames = serviceType === 'frames' || serviceType === 'both'
 
-  if (intent === 'quote' && wantsFrames && !packageRecommendationRequested) {
-    if (!packageId) {
-      return { ok: false, error: 'Please choose a package.' }
-    }
-    if (!frameStyleId && !designToken) {
-      return { ok: false, error: 'Please choose a magnet colour.' }
-    }
-  }
-
   if (email && !email.includes('@')) {
     return { ok: false, error: 'Please provide a valid email address.' }
   }
 
   const privacyConsent = String(formData.get('privacyConsent') || '').trim()
-  if (isQuote && privacyConsent !== '1') {
+  if (privacyConsent !== '1') {
     return {
       ok: false,
       error: 'Please agree to the Privacy Policy to submit your inquiry.',

@@ -26,7 +26,6 @@ import { retentionHintForPackage } from '@/lib/retention-policy'
 import {
   buildQuoteSteps,
   mapServerQuoteError,
-  QUOTE_ERRORS,
   validateQuoteAll,
   validateQuoteStep,
   type QuoteStepId,
@@ -457,24 +456,21 @@ export function QuoteBuilder({
 
           <section ref={eventRef} className={stepVisible('event', activeStepId)}>
             <h2 className="text-2xl font-serif mb-2">
-              {stepHeading(steps, 'event', 'Tell us about your event')} <ReqStar />
+              {stepHeading(steps, 'event', 'Tell us about your event')}
             </h2>
             <SectionError message={sectionErrors.event} />
             <div className="card p-6 md:p-8 grid sm:grid-cols-2 gap-5">
               <div>
                 <label className="block text-sm font-medium mb-1.5" htmlFor="eventType">
-                  Event Type <ReqStar />
+                  Event Type
                 </label>
                 <select
                   id="eventType"
                   name="eventType"
-                  required
                   defaultValue=""
                   className={`field-input ${fieldErrors.eventType ? 'ring-1 ring-red-400' : ''}`}
                 >
-                  <option value="" disabled>
-                    Select type...
-                  </option>
+                  <option value="">Select type...</option>
                   {eventTypes.map((t) => (
                     <option key={t} value={t}>
                       {t}
@@ -489,14 +485,12 @@ export function QuoteBuilder({
                 label="Event Date"
                 name="eventDate"
                 type="date"
-                required
                 error={fieldErrors.eventDate}
               />
-              <Field label="City" name="eventCity" required error={fieldErrors.eventCity} />
+              <Field label="City" name="eventCity" error={fieldErrors.eventCity} />
               <Field
                 label="Postal Code"
                 name="postalCode"
-                required
                 error={fieldErrors.postalCode}
                 placeholder="N2G 1A1"
               />
@@ -506,7 +500,7 @@ export function QuoteBuilder({
 
           <section ref={serviceRef} className={stepVisible('service', activeStepId)}>
             <h2 className="text-2xl font-serif mb-2">
-              {stepHeading(steps, 'service', 'What are you interested in?')} <ReqStar />
+              {stepHeading(steps, 'service', 'What are you interested in?')}
             </h2>
             <SectionError message={sectionErrors.service} />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
@@ -593,7 +587,7 @@ export function QuoteBuilder({
             <>
               <section ref={packageRef} className={stepVisible('package', activeStepId)}>
                 <h2 className="text-2xl font-serif mb-2">
-                  {stepHeading(steps, 'package', 'Choose a frame package')} <ReqStar />
+                  {stepHeading(steps, 'package', 'Choose a frame package')}
                 </h2>
                 <SectionError message={sectionErrors.package} />
                 <p className="text-text-secondary text-sm mb-3">
@@ -641,7 +635,7 @@ export function QuoteBuilder({
               {!loadedDesign ? (
                 <section ref={styleRef} className={stepVisible('style', activeStepId)}>
                   <h2 className="text-2xl font-serif mb-2">
-                    {stepHeading(steps, 'style', 'Choose magnet colour')} <ReqStar />
+                    {stepHeading(steps, 'style', 'Choose magnet colour')}
                   </h2>
                   <SectionError message={sectionErrors.style} />
                   <p className="text-text-secondary text-sm mb-4">
@@ -690,7 +684,7 @@ export function QuoteBuilder({
 
               <section ref={contactRef} className={stepVisible('contact', activeStepId)}>
                 <h2 className="text-2xl font-serif mb-2">
-                  {stepHeading(steps, 'contact', 'Your details')} <ReqStar />
+                  {stepHeading(steps, 'contact', 'Your details')}
                 </h2>
                 <SectionError message={sectionErrors.contact || state.error} />
                 <p className="text-text-secondary text-sm mb-6">
@@ -698,18 +692,17 @@ export function QuoteBuilder({
                 </p>
                 <div className="card p-6 md:p-8 space-y-5">
                   <div className="grid sm:grid-cols-2 gap-5">
-                    <Field label="Full Name" name="name" required error={fieldErrors.name} />
+                    <Field label="Full Name" name="name" error={fieldErrors.name} />
                     <Field
                       key={prefillEmail || 'quote-email'}
                       label="Email"
                       name="email"
                       type="email"
-                      required
                       defaultValue={prefillEmail}
                       error={fieldErrors.email}
                     />
                     <Field
-                      label="Phone (optional)"
+                      label="Phone"
                       name="phone"
                       type="tel"
                       error={fieldErrors.phone}
@@ -742,7 +735,10 @@ export function QuoteBuilder({
                       <Link href="/privacy" className="text-accent hover:underline font-medium">
                         Privacy Policy
                       </Link>
-                      . <ReqStar />
+                      .{' '}
+                      <span className="text-accent font-semibold" aria-hidden="true">
+                        *
+                      </span>
                     </span>
                   </label>
                   {fieldErrors.privacyConsent ? (
@@ -810,7 +806,7 @@ export function QuoteBuilder({
           {(!wantsFrames || helpMeChoose) && (
             <section ref={contactRef} className={stepVisible('contact', activeStepId)}>
               <h2 className="text-2xl font-serif mb-2">
-                {stepHeading(steps, 'contact', 'Your details')} <ReqStar />
+                {stepHeading(steps, 'contact', 'Your details')}
               </h2>
               <SectionError message={sectionErrors.contact || state.error} />
               <p className="text-text-secondary text-sm mb-6">
@@ -818,18 +814,17 @@ export function QuoteBuilder({
               </p>
               <div className="card p-6 md:p-8 space-y-5">
                 <div className="grid sm:grid-cols-2 gap-5">
-                  <Field label="Full Name" name="name" required error={fieldErrors.name} />
+                  <Field label="Full Name" name="name" error={fieldErrors.name} />
                   <Field
                     key={prefillEmail || 'quote-email-alt'}
                     label="Email"
                     name="email"
                     type="email"
-                    required
                     defaultValue={prefillEmail}
                     error={fieldErrors.email}
                   />
                   <Field
-                    label="Phone (optional)"
+                    label="Phone"
                     name="phone"
                     type="tel"
                     error={fieldErrors.phone}
@@ -862,7 +857,10 @@ export function QuoteBuilder({
                     <Link href="/privacy" className="text-accent hover:underline font-medium">
                       Privacy Policy
                     </Link>
-                    . <ReqStar />
+                    .{' '}
+                    <span className="text-accent font-semibold" aria-hidden="true">
+                      *
+                    </span>
                   </span>
                 </label>
                 {fieldErrors.privacyConsent ? (
@@ -932,19 +930,10 @@ function SubmitQuoteButton({ pending }: { pending: boolean }) {
   )
 }
 
-function ReqStar() {
-  return (
-    <span className="text-accent font-semibold" aria-hidden="true">
-      *
-    </span>
-  )
-}
-
 function Field({
   label,
   name,
   type = 'text',
-  required,
   error,
   defaultValue,
   placeholder,
@@ -952,7 +941,6 @@ function Field({
   label: string
   name: string
   type?: string
-  required?: boolean
   error?: string
   defaultValue?: string
   placeholder?: string
@@ -961,18 +949,11 @@ function Field({
     <div>
       <label className="block text-sm font-medium mb-1.5" htmlFor={name}>
         {label}
-        {required ? (
-          <>
-            {' '}
-            <ReqStar />
-          </>
-        ) : null}
       </label>
       <input
         id={name}
         name={name}
         type={type}
-        required={required}
         defaultValue={defaultValue}
         placeholder={placeholder}
         className={`field-input ${error ? 'ring-1 ring-red-400' : ''}`}

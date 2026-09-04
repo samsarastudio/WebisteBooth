@@ -98,7 +98,7 @@ export default async function FrontendLayout({
 
   return (
     <html lang="en" className={`${inter.variable} ${playfair.variable}`} data-scroll-behavior="smooth">
-      <body className="min-h-screen flex flex-col">
+      <body className="min-h-screen flex flex-col" suppressHydrationWarning>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
