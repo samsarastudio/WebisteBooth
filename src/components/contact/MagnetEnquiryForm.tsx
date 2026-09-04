@@ -9,14 +9,6 @@ import { MAGNET_BOOK_HREF, magnetColors } from '@/lib/magnet'
 
 const initialState: LeadFormState = { ok: false }
 
-function ReqStar() {
-  return (
-    <span className="text-accent font-semibold" aria-hidden="true">
-      *
-    </span>
-  )
-}
-
 export function MagnetEnquiryForm({ id = 'enquire' }: { id?: string }) {
   const [state, setState] = useState<LeadFormState>(initialState)
   const [pending, setPending] = useState(false)
@@ -57,9 +49,7 @@ export function MagnetEnquiryForm({ id = 'enquire' }: { id?: string }) {
           Custom name plate
         </p>
         <h2 className="text-2xl md:text-3xl font-serif mb-2">Tell us what to print</h2>
-        <p className="text-sm text-text-secondary">
-          Fields marked <ReqStar /> are required. We reply within 24 hours.
-        </p>
+        <p className="text-sm text-text-secondary">We reply within 24 hours.</p>
       </div>
       <div className="absolute -left-[9999px] opacity-0" aria-hidden="true">
         <label htmlFor="website">Website</label>
@@ -69,8 +59,8 @@ export function MagnetEnquiryForm({ id = 'enquire' }: { id?: string }) {
       </div>
 
       <div className="grid sm:grid-cols-2 gap-4">
-        <Field label="Full name" name="name" required />
-        <Field label="Email" name="email" type="email" required />
+        <Field label="Full name" name="name" />
+        <Field label="Email" name="email" type="email" />
         <Field label="Phone" name="phone" type="tel" />
         <Field label="Approx. quantity" name="guestCount" placeholder="e.g. 80" />
         <div>
@@ -135,7 +125,6 @@ export function MagnetEnquiryForm({ id = 'enquire' }: { id?: string }) {
           type="checkbox"
           name="privacyConsent"
           value="1"
-          required
           className="mt-1 h-4 w-4 rounded border-border accent-accent shrink-0"
         />
         <span>
@@ -143,7 +132,7 @@ export function MagnetEnquiryForm({ id = 'enquire' }: { id?: string }) {
           <Link href="/privacy" className="text-accent hover:underline font-medium">
             Privacy Policy
           </Link>{' '}
-          and consent to being contacted. <ReqStar />
+          and consent to being contacted.
         </span>
       </label>
 
@@ -158,34 +147,19 @@ function Field({
   label,
   name,
   type = 'text',
-  required,
   placeholder,
 }: {
   label: string
   name: string
   type?: string
-  required?: boolean
   placeholder?: string
 }) {
   return (
     <div>
       <label className="block text-sm font-medium mb-1.5" htmlFor={name}>
         {label}
-        {required ? (
-          <>
-            {' '}
-            <ReqStar />
-          </>
-        ) : null}
       </label>
-      <input
-        id={name}
-        name={name}
-        type={type}
-        required={required}
-        placeholder={placeholder}
-        className="field-input"
-      />
+      <input id={name} name={name} type={type} placeholder={placeholder} className="field-input" />
     </div>
   )
 }

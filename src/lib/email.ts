@@ -34,6 +34,8 @@ type LeadEmailPayload = {
 
 import { brand } from '@/lib/brand'
 
+export const UNSET_LEAD_EMAIL = 'unset@inmomentservices.com'
+
 const studioEmail = brand.email
 const studioPhone = process.env.LEAD_NOTIFY_PHONE || ''
 const fromAddress = process.env.RESEND_FROM_EMAIL || `${brand.name} <onboarding@resend.dev>`
@@ -84,6 +86,8 @@ export async function sendLeadEmails(lead: LeadEmailPayload) {
   const resend = new Resend(apiKey)
   const prefsInternal = preferencesBlock(lead, true)
   const prefsCustomer = preferencesBlock(lead, false)
+  const hasCustomerEmail =
+    Boolean(lead.email) && lead.email.includes('@') && lead.email !== UNSET_LEAD_EMAIL
 
   const isCustom = lead.intent === 'custom-frame'
   const leadKind = isCustom ? 'custom magnet enquiry' : 'quote request'
@@ -92,21 +96,23 @@ export async function sendLeadEmails(lead: LeadEmailPayload) {
   await resend.emails.send({
     from: fromAddress,
     to: studioEmail,
-    replyTo: lead.email,
+    ...(hasCustomerEmail ? { replyTo: lead.email } : {}),
     subject: `New lead: ${lead.name} — ${lead.eventType} (${lead.inquiryId})`,
     text: `
 New ${brand.fullName} ${leadKind}
 
 Inquiry ID: ${lead.inquiryId}
 Name: ${lead.name}
-Email: ${lead.email}
+Email: ${hasCustomerEmail ? lead.email : '—'}
 Phone: ${lead.phone || '—'}
 
 ${prefsInternal}
 
-Reply to this email to reach the lead directly.
+${hasCustomerEmail ? 'Reply to this email to reach the lead directly.' : 'No customer email was provided.'}
 `.trim(),
   })
+
+  if (!hasCustomerEmail) return
 
   // Auto-reply to the lead with preferences + how to reach us
   await resend.emails.send({
@@ -150,6 +156,11 @@ export async function sendLeadResponseEmail(input: {
 
   if (!apiKey) {
     console.log('Lead response email skipped — missing RESEND_API_KEY:', input.inquiryId)
+    return
+  }
+
+  if (!input.email.includes('@') || input.email === UNSET_LEAD_EMAIL) {
+    console.log('Lead response email skipped — no customer email:', input.inquiryId)
     return
   }
 

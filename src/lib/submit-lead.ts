@@ -2,7 +2,7 @@ import { sql } from 'drizzle-orm'
 import type { LeadFormState } from '@/lib/lead-form'
 import { getPayloadClient } from '@/lib/payload'
 import { calculateEstimate, type PricingUnit } from '@/lib/pricing'
-import { sendLeadEmails } from '@/lib/email'
+import { sendLeadEmails, UNSET_LEAD_EMAIL } from '@/lib/email'
 import { rateLimit } from '@/lib/rate-limit'
 import { getFrameDesignByToken, linkDesignToLead } from '@/lib/frame-design/save-design'
 import type { FrameDesignState } from '@/lib/frame-design/types'
@@ -58,15 +58,14 @@ export async function submitLeadFromFormData(
   const intentValue =
     intent === 'quote' ? 'quote' : intent === 'custom-frame' ? 'custom-frame' : 'contact'
   const isCustomFrame = intentValue === 'custom-frame'
+  const isQuote = intentValue === 'quote'
 
-  if (isCustomFrame) {
-    if (!name || !email) {
-      return { ok: false, error: 'Name and email are required.' }
-    }
-  } else if (!name || !email || !eventType || !eventDate || !eventCity || !postalCode) {
-    return {
-      ok: false,
-      error: 'Name, email, event type, date, city, and postal code are required.',
+  if (isQuote) {
+    if (!name || !email || !eventType || !eventDate || !eventCity || !postalCode) {
+      return {
+        ok: false,
+        error: 'Name, email, event type, date, city, and postal code are required.',
+      }
     }
   }
 
@@ -84,12 +83,12 @@ export async function submitLeadFromFormData(
     }
   }
 
-  if (!email.includes('@')) {
+  if (email && !email.includes('@')) {
     return { ok: false, error: 'Please provide a valid email address.' }
   }
 
   const privacyConsent = String(formData.get('privacyConsent') || '').trim()
-  if (privacyConsent !== '1') {
+  if (isQuote && privacyConsent !== '1') {
     return {
       ok: false,
       error: 'Please agree to the Privacy Policy to submit your inquiry.',
@@ -191,10 +190,10 @@ export async function submitLeadFromFormData(
     const createdLead = await createLeadDoc(payload, {
       intent: intentValue,
       serviceType,
-      name,
-      email,
+      name: name || '—',
+      email: email || UNSET_LEAD_EMAIL,
       phone: phone || '—',
-      eventType: eventType || (isCustomFrame ? 'Custom fridge magnet' : eventType),
+      eventType: eventType || (isCustomFrame ? 'Custom fridge magnet' : undefined),
       eventDate: eventDate || undefined,
       guestCount: guestCount || undefined,
       eventCity: eventCity || undefined,
@@ -226,7 +225,7 @@ export async function submitLeadFromFormData(
       estimatedTotal: estimate.total,
       status: 'new',
       inquiryId,
-      privacyConsentAt: new Date().toISOString(),
+      privacyConsentAt: privacyConsent === '1' ? new Date().toISOString() : undefined,
     })
 
     if (designToken && createdLead.id) {
@@ -250,10 +249,10 @@ export async function submitLeadFromFormData(
       await sendLeadEmails({
         inquiryId,
         intent: intentValue,
-        name,
-        email,
+        name: name || '—',
+        email: email || UNSET_LEAD_EMAIL,
         phone: phone || '—',
-        eventType: eventType || (isCustomFrame ? 'Custom fridge magnet' : eventType),
+        eventType: eventType || (isCustomFrame ? 'Custom fridge magnet' : '—'),
         eventDate: eventDate || '—',
         guestCount,
         eventCity,
@@ -375,7 +374,9 @@ async function createLeadDoc(
 function legacySafeLead(data: Record<string, unknown>, detail: string) {
   const next: Record<string, unknown> = { ...data }
   next.phone = next.phone || '—'
-  next.eventType = next.eventType || 'Custom fridge magnet'
+  next.name = next.name || '—'
+  next.email = next.email || UNSET_LEAD_EMAIL
+  next.eventType = next.eventType || '—'
   if (!next.eventDate) {
     next.eventDate = '1970-01-01'
     const note = 'Event date not specified.'

@@ -17,14 +17,6 @@ const eventTypes = [
   'Other',
 ]
 
-function ReqStar() {
-  return (
-    <span className="text-accent font-semibold" aria-hidden="true">
-      *
-    </span>
-  )
-}
-
 export function ContactForm() {
   const [state, setState] = useState<LeadFormState>(initialState)
   const [pending, setPending] = useState(false)
@@ -63,9 +55,7 @@ export function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit} className="card p-6 md:p-8 space-y-5 relative">
-      <p className="text-xs text-text-secondary">
-        Fields marked <ReqStar /> are required.
-      </p>
+      <p className="text-xs text-text-secondary">We reply within 24 hours.</p>
       <div className="absolute -left-[9999px] opacity-0" aria-hidden="true">
         <label htmlFor="website">Website</label>
         <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
@@ -73,16 +63,14 @@ export function ContactForm() {
       </div>
 
       <div className="grid sm:grid-cols-2 gap-5">
-        <Field label="Full Name" name="name" required />
-        <Field label="Email" name="email" type="email" required />
+        <Field label="Full Name" name="name" />
+        <Field label="Email" name="email" type="email" />
         <div>
           <label className="block text-sm font-medium mb-1.5" htmlFor="eventType">
-            Event Type <ReqStar />
+            Event Type
           </label>
-          <select id="eventType" name="eventType" required defaultValue="" className="field-input">
-            <option value="" disabled>
-              Select type...
-            </option>
+          <select id="eventType" name="eventType" defaultValue="" className="field-input">
+            <option value="">Select type...</option>
             {eventTypes.map((t) => (
               <option key={t} value={t}>
                 {t}
@@ -90,7 +78,7 @@ export function ContactForm() {
             ))}
           </select>
         </div>
-        <Field label="Event Date" name="eventDate" type="date" required />
+        <Field label="Event Date" name="eventDate" type="date" />
         <Field label="Guest Count" name="guestCount" />
       </div>
 
@@ -118,7 +106,6 @@ export function ContactForm() {
           type="checkbox"
           name="privacyConsent"
           value="1"
-          required
           className="mt-1 h-4 w-4 rounded border-border accent-accent shrink-0"
         />
         <span>
@@ -126,7 +113,7 @@ export function ContactForm() {
           <Link href="/privacy" className="text-accent hover:underline font-medium">
             Privacy Policy
           </Link>{' '}
-          and consent to being contacted about my inquiry. <ReqStar />
+          and consent to being contacted about my inquiry.
         </span>
       </label>
 
@@ -142,25 +129,17 @@ function Field({
   label,
   name,
   type = 'text',
-  required,
 }: {
   label: string
   name: string
   type?: string
-  required?: boolean
 }) {
   return (
     <div>
       <label className="block text-sm font-medium mb-1.5" htmlFor={name}>
         {label}
-        {required ? (
-          <>
-            {' '}
-            <ReqStar />
-          </>
-        ) : null}
       </label>
-      <input id={name} name={name} type={type} required={required} className="field-input" />
+      <input id={name} name={name} type={type} className="field-input" />
     </div>
   )
 }
