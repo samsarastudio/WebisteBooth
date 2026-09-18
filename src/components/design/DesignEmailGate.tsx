@@ -105,7 +105,7 @@ export function DesignEmailGate({
             required
             autoComplete="email"
             className="field-input mt-1.5"
-            placeholder="you@example.com"
+            placeholder="Your email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />

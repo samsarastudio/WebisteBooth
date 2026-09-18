@@ -16,7 +16,7 @@ export const brand = {
   ctaDesign: 'Design a similar frame',
   ctaEnquire: 'Enquire',
   ctaBook: 'Book the booth',
-  email: process.env.LEAD_NOTIFY_EMAIL || 'hello@inmomentservices.com',
+  email: 'hello@inmomentservices.com',
   siteUrl: process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000',
   parentUrl: process.env.NEXT_PUBLIC_PARENT_URL || 'https://inmomentservices.com',
 } as const

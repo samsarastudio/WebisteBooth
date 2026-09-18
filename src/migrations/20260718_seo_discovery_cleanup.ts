@@ -53,7 +53,7 @@ export async function up({ db }: MigrateUpArgs): Promise<void> {
   await db.run(sql`
     UPDATE \`site_settings\`
     SET \`email\` = 'hello@inmomentservices.com'
-    WHERE \`email\` = 'frameflix@inmoment.com'
+    WHERE \`email\` IS NULL OR \`email\` != 'hello@inmomentservices.com'
   `)
 }
 

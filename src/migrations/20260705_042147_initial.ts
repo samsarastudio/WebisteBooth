@@ -354,7 +354,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   await db.run(sql`CREATE TABLE \`site_settings\` (
   	\`id\` integer PRIMARY KEY NOT NULL,
   	\`phone\` text DEFAULT '(416) 555-1234',
-  	\`email\` text DEFAULT 'frameflix@inmoment.com',
+  	\`email\` text DEFAULT 'hello@inmomentservices.com',
   	\`service_area\` text DEFAULT 'Kitchener, Cambridge, Waterloo, Guelph & beyond',
   	\`hero_eyebrow\` text DEFAULT 'Custom 3D-Printed Frames',
   	\`hero_title\` text DEFAULT 'Souvenirs Your Guests Will Actually Keep',

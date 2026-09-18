@@ -401,12 +401,7 @@ async function syncFaqs(payload: Payload) {
 async function syncSiteSettings(payload: Payload) {
   try {
     const current = await payload.findGlobal({ slug: 'site-settings' })
-    const email =
-      !current.email ||
-      current.email === 'hello@frameflixstudio.com' ||
-      current.email === 'frameflix@inmoment.com'
-        ? defaultSiteSettings.email
-        : current.email
+    const email = defaultSiteSettings.email
     const phone =
       !current.phone || current.phone === '(416) 555-1234' ? '' : current.phone
 

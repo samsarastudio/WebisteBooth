@@ -34,11 +34,11 @@ type LeadEmailPayload = {
 
 import { brand } from '@/lib/brand'
 
-export const UNSET_LEAD_EMAIL = 'unset@inmomentservices.com'
+export const UNSET_LEAD_EMAIL = brand.email
 
 const studioEmail = brand.email
 const studioPhone = process.env.LEAD_NOTIFY_PHONE || ''
-const fromAddress = process.env.RESEND_FROM_EMAIL || `${brand.name} <onboarding@resend.dev>`
+const fromAddress = process.env.RESEND_FROM_EMAIL || `${brand.name} <${brand.email}>`
 
 function preferencesBlock(lead: LeadEmailPayload, includePricing = false) {
   const lines = lead.addOnLines

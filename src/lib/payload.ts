@@ -183,7 +183,7 @@ export async function getSiteSettings(): Promise<SiteSettingsData> {
     const settings = await payload.findGlobal({ slug: 'site-settings' })
     return {
       phone: settings.phone || '',
-      email: settings.email || defaultSiteSettings.email,
+      email: defaultSiteSettings.email,
       serviceArea: settings.serviceArea || defaultSiteSettings.serviceArea,
       googleBusinessUrl: settings.googleBusinessUrl || '',
       instagramUrl: settings.instagramUrl || '',

@@ -3,7 +3,7 @@ import { Resend } from 'resend'
 import { brand } from '@/lib/brand'
 
 const studioEmail = brand.email
-const fromAddress = process.env.RESEND_FROM_EMAIL || `${brand.name} <onboarding@resend.dev>`
+const fromAddress = process.env.RESEND_FROM_EMAIL || `${brand.name} <${brand.email}>`
 
 export async function sendDesignerLoginEmail(email: string) {
   const apiKey = process.env.RESEND_API_KEY
